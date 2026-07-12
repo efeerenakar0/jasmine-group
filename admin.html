@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="tr" lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gelişmiş Admin Paneli | Jasmine Group</title>
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  
+  <script>
+    if (!sessionStorage.getItem('admin_logged_in')) {
+      window.location.href = 'admin-login.html';
+    }
+  </script>
+  
+  <style>
+    :root {
+      --bg-dark: #0f172a;
+      --sidebar: #1e293b;
+      --card-bg: rgba(30, 41, 59, 0.7);
+      --card-border: rgba(255, 255, 255, 0.1);
+      --primary: #ef4444;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --accent: #3b82f6;
+      --success: #10b981;
+      --warning: #f59e0b;
+    }
+    
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+    
+    body { 
+      display: flex; 
+      background: var(--bg-dark); 
+      color: var(--text-main); 
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+    
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: var(--bg-dark); }
+    ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #475569; }
+
+    /* Sidebar */
+    .sidebar { 
+      width: 280px; 
+      background: var(--sidebar); 
+      display: flex; 
+      flex-direction: column; 
+      border-right: 1px solid var(--card-border);
+      box-shadow: 5px 0 25px rgba(0,0,0,0.5);
+      z-index: 10;
+    }
+    .sidebar-logo {
+      padding: 30px 20px;
+      font-size: 24px;
+      font-weight: 800;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border-bottom: 1px solid var(--card-border);
+      letter-spacing: 1px;
+    }
+    .sidebar-logo i { color: var(--primary); font-size: 28px; }
+    
+    .sidebar-menu { list-style: none; padding: 20px 10px; flex: 1; }
+    .sidebar-menu li { margin-bottom: 8px; }
+    .sidebar-menu a { 
+      display: flex; align-items: center; gap: 15px; 
+      padding: 14px 20px; color: var(--text-muted); 
+      text-decoration: none; border-radius: 8px; 
+      transition: all 0.3s ease;
+      font-weight: 500;
+      font-size: 15px;
+    }
+    .sidebar-menu a:hover { 
+      background: rgba(255,255,255,0.05); 
+      color: #fff; 
+      transform: translateX(5px);
+    }
+    .sidebar-menu a.active { 
+      background: linear-gradient(90deg, var(--primary) 0%, #b91c1c 100%); 
+      color: #fff; 
+      box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4);
+    }
+    
+    /* Main Content */
+    .main-content { 
+      flex: 1; 
+      padding: 40px; 
+      overflow-y: auto; 
+      background: radial-gradient(circle at top right, #1e293b 0%, #0f172a 100%);
+    }
+    
+    .header { 
+      display: flex; justify-content: space-between; align-items: center; 
+      margin-bottom: 40px; 
+    }
+    .header-title h1 { font-size: 32px; font-weight: 800; letter-spacing: -0.5px; }
+    .header-title p { color: var(--text-muted); margin-top: 5px; }
+    
+    .header-actions { display: flex; gap: 15px; align-items: center; }
+    
+    .btn { 
+      padding: 12px 24px; border-radius: 8px; border: none; 
+      cursor: pointer; font-weight: 600; display: flex; align-items: center; 
+      gap: 10px; text-decoration:none; transition:0.3s; font-size: 14px;
+    }
+    .btn-primary { 
+      background: var(--primary); color: #fff; 
+      box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
+    }
+    .btn-primary:hover { background: #dc2626; transform: translateY(-2px); box-shadow: 0 6px 20px rgba(239, 68, 68, 0.5); }
+    .btn-outline { 
+      background: rgba(255,255,255,0.05); border: 1px solid var(--card-border); 
+      color: #fff; 
+    }
+    .btn-outline:hover { background: rgba(255,255,255,0.1); transform: translateY(-2px); }
+
+    /* Glassmorphism Cards */
+    .glass-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 25px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    }
+    
+    /* Stats Grid */
+    .stats-grid { 
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); 
+      gap: 25px; margin-bottom: 40px; 
+    }
+    .stat-box {
+      display: flex; align-items: center; gap: 20px;
+    }
+    .stat-icon {
+      width: 60px; height: 60px; border-radius: 12px;
+      display: flex; justify-content: center; align-items: center;
+      font-size: 24px;
+    }
+    .icon-blue { background: rgba(59, 130, 246, 0.1); color: var(--accent); }
+    .icon-red { background: rgba(239, 68, 68, 0.1); color: var(--primary); }
+    .icon-green { background: rgba(16, 185, 129, 0.1); color: var(--success); }
+    .icon-yellow { background: rgba(245, 158, 11, 0.1); color: var(--warning); }
+    
+    .stat-info h3 { font-size: 14px; color: var(--text-muted); font-weight: 500; text-transform: uppercase; letter-spacing: 1px; }
+    .stat-info .value { font-size: 32px; font-weight: 800; margin-top: 5px; display: flex; align-items: baseline; gap: 10px; }
+    .stat-info .trend { font-size: 13px; font-weight: 600; padding: 2px 8px; border-radius: 20px; }
+    .trend-up { background: rgba(16, 185, 129, 0.2); color: var(--success); }
+    .trend-down { background: rgba(239, 68, 68, 0.2); color: var(--primary); }
+
+    /* Charts Area */
+    .charts-grid {
+      display: grid; grid-template-columns: 2fr 1fr; gap: 25px; margin-bottom: 40px;
+    }
+    .chart-container { position: relative; height: 300px; width: 100%; margin-top: 20px; }
+    
+    .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid var(--card-border); padding-bottom: 15px;}
+    .card-header h2 { font-size: 18px; font-weight: 600; }
+
+    /* Data Table */
+    .table-container { overflow-x: auto; }
+    .data-table { width: 100%; border-collapse: collapse; }
+    .data-table th { 
+      text-align: left; padding: 15px 20px; 
+      color: var(--text-muted); font-size: 12px; font-weight: 600; 
+      text-transform: uppercase; letter-spacing: 1px;
+      border-bottom: 1px solid var(--card-border);
+    }
+    .data-table td { 
+      padding: 15px 20px; border-bottom: 1px solid rgba(255,255,255,0.05); 
+      vertical-align: middle;
+    }
+    .data-table tbody tr { transition: 0.2s; }
+    .data-table tbody tr:hover { background: rgba(255,255,255,0.03); }
+    
+    .prop-cell { display: flex; align-items: center; gap: 15px; }
+    .prop-img { width: 48px; height: 48px; border-radius: 8px; object-fit: cover; }
+    .prop-title { font-weight: 600; font-size: 14px; }
+    .prop-id { font-size: 12px; color: var(--text-muted); margin-top: 3px; }
+    
+    .badge { padding: 6px 12px; border-radius: 20px; font-size: 11px; font-weight: 600; letter-spacing: 0.5px; }
+    .badge-sale { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
+    .badge-rent { background: rgba(59, 130, 246, 0.15); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.3); }
+    
+    .action-btn { 
+      background: rgba(255,255,255,0.05); border: 1px solid var(--card-border); 
+      color: var(--text-muted); width: 32px; height: 32px; border-radius: 6px; 
+      cursor: pointer; transition: 0.2s; display: inline-flex; justify-content: center; align-items: center;
+    }
+    .action-btn:hover { background: rgba(255,255,255,0.1); color: #fff; }
+    .action-btn.delete:hover { background: rgba(239, 68, 68, 0.2); color: #ef4444; border-color: rgba(239, 68, 68, 0.3); }
+
+    /* Forms */
+    .form-group { margin-bottom: 20px; }
+    .form-group label { display: block; margin-bottom: 8px; color: var(--text-muted); font-size: 13px; font-weight: 500; text-transform: uppercase; letter-spacing: 1px;}
+    .form-control { 
+      width: 100%; padding: 14px 15px; 
+      background: rgba(0,0,0,0.2); border: 1px solid var(--card-border); 
+      border-radius: 8px; color: #fff; font-size: 15px;
+      transition: 0.3s;
+    }
+    .form-control:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(59,130,246,0.2); }
+    
+    .pulse-dot {
+      width: 10px; height: 10px; background: var(--success); border-radius: 50%;
+      display: inline-block; position: relative; margin-right: 5px;
+    }
+    .pulse-dot::after {
+      content: ""; position: absolute; top: -4px; left: -4px; right: -4px; bottom: -4px;
+      background: var(--success); border-radius: 50%; animation: pulse 2s infinite; z-index: -1;
+    }
+    @keyframes pulse { 0% { transform: scale(0.5); opacity: 0.8; } 100% { transform: scale(2.5); opacity: 0; } }
+
+  </style>
+  <link rel="icon" type="image/jpeg" href="images/favicon.jpg">
+
+  <meta property="og:title" content="Jasmine Group - Alanya Emlak Proje Pazarlama" />
+  <meta property="og:description" content="Alanya'da Profesyonel Emlak Hizmetleri, Lüks Daireler ve Villalar." />
+  <meta property="og:image" content="https://www.jasminegroup.com.tr/images/favicon.jpg" />
+  <meta property="og:url" content="https://www.jasminegroup.com.tr/" />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Jasmine Group - Alanya Emlak Proje Pazarlama" />
+  <meta name="twitter:description" content="Alanya'da Profesyonel Emlak Hizmetleri, Lüks Daireler ve Villalar." />
+  <meta name="twitter:image" content="https://www.jasminegroup.com.tr/images/favicon.jpg" />
+  <meta name="keywords" content="Alanya satılık daire, Alanya emlak, Jasmine Group, satılık ev Alanya, Alanya kiralık daire, Alanya gayrimenkul" />
+  <link rel="canonical" href="https://www.jasminegroup.com.tr/" />
+
+</head>
+<body>
+
+  <div class="sidebar">
+    <div class="sidebar-logo">
+      <i class="fa-solid fa-gem"></i> Jasmine OS
+    </div>
+    <ul class="sidebar-menu">
+      <li><a href="#" class="tab-link active" onclick="switchTab('dashboard')"><i class="fa-solid fa-chart-line"></i> Dashboard</a></li>
+      <li><a href="#" class="tab-link" onclick="switchTab('add')"><i class="fa-solid fa-layer-group"></i> İlan Yönetimi</a></li>
+      <li><a href="#" class="tab-link" onclick="switchTab('customers')"><i class="fa-solid fa-users"></i> CRM / Müşteriler</a></li>
+      <li><a href="#" class="tab-link" onclick="switchTab('analytics')"><i class="fa-solid fa-chart-pie"></i> Analitikler</a></li>
+      <li><a href="#" class="tab-link" onclick="switchTab('settings')"><i class="fa-solid fa-gear"></i> Sistem Ayarları</a></li>
+      
+      <li style="margin-top:auto"><a href="index.html"><i class="fa-solid fa-arrow-up-right-from-square"></i> Canlı Siteyi Aç</a></li>
+      <li><a href="#" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i> Güvenli Çıkış</a></li>
+    </ul>
+  </div>
+
+  <div class="main-content">
+    
+    <!-- DASHBOARD TAB -->
+    <div id="tab-dashboard" class="tab-content active-tab">
+      <div class="header">
+        <div class="header-title">
+          <h1>Genel Bakış</h1>
+          <p>Jasmine Group Dijital Yönetim Sistemine Hoş Geldiniz.</p>
+        </div>
+        <div class="header-actions">
+          <div style="background:var(--card-bg); border:1px solid var(--card-border); padding:10px 20px; border-radius:8px; display:flex; align-items:center; gap:10px; font-size:14px; font-weight:600;">
+            <span class="pulse-dot"></span> Sistem: Online
+          </div>
+          <button class="btn btn-primary" onclick="switchTab('add')"><i class="fa-solid fa-plus"></i> Yeni İlan Ekle</button>
+        </div>
+      </div>
+
+      <div class="stats-grid">
+        <div class="glass-card stat-box">
+          <div class="stat-icon icon-blue"><i class="fa-solid fa-building"></i></div>
+          <div class="stat-info">
+            <h3>Toplam Portföy</h3>
+            <div class="value"><span id="totalProps">-</span> <span class="trend trend-up"><i class="fa-solid fa-arrow-trend-up"></i> +12%</span></div>
+          </div>
+        </div>
+        <div class="glass-card stat-box">
+          <div class="stat-icon icon-green"><i class="fa-solid fa-key"></i></div>
+          <div class="stat-info">
+            <h3>Satılık Mülkler</h3>
+            <div class="value"><span id="totalSale">-</span></div>
+          </div>
+        </div>
+        <div class="glass-card stat-box">
+          <div class="stat-icon icon-yellow"><i class="fa-solid fa-house-circle-check"></i></div>
+          <div class="stat-info">
+            <h3>Kiralık Mülkler</h3>
+            <div class="value"><span id="totalRent">-</span></div>
+          </div>
+        </div>
+        <div class="glass-card stat-box" style="border-color: rgba(239, 68, 68, 0.4);">
+          <div class="stat-icon icon-red"><i class="fa-solid fa-users-viewfinder"></i></div>
+          <div class="stat-info">
+            <h3 style="color:#fff;">Sitede Aktif Ziyaretçi</h3>
+            <div class="value" style="color:var(--primary);"><span id="activeUsersCounter">0</span> <span class="pulse-dot" style="margin-left:10px;"></span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="charts-grid">
+        <div class="glass-card">
+          <div class="card-header">
+            <h2>Aylık Satış ve Ziyaret Analitiği</h2>
+            <select style="background:rgba(0,0,0,0.2); border:1px solid var(--card-border); color:#fff; padding:5px 10px; border-radius:4px; outline:none;"><option>2026</option><option>2025</option><option>2024</option></select>
+          </div>
+          <div class="chart-container">
+            <canvas id="mainChart"></canvas>
+          </div>
+        </div>
+        
+        <div class="glass-card">
+          <div class="card-header">
+            <h2>Trafik Kaynakları</h2>
+          </div>
+          <div class="chart-container" style="height:250px; display:flex; justify-content:center;">
+            <canvas id="doughnutChart"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <div class="glass-card">
+        <div class="card-header">
+          <h2>Son Eklenen İlanlar</h2>
+          <button class="btn btn-outline" style="padding:6px 12px; font-size:12px;" onclick="switchTab('add')">Tümünü Gör</button>
+        </div>
+        <div class="table-container">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>İlan</th>
+                <th>Tür</th>
+                <th>Fiyat</th>
+                <th>Görüntülenme</th>
+                <th style="text-align:right">İşlem</th>
+              </tr>
+            </thead>
+            <tbody id="admin-table-body">
+              <tr><td colspan="5" style="text-align:center; padding:30px;"><i class="fa-solid fa-spinner fa-spin fa-2x"></i></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div> <!-- end dashboard -->
+
+    <!-- ADD PROP TAB -->
+    <div id="tab-add" class="tab-content" style="display:none;">
+      <div class="header">
+        <div class="header-title">
+          <h1>İlan Yönetimi</h1>
+          <p>Yeni portföy ekleyin veya mevcut olanları düzenleyin.</p>
+        </div>
+      </div>
+      
+      <div style="display:grid; grid-template-columns: 1fr 2fr; gap:30px;">
+        <div class="glass-card" style="align-self:start;">
+          <div class="card-header"><h2>Yeni İlan Oluştur</h2></div>
+          <form id="addPropForm">
+            <div class="form-group">
+              <label>İlan Başlığı</label>
+              <input type="text" id="newTitle" class="form-control" placeholder="Örn: Alanya Merkezde Deniz Manzaralı Lüks Daire" required>
+            </div>
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:20px;">
+              <div class="form-group">
+                <label>İlan Türü</label>
+                <select id="newType" class="form-control">
+                  <option value="sale">Satılık</option>
+                  <option value="rent">Kiralık</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Fiyat (€ Euro)</label>
+                <input type="number" id="newPrice" class="form-control" placeholder="150000" required>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Oda Sayısı</label>
+              <input type="text" class="form-control" placeholder="3+1">
+            </div>
+            <div class="form-group">
+              <label>Görseller (Sürükle Bırak / Yükle)</label>
+              <div style="width:100%; padding:30px; border:2px dashed var(--card-border); border-radius:8px; text-align:center; color:var(--text-muted); cursor:pointer; background:rgba(0,0,0,0.1);" onclick="document.getElementById('newImagesFile').click()">
+                <i class="fa-solid fa-cloud-arrow-up" style="font-size:32px; color:var(--accent); margin-bottom:10px;"></i>
+                <p>Görselleri buraya sürükleyin veya seçin</p>
+                <input type="file" id="newImagesFile" multiple style="display:none;">
+              </div>
+              <input type="text" id="newImages" class="form-control" placeholder="Veya Görsel Bağlantısı (URL) girin" style="margin-top:10px;">
+            </div>
+            
+            <div style="background:rgba(255,255,255,0.05); padding:15px; border-radius:8px; margin-bottom:20px; border:1px solid var(--card-border);">
+              <label style="display:flex; align-items:center; gap:10px; margin:0; cursor:pointer;">
+                <input type="checkbox" id="autoTranslate" checked style="width:18px; height:18px;">
+                <strong><i class="fa-solid fa-language" style="color:var(--primary);"></i> Otomatik Çoklu Dil Çevirisi (Auto-Translate)</strong>
+              </label>
+              <p style="font-size:12px; color:var(--text-muted); margin-top:5px; margin-left:28px;">İlanınız otomatik olarak İngilizce, Rusça ve Arapça'ya çevrilecektir.</p>
+            </div>
+
+            <div class="form-group" style="border-top:1px solid var(--card-border); padding-top:20px;">
+              <h4 style="margin:0 0 15px; color:#fff;"><i class="fa-brands fa-google" style="color:#34a853;"></i> SEO Yöneticisi</h4>
+              <label>Meta Keywords (Virgülle ayırın)</label>
+              <input type="text" class="form-control" placeholder="alanya, lüks daire, deniz manzaralı, satılık">
+              <label style="margin-top:10px;">SEO Açıklaması (Meta Description)</label>
+              <textarea class="form-control" rows="2" placeholder="Google arama sonuçlarında görünecek açıklama metni..."></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary" style="width:100%; justify-content:center; padding:15px; font-size:16px;"><i class="fa-solid fa-cloud-arrow-up"></i> Veritabanına Kaydet</button>
+            <div id="addSuccess" style="color:var(--success); background:rgba(16,185,129,0.1); padding:15px; border-radius:8px; margin-top:20px; display:none; border:1px solid rgba(16,185,129,0.3); text-align:center;"><i class="fa-solid fa-circle-check"></i> İlan başarıyla kaydedildi!</div>
+          </form>
+        </div>
+        
+        <div class="glass-card">
+          <div class="card-header">
+            <h2>Sistemdeki Portföyler</h2>
+            <div style="display:flex; gap:10px;">
+              <input type="text" class="form-control" style="padding:6px 12px; width:200px;" placeholder="İlan Ara...">
+            </div>
+          </div>
+          <div class="table-container" style="max-height:600px; overflow-y:auto;">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>İlan</th>
+                  <th>Durum</th>
+                  <th style="text-align:right">İşlem</th>
+                </tr>
+              </thead>
+              <tbody id="manage-table-body">
+                <!-- JS fill -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div> <!-- end add -->
+
+    <!-- OTHER TABS MOCKS -->
+    <div id="tab-customers" class="tab-content" style="display:none;">
+      <div class="header">
+        <div class="header-title"><h1>CRM / Müşteriler</h1></div>
+      </div>
+      <div class="glass-card" style="text-align:center; padding:100px 20px;">
+        <i class="fa-solid fa-users-slash" style="font-size:60px; color:var(--text-muted); margin-bottom:20px;"></i>
+        <h2>Henüz Müşteri Kaydı Yok</h2>
+        <p style="color:var(--text-muted); margin-top:10px;">Web sitesi üzerinden gelen form ve randevu talepleri burada listelenecektir.</p>
+      </div>
+    </div>
+
+    <div id="tab-analytics" class="tab-content" style="display:none;">
+      <div class="header">
+        <div class="header-title"><h1>Detaylı Analitikler</h1></div>
+      </div>
+      <div class="glass-card" style="text-align:center; padding:100px 20px;">
+        <i class="fa-solid fa-chart-area" style="font-size:60px; color:var(--accent); margin-bottom:20px;"></i>
+        <h2>Google Analytics Bağlantısı Bekleniyor</h2>
+        <p style="color:var(--text-muted); margin-top:10px;">Detaylı trafik analizleri için API entegrasyonunu tamamlayın.</p>
+      </div>
+    </div>
+
+    <div id="tab-settings" class="tab-content" style="display:none;">
+      <div class="header">
+        <div class="header-title"><h1>Sistem Ayarları</h1></div>
+      </div>
+      <div class="glass-card" style="max-width:600px;">
+        <div class="card-header"><h2>Güvenlik Ayarları</h2></div>
+        <div class="form-group">
+          <label>Mevcut Şifre</label>
+          <input type="password" class="form-control">
+        </div>
+        <div class="form-group">
+          <label>Yeni Şifre</label>
+          <input type="password" class="form-control">
+        </div>
+        <button class="btn btn-primary"><i class="fa-solid fa-floppy-disk"></i> Şifreyi Güncelle</button>
+      </div>
+    </div>
+
+  </div> <!-- end main content -->
+
+  <script>
+    // Tab Switching
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-content').forEach(el => el.style.display = 'none');
+      document.getElementById('tab-' + tabId).style.display = 'block';
+      document.querySelectorAll('.tab-link').forEach(el => el.classList.remove('active'));
+      event.currentTarget.classList.add('active');
+    }
+    
+    // Logout
+    function logout() {
+      sessionStorage.removeItem('admin_logged_in');
+      window.location.href = 'admin-login.html';
+    }
+    
+    // Add form logic
+    document.getElementById('addPropForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      
+      const newProp = {
+        id: 'P-' + Math.floor(Math.random() * 10000),
+        title: document.getElementById('newTitle').value,
+        type: document.getElementById('newType').value,
+        price_eur: parseInt(document.getElementById('newPrice').value) || 0,
+        images: [document.getElementById('newImages').value || 'https://via.placeholder.com/600x400'],
+        location: 'Alanya',
+        features: []
+      };
+
+      try {
+        const res = await fetch('admin/save.php', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(newProp)
+        });
+        const data = await res.json();
+        if (data.success) {
+          document.getElementById('addSuccess').style.display = 'block';
+          setTimeout(() => document.getElementById('addSuccess').style.display = 'none', 4000);
+          this.reset();
+          loadAdminData(); // Reload table
+        } else {
+          alert('Hata: ' + data.message);
+        }
+      } catch (err) {
+        alert('Sunucuya bağlanılamadı. Host üzerinde PHP desteği gereklidir.');
+      }
+    });
+
+    // Dynamic Active Users Algorithm (Deterministic pseudo-random based on current hour)
+    function updateActiveUsers() {
+      // Get current date and hour
+      const now = new Date();
+      // Use year, month, date, and hour to seed random generator
+      const seed = now.getFullYear() * 10000 + (now.getMonth() + 1) * 100 + now.getDate() + now.getHours();
+      
+      // Simple seeded random function
+      const x = Math.sin(seed) * 10000;
+      const rand = x - Math.floor(x);
+      
+      // Map random 0-1 to 20-100
+      const min = 20;
+      const max = 100;
+      const users = Math.floor(rand * (max - min + 1)) + min;
+      
+      const counterEl = document.getElementById('activeUsersCounter');
+      
+      // Animate the counter change
+      let currentVal = parseInt(counterEl.innerText) || 0;
+      if (currentVal !== users) {
+        animateValue(counterEl, currentVal, users, 1500);
+      }
+    }
+    
+    function animateValue(obj, start, end, duration) {
+      let startTimestamp = null;
+      const step = (timestamp) => {
+        if (!startTimestamp) startTimestamp = timestamp;
+        const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+        obj.innerHTML = Math.floor(progress * (end - start) + start);
+        if (progress < 1) {
+          window.requestAnimationFrame(step);
+        }
+      };
+      window.requestAnimationFrame(step);
+    }
+
+    // Call immediately and set interval to check every minute (to catch hour changes)
+    updateActiveUsers();
+    setInterval(updateActiveUsers, 60000);
+
+    // Load Data
+    async function loadAdminData() {
+      try {
+        const res = await fetch('admin/data.json');
+        const data = await res.json();
+        const props = data.properties || [];
+        
+        document.getElementById('totalProps').innerText = props.length;
+        document.getElementById('totalSale').innerText = props.filter(p => p.type === 'sale').length;
+        document.getElementById('totalRent').innerText = props.filter(p => p.type === 'rent').length;
+
+        const tbody = document.getElementById('admin-table-body');
+        const manageBody = document.getElementById('manage-table-body');
+        tbody.innerHTML = '';
+        manageBody.innerHTML = '';
+        
+        props.slice(0, 10).forEach(p => {
+          let img = p.images.length > 0 ? p.images[0] : 'https://via.placeholder.com/50';
+          let badge = p.type === 'sale' ? '<span class="badge badge-sale">Satılık</span>' : '<span class="badge badge-rent">Kiralık</span>';
+          let views = Math.floor(Math.random() * 500) + 50; // Mock views
+          
+          let tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td>
+              <div class="prop-cell">
+                <img src="${img}" class="prop-img">
+                <div>
+                  <div class="prop-title">${p.title.substring(0,35)}...</div>
+                  <div class="prop-id">Kodu: ${p.id}</div>
+                </div>
+              </div>
+            </td>
+            <td>${badge}</td>
+            <td style="font-weight:600;">€ ${p.price_eur.toLocaleString('de-DE')}</td>
+            <td style="color:var(--text-muted);"><i class="fa-regular fa-eye"></i> ${views}</td>
+            <td style="text-align:right;">
+              <button class="action-btn" title="Düzenle"><i class="fa-solid fa-pen"></i></button>
+              <button class="action-btn delete" title="Sil"><i class="fa-solid fa-trash"></i></button>
+            </td>
+          `;
+          tbody.appendChild(tr.cloneNode(true));
+          manageBody.appendChild(tr);
+        });
+      } catch (e) {
+        console.error(e);
+      }
+    }
+    
+    // Init Charts
+    function initCharts() {
+      const ctx = document.getElementById('mainChart').getContext('2d');
+      new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: ['Oca', 'Şub', 'Mar', 'Nis', 'May', 'Haz', 'Tem', 'Ağu', 'Eyl'],
+          datasets: [{
+            label: 'Web Sitesi Ziyaretleri',
+            data: [1200, 1900, 1500, 2200, 2800, 3100, 4000, 3800, 4200],
+            borderColor: '#3b82f6',
+            backgroundColor: 'rgba(59, 130, 246, 0.1)',
+            borderWidth: 3,
+            tension: 0.4,
+            fill: true
+          },
+          {
+            label: 'Alınan Randevular',
+            data: [20, 35, 25, 45, 60, 55, 80, 75, 90],
+            borderColor: '#ef4444',
+            backgroundColor: 'transparent',
+            borderWidth: 3,
+            tension: 0.4
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { labels: { color: '#94a3b8' } }
+          },
+          scales: {
+            y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#94a3b8' } },
+            x: { grid: { display: false }, ticks: { color: '#94a3b8' } }
+          }
+        }
+      });
+
+      const ctx2 = document.getElementById('doughnutChart').getContext('2d');
+      new Chart(ctx2, {
+        type: 'doughnut',
+        data: {
+          labels: ['Google', 'Sosyal Medya', 'Doğrudan'],
+          datasets: [{
+            data: [55, 30, 15],
+            backgroundColor: ['#3b82f6', '#ef4444', '#10b981'],
+            borderWidth: 0,
+            hoverOffset: 4
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { position: 'bottom', labels: { color: '#94a3b8', padding: 20 } }
+          },
+          cutout: '75%'
+        }
+      });
+    }
+
+    // Initialize
+    loadAdminData();
+    setTimeout(initCharts, 500);
+
+  </script>
+</body>
+</html>

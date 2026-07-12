@@ -1,0 +1,18 @@
+{
+  "name": "jasmine-group-website",
+  "version": "1.0.0",
+  "description": "Premium Real Estate Website for Jasmine Group",
+  "main": "index.html",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^5.0.0"
+  },
+  "dependencies": {
+    "cheerio": "^1.2.0",
+    "jsdom": "^29.1.1"
+  }
+}

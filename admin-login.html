@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="tr" lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Girişi | Jasmine Group</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    body { margin: 0; padding: 0; font-family: 'Inter', sans-serif; background: #0b1120; display: flex; justify-content: center; align-items: center; min-height: 100vh; color: #fff; }
+    .login-container { background: #1a202c; padding: 40px; border-radius: 12px; box-shadow: 0 15px 35px rgba(0,0,0,0.5); width: 100%; max-width: 400px; text-align: center; border: 1px solid rgba(255,255,255,0.1); }
+    .login-logo { font-size: 24px; font-weight: 700; margin-bottom: 30px; letter-spacing: 1px; }
+    .login-logo span { color: #c90000; }
+    .input-group { margin-bottom: 20px; text-align: left; }
+    .input-group label { display: block; font-size: 13px; color: #a0aec0; margin-bottom: 8px; }
+    .input-group input { width: 100%; padding: 12px 15px; border-radius: 6px; border: 1px solid #4a5568; background: #2d3748; color: #fff; font-size: 15px; outline: none; transition: 0.3s; box-sizing: border-box; }
+    .input-group input:focus { border-color: #c90000; box-shadow: 0 0 0 3px rgba(201,0,0,0.2); }
+    .login-btn { width: 100%; background: #c90000; color: #fff; border: none; padding: 14px; font-size: 16px; font-weight: 600; border-radius: 6px; cursor: pointer; transition: 0.3s; margin-top: 10px; }
+    .login-btn:hover { background: #a00000; }
+    .error-msg { color: #fc8181; font-size: 13px; margin-top: 15px; display: none; }
+    .back-link { display: inline-block; margin-top: 25px; color: #a0aec0; text-decoration: none; font-size: 13px; transition: 0.3s; }
+    .back-link:hover { color: #fff; }
+  </style>
+  <link rel="icon" type="image/jpeg" href="images/favicon.jpg">
+
+  <meta property="og:title" content="Jasmine Group - Alanya Emlak Proje Pazarlama" />
+  <meta property="og:description" content="Alanya'da Profesyonel Emlak Hizmetleri, Lüks Daireler ve Villalar." />
+  <meta property="og:image" content="https://www.jasminegroup.com.tr/images/favicon.jpg" />
+  <meta property="og:url" content="https://www.jasminegroup.com.tr/" />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Jasmine Group - Alanya Emlak Proje Pazarlama" />
+  <meta name="twitter:description" content="Alanya'da Profesyonel Emlak Hizmetleri, Lüks Daireler ve Villalar." />
+  <meta name="twitter:image" content="https://www.jasminegroup.com.tr/images/favicon.jpg" />
+  <meta name="keywords" content="Alanya satılık daire, Alanya emlak, Jasmine Group, satılık ev Alanya, Alanya kiralık daire, Alanya gayrimenkul" />
+  <link rel="canonical" href="https://www.jasminegroup.com.tr/" />
+
+</head>
+<body>
+  <div class="login-container">
+    <div class="login-logo">JASMINE <span>ADMIN</span></div>
+    <form id="loginForm">
+      <div class="input-group">
+        <label>Kullanıcı Adı</label>
+        <input type="text" id="username" placeholder="Kullanıcı Adı" required />
+      </div>
+      <div class="input-group">
+        <label>Şifre</label>
+        <input type="password" id="password" placeholder="••••••••" required />
+      </div>
+      <button type="submit" class="login-btn">Giriş Yap</button>
+      <div class="error-msg" id="errorMsg">Kullanıcı adı veya şifre hatalı!</div>
+    </form>
+    <a href="index.html" class="back-link"><i class="fa-solid fa-arrow-left"></i> Siteye Dön</a>
+  </div>
+
+  <script>
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const user = document.getElementById('username').value;
+      const pass = document.getElementById('password').value;
+      
+      if (user === 'efe' && pass === 'jasmin2026') {
+        sessionStorage.setItem('admin_logged_in', 'true');
+        window.location.href = 'admin.html';
+      } else {
+        document.getElementById('errorMsg').style.display = 'block';
+      }
+    });
+  </script>
+</body>
+</html>

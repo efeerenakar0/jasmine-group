@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="tr" lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kiralık Emlaklar | Jasmine Group®</title>
+  <meta name="description" content="Alanya'da Profesyonel Emlak Hizmetleri" />
+  <!-- Swiper -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" />
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css?v=1783897248529" />
+  <link rel="icon" type="image/jpeg" href="images/favicon.jpg">
+
+  <meta property="og:title" content="Jasmine Group - Alanya Emlak Proje Pazarlama" />
+  <meta property="og:description" content="Alanya'da Profesyonel Emlak Hizmetleri, Lüks Daireler ve Villalar." />
+  <meta property="og:image" content="https://www.jasminegroup.com.tr/images/favicon.jpg" />
+  <meta property="og:url" content="https://www.jasminegroup.com.tr/" />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Jasmine Group - Alanya Emlak Proje Pazarlama" />
+  <meta name="twitter:description" content="Alanya'da Profesyonel Emlak Hizmetleri, Lüks Daireler ve Villalar." />
+  <meta name="twitter:image" content="https://www.jasminegroup.com.tr/images/favicon.jpg" />
+  <meta name="keywords" content="Alanya satılık daire, Alanya emlak, Jasmine Group, satılık ev Alanya, Alanya kiralık daire, Alanya gayrimenkul" />
+  <link rel="canonical" href="https://www.jasminegroup.com.tr/" />
+
+</head>
+<body>
+  <!-- TOP HEADER BAR -->
+  <div class="top-header-bar">
+    <div class="thb-container">
+      <div class="thb-left">
+        <a href="tel:+905330850769"><i class="fa-solid fa-phone"></i> +90 533 085 0769</a>
+        <a href="mailto:jasminegroupemlak@gmail.com"><i class="fa-solid fa-envelope"></i> jasminegroupemlak@gmail.com</a>
+      </div>
+      <div class="thb-right">
+                <div class="thb-dropdown">
+          <button class="thb-dropbtn"><span id="currentLangFlag">🇹🇷</span> <span id="currentLangText">TR</span> <i class="fa-solid fa-chevron-down"></i></button>
+          <div class="thb-dropdown-content">
+            <a href="#" onclick="changeLang('tr'); return false;">🇹🇷 Türkçe</a>
+            <a href="#" onclick="changeLang('en'); return false;">🇬🇧 English</a>
+            <a href="#" onclick="changeLang('ru'); return false;">🇷🇺 Русский</a>
+            <a href="#" onclick="changeLang('de'); return false;">🇩🇪 Deutsch</a>
+            <a href="#" onclick="changeLang('fr'); return false;">🇫🇷 Français</a>
+            <a href="#" onclick="changeLang('nl'); return false;">🇳🇱 Nederlands</a>
+            <a href="#" onclick="changeLang('sv'); return false;">🇸🇪 Svenska</a>
+            <a href="#" onclick="changeLang('ar'); return false;">🇸🇦 العربية</a>
+            <a href="#" onclick="changeLang('fa'); return false;">🇮🇷 فارسی</a>
+          </div>
+        </div>
+        <div class="thb-dropdown">
+          <button class="thb-dropbtn"><i class="fa-solid fa-money-bill"></i> <span id="currentCurr">EUR (€)</span> <i class="fa-solid fa-chevron-down"></i></button>
+          <div class="thb-dropdown-content">
+            <a href="#" onclick="changeCurrency('eur'); document.querySelectorAll('#currentCurr').forEach(el=>el.textContent='EUR (€)'); return false;">EUR (€)</a>
+            <a href="#" onclick="changeCurrency('usd'); document.querySelectorAll('#currentCurr').forEach(el=>el.textContent='USD ($)'); return false;">USD ($)</a>
+            <a href="#" onclick="changeCurrency('try'); document.querySelectorAll('#currentCurr').forEach(el=>el.textContent='TRY (₺)'); return false;">TRY (₺)</a>
+            <a href="#" onclick="changeCurrency('rub'); document.querySelectorAll('#currentCurr').forEach(el=>el.textContent='RUB (₽)'); return false;">RUB (₽)</a>
+            <a href="#" onclick="changeCurrency('gbp'); document.querySelectorAll('#currentCurr').forEach(el=>el.textContent='GBP (£)'); return false;">GBP (£)</a>
+          </div>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+
+    <!-- MAIN HEADER -->
+  <header class="main-header">
+    <div class="container">
+      <a href="index.html" class="site-logo">JASMINE <span>GROUP</span></a>
+      <nav class="main-nav">
+        <a href="buy.html" data-i18n="nav_sale">SATILIK</a>
+        <a href="rent.html" data-i18n="nav_rent">KİRALIK</a>
+        <a href="sell.html" data-i18n="nav_sell">MÜLK SATIŞI</a>
+        <a href="buying-guide.html" data-i18n="nav_guide">ALIM REHBERİ</a>
+        <a href="corporate.html" data-i18n="nav_corporate">KURUMSAL</a>
+        <a href="blog.html" data-i18n="nav_blog">BLOG</a>
+        <a href="contact.html" data-i18n="nav_contact">İLETİŞİM</a>
+      </nav>
+    </div>
+  </header>
+  <main>
+    <div class="page-header text-center">
+      <div class="container">
+        <h1 data-i18n="page_title_rent">Alanya'da Kiralık Emlaklar</h1>
+        <div class="breadcrumb justify-center" style="justify-content:center">
+          <a href="index.html">Ana Sayfa</a> <i class="fa-solid fa-chevron-right"></i> Kiralık
+        </div>
+      </div>
+    </div>
+    
+    <div class="page-content container">
+      <div class="content-with-sidebar reverse">
+        <aside class="filter-sidebar">
+          <h3 data-i18n="filter_title_sidebar">FİLTRELE</h3>
+          <div class="filter-group">
+            <label data-i18n="filter_rent_type">KİRALAMA TİPİ</label>
+            <select><option>Tümü</option><option>Uzun Dönem</option><option>Kısa Dönem (Tatil)</option></select>
+          </div>
+          <div class="filter-group">
+            <label data-i18n="filter_region">BÖLGE</label>
+            <select id="sidebar-loc" class="filter-loc-select"><option>Tümü</option><option>Alanya Merkez</option><option>Oba</option></select>
+          </div>
+          <button id="btn-sidebar-apply" class="btn-filter-search">UYGULA</button>
+          <button id="btn-sidebar-reset" class="btn-filter-reset">TEMİZLE</button>
+        </aside>
+        
+        <div class="listings-area">
+          <div class="sort-bar">
+            
+            <select><option>En Yeniler</option><option>Fiyat Artan</option></select>
+          </div>
+          <div class="property-list" id="prop-list"></div>
+        </div>
+      </div>
+          </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+  <!-- FOOTER -->
+  <footer class="main-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-col footer-col-logo">
+          <a href="index.html" class="site-logo">JASMINE <span>GROUP</span></a>
+          <p data-i18n="footer_desc">Alanya'nın lider gayrimenkul şirketi. 2010'dan bu yana Alanya ve çevresinde binlerce mutlu müşteriye hizmet veriyoruz.</p>
+          <div class="footer-social">
+            <a href="#" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+            <a href="#" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+            <a href="#" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
+            <a href="https://wa.me/905330850769" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h4 data-i18n="footer_links">Hızlı Linkler</h4>
+          <ul>
+            <li><a href="buy.html"><i class="fa-solid fa-chevron-right"></i> <span data-i18n="nav_sale">Satılık Emlaklar</span></a></li>
+            <li><a href="rent.html"><i class="fa-solid fa-chevron-right"></i> <span data-i18n="nav_rent">Kiralık Emlaklar</span></a></li>
+            <li><a href="sell.html"><i class="fa-solid fa-chevron-right"></i> <span data-i18n="nav_sell">Mülkünüzü Satın</span></a></li>
+            <li><a href="buying-guide.html"><i class="fa-solid fa-chevron-right"></i> <span data-i18n="nav_guide">Alım Rehberi</span></a></li>
+            <li><a href="corporate.html"><i class="fa-solid fa-chevron-right"></i> <span data-i18n="nav_corporate">Hakkımızda</span></a></li>
+            <li><a href="blog.html"><i class="fa-solid fa-chevron-right"></i> <span data-i18n="nav_blog">Blog</span></a></li>
+            <li><a href="contact.html"><i class="fa-solid fa-chevron-right"></i> <span data-i18n="nav_contact">İletişim</span></a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4 data-i18n="footer_regions">Alanya Bölgeleri</h4>
+          <ul>
+            <li><a href="buy.html"><i class="fa-solid fa-location-dot"></i> Alanya Merkez</a></li>
+            <li><a href="buy.html"><i class="fa-solid fa-location-dot"></i> Oba</a></li>
+            <li><a href="buy.html"><i class="fa-solid fa-location-dot"></i> Mahmutlar</a></li>
+            <li><a href="buy.html"><i class="fa-solid fa-location-dot"></i> Kargıcak</a></li>
+            <li><a href="buy.html"><i class="fa-solid fa-location-dot"></i> Tepe & Bektaş</a></li>
+            <li><a href="buy.html"><i class="fa-solid fa-location-dot"></i> Kestel</a></li>
+            <li><a href="buy.html"><i class="fa-solid fa-location-dot"></i> Avsallar</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4 data-i18n="footer_contact">İletişim</h4>
+          <div class="footer-contact-item">
+            <i class="fa-solid fa-location-dot"></i>
+            <span>Oba Mah.Mesut Cad.13.Sok.Best Home Comfort 7.A-Block No:40/18-19, 07400 Alanya/Antalya</span>
+          </div>
+          <div class="footer-contact-item">
+            <i class="fa-solid fa-phone"></i>
+            <span><a href="tel:+902420000000">444 6 407</a></span>
+          </div>
+          <div class="footer-contact-item">
+            <i class="fa-brands fa-whatsapp"></i>
+            <span><a href="https://wa.me/905330850769">0533 085 0769</a></span>
+          </div>
+          <div class="footer-contact-item">
+            <i class="fa-solid fa-envelope"></i>
+            <span><a href="mailto:jasminegroupemlak@gmail.com">jasminegroupemlak@gmail.com</a></span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="container">
+        <a href="admin-login.html" style="color:inherit; text-decoration:none; cursor:default;" title="">© 2024</a> Jasmine Group® — Tüm hakları saklıdır. | Alanya, Antalya
+      </div>
+    </div>
+  </footer>
+
+  <!-- WhatsApp Float -->
+  <a href="https://wa.me/905330850769" class="wa-float" target="_blank" aria-label="WhatsApp ile yazın">
+    <i class="fa-brands fa-whatsapp"></i>
+  </a>
+
+  <!-- Swiper JS -->
+  <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
+  <script src="script.js?v=1783897713974"></script>
+
+<!-- MEGA MENU MODAL -->
+<div id="megaMenuOverlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:9998;" onclick="closeMegaMenu()"></div>
+<div id="megaMenuModal" style="display:none; position:fixed; top:40px; left:50%; transform:translateX(-50%); width:90%; max-width:900px; background:#fff; z-index:9999; border-radius:8px; box-shadow:0 10px 30px rgba(0,0,0,0.2); padding:30px; padding-top:40px;">
+  <button onclick="closeMegaMenu()" style="position:absolute; top:10px; right:15px; background:transparent; border:none; font-size:24px; cursor:pointer; color:#888;">&times;</button>
+  
+  <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:30px;">
+    <!-- LANGUAGE -->
+    <div>
+      <h4 style="margin:0 0 15px; font-size:13px; color:var(--navy); border-bottom:1px solid #eee; padding-bottom:10px;">LANGUAGE</h4>
+      <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; font-size:14px;">
+        <a href="#" onclick="setLangMega('en')" class="mega-lang mega-link">English</a>
+        <a href="#" onclick="setLangMega('tr')" class="mega-lang mega-link active">Türkçe</a>
+        <a href="#" onclick="setLangMega('ru')" class="mega-lang mega-link">Русский</a>
+        <a href="#" onclick="setLangMega('fr')" class="mega-lang mega-link">Français</a>
+        <a href="#" onclick="setLangMega('de')" class="mega-lang mega-link">Deutsch</a>
+        <a href="#" onclick="setLangMega('nl')" class="mega-lang mega-link">Nederlands</a>
+        <a href="#" onclick="setLangMega('sv')" class="mega-lang mega-link">Svenska</a>
+        <a href="#" onclick="setLangMega('fa')" class="mega-lang mega-link">فارسی</a>
+        <a href="#" onclick="setLangMega('ar')" class="mega-lang mega-link">العربية</a>
+      </div>
+    </div>
+    
+    <!-- CURRENCY -->
+    <div style="border-left:1px solid #eee; padding-left:30px;">
+      <h4 style="margin:0 0 15px; font-size:13px; color:var(--navy); border-bottom:1px solid #eee; padding-bottom:10px;">CURRENCY</h4>
+      <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:10px; font-size:14px;">
+        <a href="#" onclick="setCurrMega('try')" class="mega-curr mega-link">TRY</a>
+        <a href="#" onclick="setCurrMega('usd')" class="mega-curr mega-link">USD</a>
+        <a href="#" onclick="setCurrMega('eur')" class="mega-curr mega-link active">EUR</a>
+        <a href="#" onclick="setCurrMega('sek')" class="mega-curr mega-link">SEK</a>
+        <a href="#" onclick="setCurrMega('rub')" class="mega-curr mega-link">RUB</a>
+        <a href="#" onclick="setCurrMega('nok')" class="mega-curr mega-link">NOK</a>
+        <a href="#" onclick="setCurrMega('chf')" class="mega-curr mega-link">CHF</a>
+        <a href="#" onclick="setCurrMega('gbp')" class="mega-curr mega-link">GBP</a>
+        <a href="#" onclick="setCurrMega('cny')" class="mega-curr mega-link">CNY</a>
+        <a href="#" onclick="setCurrMega('cad')" class="mega-curr mega-link">CAD</a>
+        <a href="#" onclick="setCurrMega('sar')" class="mega-curr mega-link">SAR</a>
+        <a href="#" onclick="setCurrMega('aed')" class="mega-curr mega-link">AED</a>
+      </div>
+    </div>
+    
+    <!-- UNIT -->
+    <div style="border-left:1px solid #eee; padding-left:30px;">
+      <h4 style="margin:0 0 15px; font-size:13px; color:var(--navy); border-bottom:1px solid #eee; padding-bottom:10px;">MEASUREMENT UNIT</h4>
+      <div style="display:flex; gap:20px; font-size:14px;">
+        <a href="#" onclick="setUnitMega('metric')" class="mega-unit mega-link active">METRIC</a>
+        <a href="#" onclick="setUnitMega('imperial')" class="mega-unit mega-link">IMPERIAL</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+</body>
+</html>
