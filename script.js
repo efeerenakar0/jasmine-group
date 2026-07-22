@@ -909,91 +909,139 @@ async function renderPropertyDetail() {
   
   let mainImg = p.images.length > 0 ? p.images[0] : 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=800&q=80';
   let thumbsHTML = p.images.map((img, i) => `
-    <img src="${img}" style="min-width:120px; width:120px; height:85px; object-fit:cover; border-radius:6px; cursor:pointer; opacity:${i===0?'1':'0.6'}; border:2px solid ${i===0?'var(--red)':'transparent'}; transition:0.3s;" onclick="changeMainImage(this, '${img}')" class="detail-thumb">
+    <img src="${img}" class="detail-thumb ${i===0?'active':''}" onclick="changeMainImage(this, '${img}')">
   `).join('');
   if(p.images.length === 0) thumbsHTML = '';
   
   let bClass = p.badge_color ? `prop-badge ${p.badge_color}` : `prop-badge`;
+  let typeLabel = p.type === 'rent' ? 'Kiralık' : 'Satılık';
   let suffix = p.type === 'rent' ? ' <em>/ ay</em>' : '';
   
+  // RENDER SIMILAR PROPERTIES HTML FIRST
+  const similar = props.filter(sp => sp.id !== p.id && sp.type === p.type).slice(0, 4);
+  let simHTML = '';
+  if (similar.length > 0) {
+    simHTML = `<div style="margin-top:50px;"><h2 class="detail-similar-title">Benzer İlanlar</h2><div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(260px, 1fr)); gap:20px;">`;
+    similar.forEach(sp => {
+      const spImg = sp.images && sp.images.length > 0 ? sp.images[0] : '';
+      const spSuffix = sp.type === 'rent' ? ' / ay' : '';
+      simHTML += `
+        <a href="property-detail.html?id=${sp.id}" style="text-decoration:none; background:var(--card-bg); border-radius:10px; overflow:hidden; border:1px solid var(--border); transition:0.3s; display:block;" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 8px 25px rgba(0,0,0,0.12)'" onmouseout="this.style.transform=''; this.style.boxShadow=''">
+          <img src="${spImg}" style="width:100%; height:180px; object-fit:cover;" alt="${sp.title}" />
+          <div style="padding:15px;">
+            <h4 style="color:var(--navy); font-size:15px; margin:0 0 8px; line-height:1.3;">${sp.title}</h4>
+            <p style="color:var(--text-muted); font-size:13px; margin:0 0 8px;"><i class="fa-solid fa-location-dot"></i> ${sp.location}</p>
+            <div style="color:var(--red); font-weight:800; font-size:16px;">€ ${sp.price_eur.toLocaleString('de-DE')}${spSuffix}</div>
+          </div>
+        </a>`;
+    });
+    simHTML += `</div></div>`;
+  }
+
   container.innerHTML = `
-    <div style="background:#fff; border-radius:12px; padding:30px; box-shadow:0 5px 20px rgba(0,0,0,0.05);">
-      <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:20px; flex-wrap:wrap; gap:20px;">
-        <div>
-          ${p.badge ? `<span class="${bClass}" style="position:static; margin-bottom:10px; display:inline-block;">${p.badge}</span>` : ''}
-          <h1 style="font-size:28px; color:var(--navy); margin:0 0 10px;">${p.title}</h1>
-          <p style="color:#666; font-size:16px; margin:0;"><i class="fa-solid fa-location-dot"></i> ${p.location}</p>
+    <!-- BREADCRUMB -->
+    <div class="breadcrumb">
+      <a href="index.html">Ana Sayfa</a>
+      <span class="separator"><i class="fa-solid fa-chevron-right"></i></span>
+      <a href="buy.html">Emlak</a>
+      <span class="separator"><i class="fa-solid fa-chevron-right"></i></span>
+      <a href="buy.html">Alanya</a>
+      <span class="separator"><i class="fa-solid fa-chevron-right"></i></span>
+      <span style="color:var(--navy);">${p.title}</span>
+    </div>
+
+    <div class="detail-page-wrapper">
+      <!-- LEFT COLUMN -->
+      <div class="detail-left-col">
+        
+        <h1 class="detail-main-title">${p.title}</h1>
+        <div class="detail-location-subtitle">
+          <i class="fa-solid fa-location-dot"></i> ${p.location}
+          ${p.badge ? `<span class="${bClass}" style="margin-left:15px; font-size:11px; padding:2px 8px; position:static;">${p.badge}</span>` : ''}
         </div>
-        <div style="text-align:right;">
-          <div class="prop-price" style="font-size:32px; font-weight:800; color:var(--red);" data-eur="${p.price_eur}" data-type="${p.type === 'rent' ? 'rent_month' : 'sale'}">€ ${p.price_eur.toLocaleString('de-DE')}${suffix}</div>
-          <div style="color:#888; font-size:14px; margin-top:5px;">İlan Kodu: ${p.id}</div>
-        </div>
-      </div>
-      
-      <div style="margin-bottom:40px;">
-        <div style="width:100%; height:550px; border-radius:12px; overflow:hidden; margin-bottom:15px; background:#0f172a; box-shadow:0 10px 25px rgba(0,0,0,0.1);">
-            <img id="main-gallery-img" src="${mainImg}" style="width:100%; height:100%; object-fit:contain; cursor:pointer; transition:0.3s;" onclick="window.open(this.src, '_blank')" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'"/>
-        </div>
-        <div style="display:flex; gap:12px; overflow-x:auto; padding-bottom:15px;" id="gallery-thumbs" class="custom-scrollbar">
+
+        <!-- GALLERY -->
+        <div class="detail-gallery-container">
+          <div class="detail-badge-overlay">${typeLabel}</div>
+          <div class="detail-fav-overlay" onclick="toggleWishlist('${p.id}', event)"><i class="fa-regular fa-heart"></i></div>
+          
+          <div class="detail-main-img-box">
+             <img id="main-gallery-img" src="${mainImg}" onclick="openLightbox(${JSON.stringify(p.images).replace(/"/g, '&quot;')}, ${JSON.stringify(p.images).replace(/"/g, '&quot;')}.indexOf(this.src))" />
+          </div>
+          <div class="detail-thumbs-scroll custom-scrollbar" id="gallery-thumbs">
             ${thumbsHTML}
-        </div>
-      </div>
-      
-      <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap:15px; background:var(--off-white); padding:20px; border-radius:8px; margin-bottom:30px; text-align:center;">
-        <div><i class="fa-solid fa-bed" style="font-size:24px; color:var(--red); margin-bottom:10px;"></i><br><strong>Oda:</strong> ${p.rooms}</div>
-        <div><i class="fa-solid fa-bath" style="font-size:24px; color:var(--red); margin-bottom:10px;"></i><br><strong>Banyo:</strong> ${p.bathrooms || '-'}</div>
-        <div><i class="fa-solid fa-maximize" style="font-size:24px; color:var(--red); margin-bottom:10px;"></i><br><strong>Net Alan:</strong> ${p.area_net}</div>
-        <div><i class="fa-solid fa-chart-area" style="font-size:24px; color:var(--red); margin-bottom:10px;"></i><br><strong>Brüt/Arsa:</strong> ${p.area_gross || '-'}</div>
-      </div>
-      
-      <h3 style="color:var(--navy); border-bottom:2px solid var(--red); padding-bottom:10px; display:inline-block;">İlan Açıklaması</h3>
-      <p style="line-height:1.8; color:#444; margin-top:20px; font-size:16px;">${p.desc.replace(/\n/g, '<br>')}</p>
-      
-      
-      <div style="margin-top:40px; padding:30px; background:var(--off-white); border-radius:12px; border:1px solid #e2e8f0;">
-        <h3 style="color:var(--navy); margin-top:0; margin-bottom:20px;"><i class="fa-solid fa-calculator" style="color:var(--red);"></i> Mortgage / Kredi Hesaplama Aracı</h3>
-        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:20px; margin-bottom:20px;">
-          <div>
-            <label style="display:block; font-size:14px; font-weight:600; color:#475569; margin-bottom:8px;">Peşinat Tutarı (€)</label>
-            <input type="number" id="mortgage-down" value="50000" style="width:100%; padding:12px; border-radius:8px; border:1px solid #cbd5e1; font-family:inherit; box-sizing:border-box;" />
-          </div>
-          <div>
-            <label style="display:block; font-size:14px; font-weight:600; color:#475569; margin-bottom:8px;">Vade (Yıl)</label>
-            <select id="mortgage-years" style="width:100%; padding:12px; border-radius:8px; border:1px solid #cbd5e1; font-family:inherit; box-sizing:border-box;">
-              <option value="5">5 Yıl</option>
-              <option value="10" selected>10 Yıl</option>
-              <option value="15">15 Yıl</option>
-              <option value="20">20 Yıl</option>
-            </select>
-          </div>
-          <div>
-            <label style="display:block; font-size:14px; font-weight:600; color:#475569; margin-bottom:8px;">Yıllık Faiz Oranı (%)</label>
-            <input type="number" id="mortgage-rate" value="5.5" step="0.1" style="width:100%; padding:12px; border-radius:8px; border:1px solid #cbd5e1; font-family:inherit; box-sizing:border-box;" />
-          </div>
-          <div style="display:flex; align-items:flex-end;">
-            <button onclick="calculateMortgage(${p.price_eur})" style="width:100%; padding:12px; border-radius:8px; border:none; background:var(--navy); color:#fff; font-weight:700; cursor:pointer;">HESAPLA</button>
           </div>
         </div>
-        <div id="mortgage-result" style="display:none; background:#dbeafe; padding:20px; border-radius:8px; text-align:center; color:#1e40af; border:1px solid #bfdbfe;">
-          <h4 style="margin:0 0 10px; font-size:16px;">Tahmini Aylık Ödeme</h4>
-          <div style="font-size:32px; font-weight:800;" id="mortgage-monthly">€ 0</div>
-          <p style="margin:10px 0 0; font-size:13px; color:#3b82f6;">Bu hesaplama yalnızca bilgilendirme amaçlıdır. Güncel oranlar için bankanızla görüşün.</p>
+
+        <!-- SPECS TABLE -->
+        <div class="detail-specs-box">
+          <div class="detail-specs-title"><i class="fa-solid fa-list" style="color:var(--red); margin-right:8px;"></i> İlan Özellikleri</div>
+          <div class="detail-specs-grid">
+            <div class="spec-item"><span class="spec-label">İlan No</span><span class="spec-value">${p.id}</span></div>
+            <div class="spec-item"><span class="spec-label">Emlak Tipi</span><span class="spec-value">Daire</span></div>
+            <div class="spec-item"><span class="spec-label">Durumu</span><span class="spec-value">${typeLabel}</span></div>
+            <div class="spec-item"><span class="spec-label">Oda Sayısı</span><span class="spec-value">${p.rooms}</span></div>
+            <div class="spec-item"><span class="spec-label">Banyo</span><span class="spec-value">${p.bathrooms || '-'}</span></div>
+            <div class="spec-item"><span class="spec-label">Brüt / Arsa Alanı</span><span class="spec-value">${p.area_gross || '-'}</span></div>
+            <div class="spec-item"><span class="spec-label">Net Alan</span><span class="spec-value">${p.area_net}</span></div>
+            <div class="spec-item"><span class="spec-label">Bina Yaşı</span><span class="spec-value">0 (Yeni)</span></div>
+            <div class="spec-item"><span class="spec-label">Bulunduğu Kat</span><span class="spec-value">Ara Kat</span></div>
+            <div class="spec-item"><span class="spec-label">Isıtma Tipi</span><span class="spec-value">Klima</span></div>
+          </div>
         </div>
+
+        <!-- DESCRIPTION -->
+        <div class="detail-desc-box">
+          <div class="detail-specs-title"><i class="fa-solid fa-align-left" style="color:var(--red); margin-right:8px;"></i> İlan Açıklaması</div>
+          <div class="detail-desc-text">${p.desc.replace(/\n/g, '<br>')}</div>
+        </div>
+
+        <!-- SIMILAR PROPERTIES -->
+        ${simHTML}
+
       </div>
 
-      <div style="margin-top:40px; padding:30px; background:var(--white); border-radius:12px; border:1px solid var(--border); box-shadow:var(--shadow);">
-        <div style="display:flex; align-items:center; gap:20px; flex-wrap:wrap;">
-          <div style="width:80px; height:80px; border-radius:50%; background:url('https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=200&q=80') center/cover; border:3px solid var(--navy);"></div>
-          <div style="flex:1;">
-            <h3 style="margin:0 0 5px; color:var(--navy);">Jasmine Group</h3>
-            <p style="margin:0; color:var(--text-muted); font-size:14px;"><i class="fa-solid fa-star" style="color:gold;"></i> 4.9 (120 Değerlendirme) | Gayrimenkul Danışmanı</p>
+      <!-- RIGHT COLUMN (SIDEBAR) -->
+      <div class="detail-right-col">
+        
+        <!-- PRICE BOX -->
+        <div class="sidebar-price-box">
+          <div class="sidebar-price prop-price" data-eur="${p.price_eur}" data-type="${p.type === 'rent' ? 'rent_month' : 'sale'}">€ ${p.price_eur.toLocaleString('de-DE')}${suffix}</div>
+          <div class="sidebar-ref">İlan Kodu: ${p.id}</div>
+        </div>
+
+        <!-- AGENT & CONTACT FORM -->
+        <div class="sidebar-contact-box">
+          <div class="sidebar-agent">
+            <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=200&q=80" class="sidebar-agent-img" alt="Agent">
+            <div class="sidebar-agent-info">
+              <h4>Jasmine Group</h4>
+              <p>Gayrimenkul Danışmanı</p>
+              <div style="color:gold; font-size:12px; margin-top:3px;"><i class="fa-solid fa-star"></i> 4.9 (120)</div>
+            </div>
           </div>
-          <div style="display:flex; gap:10px;">
-            <a href="https://wa.me/905330850769" target="_blank" style="background:#25D366; color:#fff; padding:10px 20px; border-radius:6px; font-weight:bold; text-decoration:none;"><i class="fa-brands fa-whatsapp"></i> Danışmana Yaz</a>
-            <a href="tel:4446407" style="background:var(--navy); color:#fff; padding:10px 20px; border-radius:6px; font-weight:bold; text-decoration:none;"><i class="fa-solid fa-phone"></i> Hemen Ara</a>
-            <a href="#" onclick="alert('PDF Broşür hazırlanıyor... Lütfen bekleyiniz.'); setTimeout(() => alert('PDF başarıyla indirildi!'), 2000); return false;" style="background:var(--red); color:#fff; padding:10px 20px; border-radius:6px; font-weight:bold; text-decoration:none;"><i class="fa-solid fa-file-pdf"></i> Broşür İndir</a>
+
+          <div class="sidebar-form">
+            <h4 style="color:var(--navy); margin-bottom:15px; font-size:15px;">Bilgi Alın</h4>
+            <input type="text" placeholder="Adınız Soyadınız">
+            <input type="text" placeholder="Telefon Numaranız">
+            <input type="email" placeholder="E-posta Adresiniz">
+            <textarea rows="3" placeholder="Merhaba, ${p.id} referans numaralı ilan hakkında bilgi almak istiyorum."></textarea>
+            <button type="button" onclick="alert('Mesajınız başarıyla iletildi. En kısa sürede dönüş yapacağız.')">GÖNDER</button>
+          </div>
+
+          <div class="sidebar-actions">
+            <a href="https://wa.me/905330850769?text=${encodeURIComponent('Merhaba, ' + p.id + ' ilanınız hakkında bilgi alabilir miyim? ' + window.location.href)}" target="_blank" class="sidebar-action-btn wa"><i class="fa-brands fa-whatsapp"></i> WhatsApp</a>
+            <a href="tel:4446407" class="sidebar-action-btn call"><i class="fa-solid fa-phone"></i> Hemen Ara</a>
           </div>
         </div>
+
+        <!-- SHARE / PRINT -->
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+          <button class="share-btn copy-link" style="width:100%; border:none; background:var(--navy); color:#fff; padding:12px; border-radius:6px; cursor:pointer; font-weight:600; font-size:13px; display:flex; justify-content:center; align-items:center; gap:8px;" onclick="copyLink()"><i class="fa-solid fa-link"></i> Linki Kopyala</button>
+          <button class="share-btn" style="width:100%; background:var(--bg-light); color:var(--navy); border:1px solid var(--border); padding:12px; border-radius:6px; cursor:pointer; font-weight:600; font-size:13px; display:flex; justify-content:center; align-items:center; gap:8px;" onclick="window.print()"><i class="fa-solid fa-print"></i> Yazdır</button>
+        </div>
+
       </div>
     </div>
   `;
@@ -1833,3 +1881,211 @@ function closeCompareModal() {
   if (modal) modal.style.display = 'none';
   if (overlay) overlay.style.display = 'none';
 }
+
+
+function toggleMobileMenu() {
+  const menu = document.getElementById("mobileSideMenu");
+  const overlay = document.getElementById("msmOverlay");
+  if(menu && overlay) {
+    menu.classList.toggle("active");
+    overlay.classList.toggle("active");
+  }
+}
+
+/* ============================================================
+   PROFESSIONAL UPGRADE — ANIMATIONS & FEATURES
+   ============================================================ */
+
+// 1. SCROLL FADE-IN ANIMATION (IntersectionObserver)
+(function initFadeIn() {
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.fade-in-up').forEach(el => observer.observe(el));
+  });
+  // Also run if DOM already loaded
+  if (document.readyState !== 'loading') {
+    setTimeout(() => {
+      document.querySelectorAll('.fade-in-up').forEach(el => observer.observe(el));
+    }, 200);
+  }
+})();
+
+// 2. COUNTER ANIMATION
+function animateCounters() {
+  document.querySelectorAll('.stat-number').forEach(el => {
+    if (el.dataset.animated) return;
+    const text = el.textContent.replace(/\s/g, '');
+    const match = text.match(/([\d\.]+)/);
+    if (!match) return;
+    const target = parseFloat(match[1].replace('.', ''));
+    const suffix = text.replace(match[1], '');
+    const hasDecimal = match[1].includes('.');
+    const duration = 2000;
+    const startTime = performance.now();
+    el.dataset.animated = 'true';
+
+    function update(currentTime) {
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      const easeOut = 1 - Math.pow(1 - progress, 3);
+      let current = Math.round(target * easeOut);
+      if (hasDecimal) {
+        el.innerHTML = current.toLocaleString('tr-TR') + suffix;
+      } else {
+        el.innerHTML = current.toLocaleString('tr-TR') + suffix;
+      }
+      if (progress < 1) requestAnimationFrame(update);
+    }
+    requestAnimationFrame(update);
+  });
+}
+
+const counterObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      animateCounters();
+      counterObserver.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.3 });
+
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.about-stats, .stat-box').forEach(el => counterObserver.observe(el));
+});
+if (document.readyState !== 'loading') {
+  setTimeout(() => {
+    document.querySelectorAll('.about-stats, .stat-box').forEach(el => counterObserver.observe(el));
+  }, 300);
+}
+
+// 3. STICKY HEADER SHRINK
+(function initStickyHeader() {
+  function handleScroll() {
+    const header = document.querySelector('.main-header');
+    if (!header) return;
+    if (window.scrollY > 80) {
+      header.classList.add('scrolled');
+    } else {
+      header.classList.remove('scrolled');
+    }
+  }
+  window.addEventListener('scroll', handleScroll, { passive: true });
+})();
+
+// 4. LIGHTBOX GALLERY
+let lightboxImages = [];
+let lightboxIndex = 0;
+
+function openLightbox(images, index) {
+  lightboxImages = images;
+  lightboxIndex = index || 0;
+  
+  let overlay = document.getElementById('lightboxOverlay');
+  if (!overlay) {
+    overlay = document.createElement('div');
+    overlay.id = 'lightboxOverlay';
+    overlay.className = 'lightbox-overlay';
+    overlay.innerHTML = `
+      <div class="lightbox-close" onclick="closeLightbox()"><i class="fa-solid fa-xmark"></i></div>
+      <div class="lightbox-arrow left" onclick="lightboxPrev()"><i class="fa-solid fa-chevron-left"></i></div>
+      <img class="lightbox-img" id="lightboxImg" src="" alt="Gallery" />
+      <div class="lightbox-arrow right" onclick="lightboxNext()"><i class="fa-solid fa-chevron-right"></i></div>
+      <div class="lightbox-counter" id="lightboxCounter"></div>
+    `;
+    document.body.appendChild(overlay);
+    
+    overlay.addEventListener('click', (e) => {
+      if (e.target === overlay) closeLightbox();
+    });
+    
+    document.addEventListener('keydown', (e) => {
+      if (!overlay.classList.contains('active')) return;
+      if (e.key === 'Escape') closeLightbox();
+      if (e.key === 'ArrowLeft') lightboxPrev();
+      if (e.key === 'ArrowRight') lightboxNext();
+    });
+  }
+  
+  updateLightbox();
+  overlay.classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeLightbox() {
+  const overlay = document.getElementById('lightboxOverlay');
+  if (overlay) {
+    overlay.classList.remove('active');
+    document.body.style.overflow = '';
+  }
+}
+
+function lightboxPrev() {
+  lightboxIndex = (lightboxIndex - 1 + lightboxImages.length) % lightboxImages.length;
+  updateLightbox();
+}
+
+function lightboxNext() {
+  lightboxIndex = (lightboxIndex + 1) % lightboxImages.length;
+  updateLightbox();
+}
+
+function updateLightbox() {
+  const img = document.getElementById('lightboxImg');
+  const counter = document.getElementById('lightboxCounter');
+  if (img) img.src = lightboxImages[lightboxIndex];
+  if (counter) counter.textContent = (lightboxIndex + 1) + ' / ' + lightboxImages.length;
+}
+
+// 5. SHARE BUTTONS FUNCTIONS
+function shareOnWhatsApp(title, url) {
+  const text = encodeURIComponent(title + ' — ' + url);
+  window.open('https://wa.me/?text=' + text, '_blank');
+}
+
+function copyLink(url) {
+  navigator.clipboard.writeText(url || window.location.href).then(() => {
+    const btn = document.querySelector('.share-btn.copy-link');
+    if (btn) {
+      const orig = btn.innerHTML;
+      btn.innerHTML = '<i class="fa-solid fa-check"></i> Kopyalandı!';
+      setTimeout(() => { btn.innerHTML = orig; }, 2000);
+    }
+  });
+}
+
+// 6. AUTO-ADD FADE-IN CLASSES TO SECTIONS
+document.addEventListener('DOMContentLoaded', () => {
+  const selectors = [
+    '.about-section', '.box-banners', '.section-title-bar',
+    '.property-list', '.why-choose-section', '.testimonials-section',
+    '.contact-info-grid', '.form-row', '.values-grid',
+    '.sell-steps', '.corporate-intro', '.blog-grid'
+  ];
+  selectors.forEach(sel => {
+    document.querySelectorAll(sel).forEach(el => {
+      if (!el.classList.contains('fade-in-up')) {
+        el.classList.add('fade-in-up');
+      }
+    });
+  });
+  // Re-observe newly added elements
+  setTimeout(() => {
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          obs.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.fade-in-up:not(.visible)').forEach(el => obs.observe(el));
+  }, 300);
+});

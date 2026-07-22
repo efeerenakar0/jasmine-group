@@ -14,7 +14,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css?v=1783897248529" />
+  <link rel="stylesheet" href="style.css?v=1784590151052" />
   <link rel="icon" type="image/jpeg" href="images/favicon.jpg">
 
   <meta property="og:title" content="Jasmine Group - Alanya Emlak Proje Pazarlama" />
@@ -86,6 +86,7 @@
         <a href="blog.html" data-i18n="nav_blog">BLOG</a>
         <a href="contact.html" data-i18n="nav_contact">İLETİŞİM</a>
       </nav>
+      <div class="mobile-menu-btn" onclick="toggleMobileMenu()"><i class="fa-solid fa-bars"></i></div>
     </div>
   </header>
   <main>
@@ -243,6 +244,77 @@
         <div class="property-list" id="prop-list"></div>
       </section>
     </div>
+
+    <!-- WHY CHOOSE US -->
+    <section class="why-choose-section fade-in-up">
+      <div style="text-align:center; margin-bottom:40px;">
+        <h2 style="font-size:28px; font-weight:800; color:#fff; margin-bottom:10px;">Neden Jasmine Group?</h2>
+        <p style="color:rgba(255,255,255,0.7); font-size:16px;">Alanya'da gayrimenkul yatırımınız için doğru adres.</p>
+      </div>
+      <div class="why-choose-grid">
+        <div class="why-choose-card">
+          <span class="why-choose-icon">🏅</span>
+          <h4>14+ Yıllık Tecrübe</h4>
+          <p>2010'dan bu yana Alanya emlak sektöründe güvenilir hizmet sunuyoruz.</p>
+        </div>
+        <div class="why-choose-card">
+          <span class="why-choose-icon">🌍</span>
+          <h4>9 Dilde Hizmet</h4>
+          <p>Türkçe, İngilizce, Rusça, Almanca, Fransızca dahil 9 farklı dilde profesyonel destek.</p>
+        </div>
+        <div class="why-choose-card">
+          <span class="why-choose-icon">🔒</span>
+          <h4>Güvenli Alım Garantisi</h4>
+          <p>Tapu işlemleri, hukuki süreçler ve vatandaşlık başvurularında tam destek.</p>
+        </div>
+        <div class="why-choose-card">
+          <span class="why-choose-icon">🤝</span>
+          <h4>1.500+ Mutlu Müşteri</h4>
+          <p>Binlerce yerli ve yabancı müşteriye başarıyla hizmet verdik.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- TESTIMONIALS -->
+    <section class="testimonials-section fade-in-up">
+      <h2>Müşterilerimiz Ne Diyor?</h2>
+      <div class="testimonials-grid">
+        <div class="testimonial-card">
+          <div class="testimonial-stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+          <p class="testimonial-text">Jasmine Group ile çalışmak gerçekten harika bir deneyimdi. Alanya'da hayalimizin evini bulduk. Tüm süreç boyunca profesyonel ve şeffaf bir yaklaşım sergilediler.</p>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar">AK</div>
+            <div class="testimonial-author-info">
+              <strong>Ahmet K.</strong>
+              <span>İstanbul, Türkiye</span>
+            </div>
+          </div>
+        </div>
+        <div class="testimonial-card">
+          <div class="testimonial-stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+          <p class="testimonial-text">We bought our dream apartment in Alanya thanks to Jasmine Group. Their multilingual team made the entire process seamless. Highly recommended!</p>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar">MS</div>
+            <div class="testimonial-author-info">
+              <strong>Maria S.</strong>
+              <span>Berlin, Germany</span>
+            </div>
+          </div>
+        </div>
+        <div class="testimonial-card">
+          <div class="testimonial-stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+          <p class="testimonial-text">Очень профессиональная команда. Помогли с покупкой квартиры и оформлением вида на жительство. Рекомендую всем!</p>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar">DP</div>
+            <div class="testimonial-author-info">
+              <strong>Dmitry P.</strong>
+              <span>Moscow, Russia</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
   </main>
   <!-- FOOTER -->
   <footer class="main-footer">
@@ -368,7 +440,7 @@
 
   <!-- Swiper JS -->
   <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
-  <script src="script.js?v=1783897713974"></script>
+  <script src="script.js?v=1784590151052"></script>
 
 <!-- MEGA MENU MODAL -->
 <div id="megaMenuOverlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:9998;" onclick="closeMegaMenu()"></div>
@@ -443,6 +515,35 @@
   }
 }
 </script>
+
+
+  <div class="msm-overlay" id="msmOverlay" onclick="toggleMobileMenu()"></div>
+  <div class="mobile-side-menu" id="mobileSideMenu">
+    <div class="msm-header">
+      <img src="images/favicon.jpg" alt="Logo">
+      <div class="msm-close" onclick="toggleMobileMenu()"><i class="fa-solid fa-xmark"></i></div>
+    </div>
+    <div class="msm-nav">
+      <a href="index.html">Ana Sayfa</a>
+      <a href="buy.html">Satılık</a>
+      <a href="rent.html">Kiralık</a>
+      <a href="corporate.html">Kurumsal</a>
+      <a href="contact.html">İletişim</a>
+    </div>
+  </div>
+  <a href="https://wa.me/905330850769" target="_blank" class="float-wa">
+    <i class="fa-brands fa-whatsapp"></i>
+  </a>
+
+
+  <nav class="mobile-bottom-nav">
+    <div class="mobile-bottom-nav-inner">
+      <a href="index.html" class="mob-nav-item"><i class="fa-solid fa-house"></i><span>Ana Sayfa</span></a>
+      <a href="buy.html" class="mob-nav-item"><i class="fa-solid fa-tag"></i><span>Satılık</span></a>
+      <a href="rent.html" class="mob-nav-item"><i class="fa-solid fa-key"></i><span>Kiralık</span></a>
+      <a href="contact.html" class="mob-nav-item"><i class="fa-solid fa-phone"></i><span>İletişim</span></a>
+    </div>
+  </nav>
 
 </body>
 </html>

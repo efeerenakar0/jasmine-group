@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-  <link rel="stylesheet" href="style.css?v=1783897248529" />
+  <link rel="stylesheet" href="style.css?v=1784590151052" />
   <style>
     /* Listings page specific styling */
     .listings-header {
@@ -229,6 +229,7 @@
         </ul>
       </div>
     </nav>
+      <div class="mobile-menu-btn" onclick="toggleMobileMenu()"><i class="fa-solid fa-bars"></i></div>
   </header>
 
   <!-- BREADCRUMBS HEADER -->
@@ -662,6 +663,35 @@
     </div>
   </div>
 </div>
+
+
+  <div class="msm-overlay" id="msmOverlay" onclick="toggleMobileMenu()"></div>
+  <div class="mobile-side-menu" id="mobileSideMenu">
+    <div class="msm-header">
+      <img src="images/favicon.jpg" alt="Logo">
+      <div class="msm-close" onclick="toggleMobileMenu()"><i class="fa-solid fa-xmark"></i></div>
+    </div>
+    <div class="msm-nav">
+      <a href="index.html">Ana Sayfa</a>
+      <a href="buy.html">Satılık</a>
+      <a href="rent.html">Kiralık</a>
+      <a href="corporate.html">Kurumsal</a>
+      <a href="contact.html">İletişim</a>
+    </div>
+  </div>
+  <a href="https://wa.me/905330850769" target="_blank" class="float-wa">
+    <i class="fa-brands fa-whatsapp"></i>
+  </a>
+
+
+  <nav class="mobile-bottom-nav">
+    <div class="mobile-bottom-nav-inner">
+      <a href="index.html" class="mob-nav-item"><i class="fa-solid fa-house"></i><span>Ana Sayfa</span></a>
+      <a href="buy.html" class="mob-nav-item"><i class="fa-solid fa-tag"></i><span>Satılık</span></a>
+      <a href="rent.html" class="mob-nav-item"><i class="fa-solid fa-key"></i><span>Kiralık</span></a>
+      <a href="contact.html" class="mob-nav-item"><i class="fa-solid fa-phone"></i><span>İletişim</span></a>
+    </div>
+  </nav>
 
 </body>
 </html>
