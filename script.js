@@ -1280,286 +1280,28 @@ function updateMegaBtnText() {
 document.addEventListener('DOMContentLoaded', updateMegaBtnText);
 
 // --- BLOG SYSTEM ---
-const BLOG_POSTS = [
-    {
-        "id": "b1",
-        "category": "YATIRIM",
-        "title": "Alanya'da Gayrimenkul Yatırımı Yapmak İçin 5 Neden",
-        "excerpt": "Alanya, Akdeniz bölgesinin en çok değer kazanan lokasyonlarından biri olmaya devam ediyor...",
-        "content": "Alanya son yıllarda gayrimenkul yatırımcılarının gözdesi haline gelmiştir. Bunun en büyük nedenleri arasında sürekli gelişen altyapı, yabancı yatırımcı ilgisi, yüksek kira getirisi ve muazzam yaşam kalitesi bulunmaktadır. Özellikle Oba ve Mahmutlar bölgelerindeki yeni projeler yatırımcılarına döviz bazında yüksek karlar sağlamaktadır. Sahip olduğu turizm potansiyeli sayesinde Alanya'da alınan bir evin yılın her dönemi kiraya verilebilmesi, yatırımın geri dönüş süresini (ROI) oldukça kısaltmaktadır.",
-        "date": "12 Ekim 2025",
-        "image": "https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=800&q=80"
-    },
-    {
-        "id": "b2",
-        "category": "VATANDAŞLIK",
-        "title": "Yatırım Yoluyla Türk Vatandaşlığı Alma Rehberi 2025",
-        "excerpt": "Türkiye'de emlak alarak vatandaşlık edinme şartları ve güncel yatırım tutarları hakkında bilmeniz gereken her şey.",
-        "content": "2024 yılı itibarıyla Türkiye'de 400.000 Amerikan Doları ve üzeri değerde gayrimenkul satın alan yabancılar, doğrudan Türk Vatandaşlığı başvurusunda bulunma hakkı kazanmaktadır. Süreç Tapu ve Kadastro Genel Müdürlüğü'nden alınan uygunluk belgesi ile başlar. Satın alınan mülkün 3 yıl boyunca satılamama şerhi tapuya işlenir. Tüm aile bireyleri (eş ve 18 yaş altı çocuklar) bu haktan faydalanabilir. Jasmine Group olarak uzman hukuk departmanımızla tüm başvuru sürecinizi A'dan Z'ye ücretsiz yönetiyoruz.",
-        "date": "05 Ekim 2025",
-        "image": "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?auto=format&fit=crop&w=800&q=80"
-    },
-    {
-        "id": "b3",
-        "category": "KİRALAMA",
-        "title": "Kısa Dönem Kiralama ile Yüksek Kira Getirisi Elde Etmek",
-        "excerpt": "Turistik bölgelerde günlük ve haftalık kiralama sisteminin yatırımcılara sunduğu avantajlar.",
-        "content": "Uzun dönem kiralamaya kıyasla kısa dönem kiralama (Airbnb, Booking vb.), özellikle sahil şeritlerinde 2 ila 3 kat daha fazla getiri sağlayabilmektedir. Antalya ve Alanya gibi bölgelerde yaz sezonu çok uzun olduğu için doluluk oranları yüksektir. Profesyonel yönetim firmaları (Jasmine Group gibi) temizlik, misafir karşılama ve fatura ödemelerini sizin yerinize takip ederek mülkünüzü pasif bir gelir makinesine dönüştürür. Yeni yasal düzenlemelerle birlikte Turizm Amaçlı Kiralama Belgesi alınması zorunludur ve ekibimiz bu işlemleri adınıza yapmaktadır.",
-        "date": "28 Eylül 2025",
-        "image": "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=800&q=80"
-    },
-    {
-        "id": "b4",
-        "category": "BÖLGE REHBERİ",
-        "title": "Antalya Konyaaltı vs Lara: Hangi Bölgeden Ev Alınmalı?",
-        "excerpt": "Antalya'nın iki parlayan yıldızı Konyaaltı ve Lara bölgelerinin avantajlı karşılaştırması.",
-        "content": "Konyaaltı muazzam sahili, dağ manzarası ve yeni Boğaçayı projesi ile doğayla iç içe lüks bir yaşam sunarken; Lara falezlerin üzerinde kurulu, iş dünyasına, büyük AVM'lere ve havalimanına daha yakın dinamik bir yaşam vadeder. Her iki bölge de yatırım açısından son derece güvenilirdir ancak yaşayış tarzınıza göre seçim yapmalısınız.",
-        "date": "20 Eylül 2025",
-        "image": "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=800&q=80"
-    },
-    {
-        "id": "b5",
-        "category": "HUKUK",
-        "title": "Yabancıların Türkiye'de Emlak Alımında Dikkat Etmesi Gerekenler",
-        "excerpt": "Tapu devri, ekspertiz raporu ve yasal kısıtlamalar hakkında hukuki bir rehber.",
-        "content": "Türkiye'de yabancı uyrukluların mülk edinimi mütekabiliyet esasına dayalı olarak serbest bırakılmıştır. Ancak askeri yasak bölgelerde alım yapılamaz ve ekspertiz raporu (Gayrimenkul Değerleme Raporu) alınması yasal bir zorunluluktur. Bu rapor, mülkün gerçek piyasa değerini belirler ve yabancı alıcıyı korur.",
-        "date": "15 Eylül 2025",
-        "image": "https://images.unsplash.com/photo-1589829085413-56de8ae18c73?auto=format&fit=crop&w=800&q=80"
-    },
-    {
-        "id": "b6",
-        "category": "PROJELER",
-        "title": "Topraktan Ev Almak: Riskler ve Fırsatlar",
-        "excerpt": "Henüz inşaat aşamasındayken konut projesine dahil olmanın kazançlı yönleri nelerdir?",
-        "content": "Topraktan (Off-Plan) konut yatırımı, projeler tamamlandığında genelde %30-%50 arasında değer artışı sağlar. Fiyatların daha ulaşılabilir olması ve kişiye özel ödeme planları sunulması (taksit) en büyük avantajıdır. En kritik nokta güvenilir, referansları sağlam bir müteahhit firma ile çalışmaktır.",
-        "date": "05 Eylül 2025",
-        "image": "https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=800&q=80"
-    },
-    {
-        "id": "b7",
-        "category": "DEKORASYON",
-        "title": "Yazlık Ev Dekorasyonunda 2024 Trendleri",
-        "excerpt": "Akdeniz ruhunu evinize taşıyacak en yeni iç mimari dekorasyon fikirleri.",
-        "content": "Bu yıl doğal malzemeler ön planda! Rattan mobilyalar, bambu detaylar, toprak tonları ve minimalizm yazlık evlerde huzuru getiriyor. Geniş terasların açık hava salonu gibi değerlendirildiği, bol yeşil bitkinin yer aldığı bohem stiller öne çıkıyor.",
-        "date": "28 Ağustos 2025",
-        "image": "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=800&q=80"
-    },
-    {
-        "id": "b8",
-        "category": "YATIRIM",
-        "title": "Kripto Para İle Türkiye'de Emlak Alınır Mı?",
-        "excerpt": "Bitcoin, Ethereum ve USDT kullanarak gayrimenkul alma süreçleri hakkında bilmeniz gerekenler.",
-        "content": "Teknik olarak doğrudan tapu dairesinde kripto ile işlem yapılamasa da, Jasmine Group olarak anlaşmalı olduğumuz yetkili aracı kurumlar üzerinden kripto paralarınızı saniyeler içinde nakde (Fiat) çeviriyor ve resmi tapu devir işleminizi tamamen yasal ve güvenli bir zeminde gerçekleştiriyoruz.",
-        "date": "15 Ağustos 2025",
-        "image": "https://images.unsplash.com/photo-1621416894569-0f39ed31d247?auto=format&fit=crop&w=800&q=80"
-    },
-    {
-        "id": "b9",
-        "category": "EKONOMİ",
-        "title": "Faiz Oranlarının Gayrimenkul Piyasasına Etkisi",
-        "excerpt": "Kredi faiz oranlarındaki değişimler ev fiyatlarını nasıl etkiliyor?",
-        "content": "Faiz oranlarının yüksek olduğu dönemlerde ipotekli satışlar yavaşlarken nakit parası olan yatırımcı için pazarlık gücü maksimuma çıkar. Bu dönemler nakit yatırımı ile büyük indirimlerin alınabildiği tarihi fırsat zamanlarıdır. Faizler düştüğünde ise talep patlaması nedeniyle fiyatlar hızla yükselir.",
-        "date": "02 Ağustos 2025",
-        "image": "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&w=800&q=80"
-    },
-    {
-        "id": "b10",
-        "category": "YAŞAM",
-        "title": "Emeklilik İçin Türkiye'ye Yerleşmek: Akdeniz Rüyası",
-        "excerpt": "Yabancı emekliler için Türkiye'de yaşamanın avantajları, sağlık sistemi ve yaşam maliyetleri.",
-        "content": "Ilıman iklimi, uygun yaşam maliyetleri, yüksek kaliteli ve uygun fiyatlı özel sağlık sistemi ile Antalya, Avrupa'lı emeklilerin yeni gözdesi. Türkiye'de bir emekli maaşıyla çok lüks ve kaliteli bir hayat standardı yakalamak mümkündür.",
-        "date": "20 Temmuz 2025",
-        "image": "https://images.unsplash.com/photo-1542314831-c6a4d1409392?auto=format&fit=crop&w=800&q=80"
-    },
-    {
-        "id": "b11",
-        "category": "BÖLGE REHBERİ",
-        "title": "Kargıcak: Alanya'nın Lüks Villa Cenneti",
-        "excerpt": "Dağların eteklerinde, panoramik deniz manzarasına sahip muazzam bir yaşam alanı: Kargıcak.",
-        "content": "Alanya'nın doğusunda yer alan Kargıcak, özellikle lüks villaların ve premium komplekslerin bulunduğu bölgedir. Sessiz, sakin ve gürültüden uzak elit bir yaşam arayanlar için idealdir. Mahmutlar merkeze sadece birkaç dakika mesafededir.",
-        "date": "10 Temmuz 2025",
-        "image": "https://images.unsplash.com/photo-1600607686527-6fb886090705?auto=format&fit=crop&w=800&q=80"
-    },
-    {
-        "id": "b12",
-        "category": "MİMARİ",
-        "title": "Akıllı Ev Sistemleri: Geleceğin Emlak Standardı",
-        "excerpt": "Yeni projelerde standartlaşan akıllı ev altyapılarının sağladığı konfor ve enerji tasarrufu.",
-        "content": "Artık dünyanın neresinde olursanız olun evinizin ışıklarını, panjurlarını, klimasını ve hatta su vanasını cep telefonunuzdan yönetebilirsiniz. Akıllı evler sadece konfor sağlamakla kalmıyor, gereksiz enerji tüketiminin de önüne geçiyor.",
-        "date": "01 Temmuz 2025",
-        "image": "https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=800&q=80"
-    },
-    {
-        "id": "b13",
-        "category": "HUKUK",
-        "title": "Emlak Vergisi ve Beyannameler Hakkında Bilinmesi Gerekenler",
-        "excerpt": "Mülk sahiplerinin yıllık vergi yükümlülükleri ve değer artış kazancı vergisi.",
-        "content": "Türkiye'de gayrimenkul alan her birey yıllık emlak vergisi ödemekle yükümlüdür (genellikle belediyelere ödenir ve rayiç bedel üzerinden hesaplanır). Ayrıca bir mülk alındıktan sonra ilk 5 yıl içinde satılırsa 'Değer Artış Kazancı Vergisi' gündeme gelmektedir.",
-        "date": "15 Haziran 2025",
-        "image": "https://images.unsplash.com/photo-1554224154-26032ffc0d07?auto=format&fit=crop&w=800&q=80"
-    },
-    {
-        "id": "b14",
-        "category": "TİCARİ",
-        "title": "Ticari Gayrimenkul Yatırımı: Dükkan vs Ofis",
-        "excerpt": "Ticari alan yatırımlarının avantajları, amortisman süreleri ve kira garantili dükkanlar.",
-        "content": "Ticari mülklerin amortisman süresi (ROI) konutlara göre genellikle daha kısadır (12-15 yıl). Kurumsal kiracıların (bankalar, süpermarketler) bulunduğu dükkanlar en güvenli yatırım limanlarıdır. Ticari kiralamalarda enflasyon oranı baz alınarak yıllık yasal artışlar düzenli olarak yapılır.",
-        "date": "01 Haziran 2025",
-        "image": "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=800&q=80"
-    },
-    {
-        "id": "b15",
-        "category": "YAŞAM",
-        "title": "Türkiye'de Eğitim: Yabancı Öğrenciler İçin Uluslararası Okullar",
-        "excerpt": "Çocuklu ailelerin Türkiye'ye yerleşirken en çok merak ettiği eğitim sistemi ve okul seçenekleri.",
-        "content": "Antalya ve Alanya bölgesinde İngilizce, Rusça ve Almanca müfredat uygulayan tamamen uluslararası birçok seçkin kolej ve üniversite bulunmaktadır. Eğitim kalitesi Avrupa standartlarında olup ücretleri pek çok batı ülkesine kıyasla oldukça makuldür.",
-        "date": "20 Mayıs 2025",
-        "image": "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&w=800&q=80"
+let cachedBlogs = null;
+async function fetchBlogs() {
+    if (cachedBlogs) return cachedBlogs;
+    try {
+        const response = await fetch('blogs.json?v=' + Date.now());
+        if (!response.ok) throw new Error('Ağ hatası');
+        cachedBlogs = await response.json();
+        return cachedBlogs;
+    } catch (error) {
+        console.error('Bloglar yüklenirken hata oluştu:', error);
+        return [];
     }
-,
-    {
-        "id": "b9",
-        "category": "HUKUK",
-        "title": "2025 Emlak Piyasasında Yeni Fırsatlar Bölüm 1",
-        "excerpt": "Yeni yılda gayrimenkul sektörünü nelerin beklediğine dair en güncel detaylar ve tahminler...",
-        "content": "Sürekli gelişen emlak sektörü 2025 yılında da yenilikçi fırsatlar sunmaya devam ediyor. Özellikle kıyı şeridindeki projeler yabancı yatırımcıların radarına girmeyi sürdürüyor. Teknoloji ile entegre akıllı evler artık bir standart haline geliyor. Jasmine Group olarak bu süreçte en doğru yatırımı yapmanız için profesyonel destek sağlıyoruz.",
-        "date": "2 Şubat 2025",
-        "image": "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=800&q=80"
-    },
-    {
-        "id": "b10",
-        "category": "BÖLGE REHBERİ",
-        "title": "2025 Emlak Piyasasında Yeni Fırsatlar Bölüm 2",
-        "excerpt": "Yeni yılda gayrimenkul sektörünü nelerin beklediğine dair en güncel detaylar ve tahminler...",
-        "content": "Sürekli gelişen emlak sektörü 2025 yılında da yenilikçi fırsatlar sunmaya devam ediyor. Özellikle kıyı şeridindeki projeler yabancı yatırımcıların radarına girmeyi sürdürüyor. Teknoloji ile entegre akıllı evler artık bir standart haline geliyor. Jasmine Group olarak bu süreçte en doğru yatırımı yapmanız için profesyonel destek sağlıyoruz.",
-        "date": "3 Şubat 2025",
-        "image": "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=800&q=80"
-    },
-    {
-        "id": "b11",
-        "category": "KİRALAMA",
-        "title": "2025 Emlak Piyasasında Yeni Fırsatlar Bölüm 3",
-        "excerpt": "Yeni yılda gayrimenkul sektörünü nelerin beklediğine dair en güncel detaylar ve tahminler...",
-        "content": "Sürekli gelişen emlak sektörü 2025 yılında da yenilikçi fırsatlar sunmaya devam ediyor. Özellikle kıyı şeridindeki projeler yabancı yatırımcıların radarına girmeyi sürdürüyor. Teknoloji ile entegre akıllı evler artık bir standart haline geliyor. Jasmine Group olarak bu süreçte en doğru yatırımı yapmanız için profesyonel destek sağlıyoruz.",
-        "date": "4 Şubat 2025",
-        "image": "https://images.unsplash.com/photo-1516156008625-3a9d6067fab5?auto=format&fit=crop&w=800&q=80"
-    },
-    {
-        "id": "b12",
-        "category": "PROJELER",
-        "title": "2025 Emlak Piyasasında Yeni Fırsatlar Bölüm 4",
-        "excerpt": "Yeni yılda gayrimenkul sektörünü nelerin beklediğine dair en güncel detaylar ve tahminler...",
-        "content": "Sürekli gelişen emlak sektörü 2025 yılında da yenilikçi fırsatlar sunmaya devam ediyor. Özellikle kıyı şeridindeki projeler yabancı yatırımcıların radarına girmeyi sürdürüyor. Teknoloji ile entegre akıllı evler artık bir standart haline geliyor. Jasmine Group olarak bu süreçte en doğru yatırımı yapmanız için profesyonel destek sağlıyoruz.",
-        "date": "5 Şubat 2025",
-        "image": "https://images.unsplash.com/photo-1448630360428-65456885c650?auto=format&fit=crop&w=800&q=80"
-    },
-    {
-        "id": "b13",
-        "category": "DEKORASYON",
-        "title": "2025 Emlak Piyasasında Yeni Fırsatlar Bölüm 5",
-        "excerpt": "Yeni yılda gayrimenkul sektörünü nelerin beklediğine dair en güncel detaylar ve tahminler...",
-        "content": "Sürekli gelişen emlak sektörü 2025 yılında da yenilikçi fırsatlar sunmaya devam ediyor. Özellikle kıyı şeridindeki projeler yabancı yatırımcıların radarına girmeyi sürdürüyor. Teknoloji ile entegre akıllı evler artık bir standart haline geliyor. Jasmine Group olarak bu süreçte en doğru yatırımı yapmanız için profesyonel destek sağlıyoruz.",
-        "date": "6 Şubat 2025",
-        "image": "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=800&q=80"
-    },
-    {
-        "id": "b14",
-        "category": "YATIRIM",
-        "title": "2025 Emlak Piyasasında Yeni Fırsatlar Bölüm 6",
-        "excerpt": "Yeni yılda gayrimenkul sektörünü nelerin beklediğine dair en güncel detaylar ve tahminler...",
-        "content": "Sürekli gelişen emlak sektörü 2025 yılında da yenilikçi fırsatlar sunmaya devam ediyor. Özellikle kıyı şeridindeki projeler yabancı yatırımcıların radarına girmeyi sürdürüyor. Teknoloji ile entegre akıllı evler artık bir standart haline geliyor. Jasmine Group olarak bu süreçte en doğru yatırımı yapmanız için profesyonel destek sağlıyoruz.",
-        "date": "7 Şubat 2025",
-        "image": "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=800&q=80"
-    },
-    {
-        "id": "b15",
-        "category": "HUKUK",
-        "title": "2025 Emlak Piyasasında Yeni Fırsatlar Bölüm 7",
-        "excerpt": "Yeni yılda gayrimenkul sektörünü nelerin beklediğine dair en güncel detaylar ve tahminler...",
-        "content": "Sürekli gelişen emlak sektörü 2025 yılında da yenilikçi fırsatlar sunmaya devam ediyor. Özellikle kıyı şeridindeki projeler yabancı yatırımcıların radarına girmeyi sürdürüyor. Teknoloji ile entegre akıllı evler artık bir standart haline geliyor. Jasmine Group olarak bu süreçte en doğru yatırımı yapmanız için profesyonel destek sağlıyoruz.",
-        "date": "8 Şubat 2025",
-        "image": "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=800&q=80"
-    },
-    {
-        "id": "b16",
-        "category": "BÖLGE REHBERİ",
-        "title": "2025 Emlak Piyasasında Yeni Fırsatlar Bölüm 8",
-        "excerpt": "Yeni yılda gayrimenkul sektörünü nelerin beklediğine dair en güncel detaylar ve tahminler...",
-        "content": "Sürekli gelişen emlak sektörü 2025 yılında da yenilikçi fırsatlar sunmaya devam ediyor. Özellikle kıyı şeridindeki projeler yabancı yatırımcıların radarına girmeyi sürdürüyor. Teknoloji ile entegre akıllı evler artık bir standart haline geliyor. Jasmine Group olarak bu süreçte en doğru yatırımı yapmanız için profesyonel destek sağlıyoruz.",
-        "date": "9 Şubat 2025",
-        "image": "https://images.unsplash.com/photo-1516156008625-3a9d6067fab5?auto=format&fit=crop&w=800&q=80"
-    },
-    {
-        "id": "b17",
-        "category": "KİRALAMA",
-        "title": "2025 Emlak Piyasasında Yeni Fırsatlar Bölüm 9",
-        "excerpt": "Yeni yılda gayrimenkul sektörünü nelerin beklediğine dair en güncel detaylar ve tahminler...",
-        "content": "Sürekli gelişen emlak sektörü 2025 yılında da yenilikçi fırsatlar sunmaya devam ediyor. Özellikle kıyı şeridindeki projeler yabancı yatırımcıların radarına girmeyi sürdürüyor. Teknoloji ile entegre akıllı evler artık bir standart haline geliyor. Jasmine Group olarak bu süreçte en doğru yatırımı yapmanız için profesyonel destek sağlıyoruz.",
-        "date": "10 Şubat 2025",
-        "image": "https://images.unsplash.com/photo-1448630360428-65456885c650?auto=format&fit=crop&w=800&q=80"
-    },
-    {
-        "id": "b18",
-        "category": "PROJELER",
-        "title": "2025 Emlak Piyasasında Yeni Fırsatlar Bölüm 10",
-        "excerpt": "Yeni yılda gayrimenkul sektörünü nelerin beklediğine dair en güncel detaylar ve tahminler...",
-        "content": "Sürekli gelişen emlak sektörü 2025 yılında da yenilikçi fırsatlar sunmaya devam ediyor. Özellikle kıyı şeridindeki projeler yabancı yatırımcıların radarına girmeyi sürdürüyor. Teknoloji ile entegre akıllı evler artık bir standart haline geliyor. Jasmine Group olarak bu süreçte en doğru yatırımı yapmanız için profesyonel destek sağlıyoruz.",
-        "date": "11 Şubat 2025",
-        "image": "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=800&q=80"
-    },
-    {
-        "id": "b19",
-        "category": "DEKORASYON",
-        "title": "2025 Emlak Piyasasında Yeni Fırsatlar Bölüm 11",
-        "excerpt": "Yeni yılda gayrimenkul sektörünü nelerin beklediğine dair en güncel detaylar ve tahminler...",
-        "content": "Sürekli gelişen emlak sektörü 2025 yılında da yenilikçi fırsatlar sunmaya devam ediyor. Özellikle kıyı şeridindeki projeler yabancı yatırımcıların radarına girmeyi sürdürüyor. Teknoloji ile entegre akıllı evler artık bir standart haline geliyor. Jasmine Group olarak bu süreçte en doğru yatırımı yapmanız için profesyonel destek sağlıyoruz.",
-        "date": "12 Şubat 2025",
-        "image": "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=800&q=80"
-    },
-    {
-        "id": "b20",
-        "category": "YATIRIM",
-        "title": "2025 Emlak Piyasasında Yeni Fırsatlar Bölüm 12",
-        "excerpt": "Yeni yılda gayrimenkul sektörünü nelerin beklediğine dair en güncel detaylar ve tahminler...",
-        "content": "Sürekli gelişen emlak sektörü 2025 yılında da yenilikçi fırsatlar sunmaya devam ediyor. Özellikle kıyı şeridindeki projeler yabancı yatırımcıların radarına girmeyi sürdürüyor. Teknoloji ile entegre akıllı evler artık bir standart haline geliyor. Jasmine Group olarak bu süreçte en doğru yatırımı yapmanız için profesyonel destek sağlıyoruz.",
-        "date": "13 Şubat 2025",
-        "image": "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=800&q=80"
-    },
-    {
-        "id": "b21",
-        "category": "HUKUK",
-        "title": "2025 Emlak Piyasasında Yeni Fırsatlar Bölüm 13",
-        "excerpt": "Yeni yılda gayrimenkul sektörünü nelerin beklediğine dair en güncel detaylar ve tahminler...",
-        "content": "Sürekli gelişen emlak sektörü 2025 yılında da yenilikçi fırsatlar sunmaya devam ediyor. Özellikle kıyı şeridindeki projeler yabancı yatırımcıların radarına girmeyi sürdürüyor. Teknoloji ile entegre akıllı evler artık bir standart haline geliyor. Jasmine Group olarak bu süreçte en doğru yatırımı yapmanız için profesyonel destek sağlıyoruz.",
-        "date": "14 Şubat 2025",
-        "image": "https://images.unsplash.com/photo-1516156008625-3a9d6067fab5?auto=format&fit=crop&w=800&q=80"
-    },
-    {
-        "id": "b22",
-        "category": "BÖLGE REHBERİ",
-        "title": "2025 Emlak Piyasasında Yeni Fırsatlar Bölüm 14",
-        "excerpt": "Yeni yılda gayrimenkul sektörünü nelerin beklediğine dair en güncel detaylar ve tahminler...",
-        "content": "Sürekli gelişen emlak sektörü 2025 yılında da yenilikçi fırsatlar sunmaya devam ediyor. Özellikle kıyı şeridindeki projeler yabancı yatırımcıların radarına girmeyi sürdürüyor. Teknoloji ile entegre akıllı evler artık bir standart haline geliyor. Jasmine Group olarak bu süreçte en doğru yatırımı yapmanız için profesyonel destek sağlıyoruz.",
-        "date": "15 Şubat 2025",
-        "image": "https://images.unsplash.com/photo-1448630360428-65456885c650?auto=format&fit=crop&w=800&q=80"
-    },
-    {
-        "id": "b23",
-        "category": "KİRALAMA",
-        "title": "2025 Emlak Piyasasında Yeni Fırsatlar Bölüm 15",
-        "excerpt": "Yeni yılda gayrimenkul sektörünü nelerin beklediğine dair en güncel detaylar ve tahminler...",
-        "content": "Sürekli gelişen emlak sektörü 2025 yılında da yenilikçi fırsatlar sunmaya devam ediyor. Özellikle kıyı şeridindeki projeler yabancı yatırımcıların radarına girmeyi sürdürüyor. Teknoloji ile entegre akıllı evler artık bir standart haline geliyor. Jasmine Group olarak bu süreçte en doğru yatırımı yapmanız için profesyonel destek sağlıyoruz.",
-        "date": "16 Şubat 2025",
-        "image": "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=800&q=80"
-    }
-];
+}
 
-function renderBlogs() {
+async function renderBlogs() {
     const list = document.getElementById('blog-list');
     if (!list) return;
     
+    const blogs = await fetchBlogs();
+    
     let html = '';
-    BLOG_POSTS.forEach(b => {
+    blogs.forEach(b => {
         html += `
         <div class="blog-card" style="background:#fff; border-radius:12px; overflow:hidden; box-shadow:0 4px 15px rgba(0,0,0,0.05); transition:transform 0.3s;">
             <a href="blog-detail.html?id=${b.id}">
@@ -1580,13 +1322,15 @@ function renderBlogs() {
     list.innerHTML = html;
 }
 
-function renderBlogDetail() {
+async function renderBlogDetail() {
     const container = document.getElementById('blog-detail-container');
     if (!container) return;
     
     const urlParams = new URLSearchParams(window.location.search);
     const id = urlParams.get('id');
-    const b = BLOG_POSTS.find(x => x.id === id);
+    
+    const blogs = await fetchBlogs();
+    const b = blogs.find(x => x.id === id);
     
     if (!b) {
         container.innerHTML = '<h2 style="text-align:center; padding:100px 0;">Blog Yazısı Bulunamadı.</h2>';
@@ -1605,7 +1349,7 @@ function renderBlogDetail() {
             <img src="${b.image}" style="width:100%; border-radius:12px; margin-bottom:30px; max-height:400px; object-fit:cover;" />
             <div style="font-size:17px; line-height:1.9; color:#444; font-family:'Inter', sans-serif;">
                 <p style="font-size:20px; font-weight:500; color:#222; margin-bottom:30px;">${b.excerpt}</p>
-                <p>${b.content}</p>
+                <div class="blog-html-content">${b.content}</div>
             </div>
             <div style="margin-top:50px; padding-top:30px; border-top:1px solid #eee; text-align:center;">
                 <a href="blog.html" style="background:var(--navy); color:#fff; padding:12px 25px; text-decoration:none; border-radius:6px; font-weight:600;"><i class="fa-solid fa-arrow-left"></i> Bloglara Dön</a>
