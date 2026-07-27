@@ -731,7 +731,8 @@ function changeLang(lang) {
 // Yüklenince çalıştır
 
 document.addEventListener('DOMContentLoaded', async () => {
-  if(document.getElementById('prop-list')) {
+  const hasPropertyList = document.getElementById('prop-list') || document.getElementById('sale-prop-list') || document.getElementById('rent-prop-list');
+  if(hasPropertyList) {
     const props = await fetchProperties();
     
     const urlParams = new URLSearchParams(window.location.search);
@@ -803,12 +804,16 @@ async function fetchProperties() {
 }
 
 function renderProperties(props) {
-  const list = document.getElementById('prop-list');
-  if (!list) return;
-  
   const isRentPage = window.location.pathname.includes('rent.html');
   const isBuyPage = window.location.pathname.includes('buy.html');
   const isIndexPage = !isRentPage && !isBuyPage && !window.location.pathname.includes('property-detail.html');
+  const lists = isIndexPage
+    ? [
+        { element: document.getElementById('sale-prop-list'), type: 'sale' },
+        { element: document.getElementById('rent-prop-list'), type: 'rent' }
+      ]
+    : [{ element: document.getElementById('prop-list'), type: null }];
+  if (!lists.some(({ element }) => element)) return;
   
   let renderProps = [...props];
   
@@ -827,15 +832,27 @@ function renderProperties(props) {
       renderProps.sort((a, b) => parseInt(b.id.replace(/\D/g, '') || 0) - parseInt(a.id.replace(/\D/g, '') || 0));
   }
   
-  if (isIndexPage) {
-    renderProps = renderProps.slice(0, 8); // Only show 8 latest properties on homepage
-  }
-  
-  list.innerHTML = '';
-  renderProps.forEach(p => {
-    if (isRentPage && p.type !== 'rent') return;
-    if (isBuyPage && p.type !== 'sale') return;
-    
+  lists.forEach(({ element: list, type: homeType }) => {
+    if (!list) return;
+    const visibleProperties = (homeType ? renderProps.filter(p => p.type === homeType) : renderProps)
+      .filter(p => !isRentPage || p.type === 'rent')
+      .filter(p => !isBuyPage || p.type === 'sale')
+      .slice(0, isIndexPage ? 4 : undefined);
+
+    list.innerHTML = '';
+    if (visibleProperties.length === 0 && isIndexPage) {
+      list.innerHTML = `
+        <article class="property-empty-state">
+          <i class="fa-solid fa-key"></i>
+          <div>
+            <h3>Yeni kiralık portföyümüz hazırlanıyor.</h3>
+            <p>Aradığınız evi bize anlatın; size uygun seçenekleri öncelikli olarak paylaşalım.</p>
+          </div>
+          <a href="contact.html">Kiralık talebi oluştur <i class="fa-solid fa-arrow-right"></i></a>
+        </article>`;
+      return;
+    }
+    visibleProperties.forEach(p => {
     let imgsHTML = p.images.map(img => `<div class="swiper-slide"><img src="${img}" alt="${p.title || 'Alanya Emlak'}" /></div>`).join('');
     let bClass = p.badge_color ? `prop-badge ${p.badge_color}` : `prop-badge`;
     let badgeHTML = p.badge ? `<span class="${bClass}">${p.badge}</span>` : '';
@@ -877,7 +894,8 @@ function renderProperties(props) {
         </div>
       </div>
     `;
-    list.innerHTML += html;
+      list.innerHTML += html;
+    });
   });
   
   document.querySelectorAll('.prop-swiper').forEach(el => {
@@ -1365,6 +1383,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Global Floating WhatsApp Button
 document.addEventListener('DOMContentLoaded', () => {
+    if (document.querySelector('.wa-float')) return;
     const waBtn = document.createElement('a');
     waBtn.href = "https://wa.me/905330850769";
     waBtn.target = "_blank";

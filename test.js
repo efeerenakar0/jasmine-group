@@ -19,6 +19,11 @@ dom.window.fetch = async (url) => {
 };
 // Mock Swiper
 dom.window.Swiper = class Swiper { constructor(){} };
+// jsdom does not implement viewport observers used by the page animations.
+dom.window.IntersectionObserver = class IntersectionObserver {
+    observe() {}
+    unobserve() {}
+};
 // Mock localStorage
 dom.window.localStorage = { getItem: () => 'eur' };
 
@@ -26,5 +31,7 @@ dom.window.eval(script);
 
 setTimeout(() => {
     const list = dom.window.document.getElementById('prop-list');
-    console.log("Children in prop-list:", list ? list.children.length : "NO LIST");
+    const count = list ? list.children.length : 0;
+    console.log("Children in prop-list:", count);
+    if (count === 0) process.exitCode = 1;
 }, 2000);

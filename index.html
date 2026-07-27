@@ -108,7 +108,12 @@
           </div>
         </div>
       </div>
-            <div class="hero-search">
+      <div class="hero-content container">
+        <p class="hero-eyebrow"><i class="fa-solid fa-location-dot"></i> ALANYA, ANTALYA</p>
+        <h1>Akdeniz'de size ait bir yaşam bulun.</h1>
+        <p class="hero-lead">Seçkin konutlar, güvenli yatırım süreçleri ve size özel danışmanlık tek yerde.</p>
+      </div>
+      <div class="hero-search">
         <div class="hero-search-tabs">
           <button class="search-tab active" id="tab-sale" data-i18n="nav_sale" onclick="setSearchType('sale')">SATILIK</button>
           <button class="search-tab" id="tab-rent" data-i18n="nav_rent" onclick="setSearchType('rent')">KİRALIK</button>
@@ -166,19 +171,29 @@
       </div>
     </section>
 
-    <!-- POPULAR LOCATIONS SECTION -->
-    <section class="container mt-60" style="margin-top:30px; margin-bottom:30px;">
-      <div style="border-bottom:1px solid var(--border); padding-bottom:8px; margin-bottom:20px;">
-        <h3 style="color:var(--red); font-size:16px; margin:0; display:inline-block; border-bottom:2px solid var(--red); padding-bottom:7px; margin-bottom:-9px; text-transform:uppercase;">MOST POPULAR PROPERTY LOCATIONS</h3>
+    <section class="trust-ribbon" aria-label="Jasmine Group avantajları">
+      <div class="container trust-ribbon-grid">
+        <div><i class="fa-solid fa-shield-halved"></i><span><strong>Güvenli satın alma</strong>Tapu ve süreç danışmanlığı</span></div>
+        <div><i class="fa-solid fa-language"></i><span><strong>9 dilde destek</strong>Uluslararası müşteri deneyimi</span></div>
+        <div><i class="fa-solid fa-house-circle-check"></i><span><strong>Seçilmiş portföy</strong>Alanya'nın değerli lokasyonları</span></div>
+        <div><i class="fa-solid fa-calendar-check"></i><span><strong>Online görüşme</strong>Size uygun zamanda keşif</span></div>
       </div>
-      <div style="border:1px solid var(--border); padding:25px; border-radius:4px; display:grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap:20px; background:var(--card-bg);">
-        <a href="#" onclick="document.getElementById('main-search-input').value='Oba'; applyFilters(); return false;" style="color:var(--navy); font-weight:500; font-size:14px; text-decoration:none;">Oba <strong style="color:var(--text);">(124)</strong></a>
-        <a href="#" onclick="document.getElementById('main-search-input').value='Mahmutlar'; applyFilters(); return false;" style="color:var(--navy); font-weight:500; font-size:14px; text-decoration:none;">Mahmutlar <strong style="color:var(--text);">(215)</strong></a>
-        <a href="#" onclick="document.getElementById('main-search-input').value='Kestel'; applyFilters(); return false;" style="color:var(--navy); font-weight:500; font-size:14px; text-decoration:none;">Kestel <strong style="color:var(--text);">(86)</strong></a>
-        <a href="#" onclick="document.getElementById('main-search-input').value='Kargıcak'; applyFilters(); return false;" style="color:var(--navy); font-weight:500; font-size:14px; text-decoration:none;">Kargıcak <strong style="color:var(--text);">(92)</strong></a>
-        <a href="#" onclick="document.getElementById('main-search-input').value='Cikcilli'; applyFilters(); return false;" style="color:var(--navy); font-weight:500; font-size:14px; text-decoration:none;">Cikcilli <strong style="color:var(--text);">(53)</strong></a>
-        <a href="#" onclick="document.getElementById('main-search-input').value='Avsallar'; applyFilters(); return false;" style="color:var(--navy); font-weight:500; font-size:14px; text-decoration:none;">Avsallar <strong style="color:var(--text);">(105)</strong></a>
-        <a href="#" onclick="document.getElementById('main-search-input').value='Merkez'; applyFilters(); return false;" style="color:var(--navy); font-weight:500; font-size:14px; text-decoration:none;">Alanya Merkez <strong style="color:var(--text);">(142)</strong></a>
+    </section>
+
+    <!-- POPULAR LOCATIONS SECTION -->
+    <section class="container location-explorer">
+      <div class="section-heading">
+        <div>
+          <p class="section-kicker">ALANYA'YI KEŞFEDİN</p>
+          <h2>En çok aranan lokasyonlar</h2>
+        </div>
+        <a href="buy.html" class="text-link">Tüm portföyü incele <i class="fa-solid fa-arrow-right"></i></a>
+      </div>
+      <div class="location-grid">
+        <a href="buy.html?loc=Oba" class="location-card location-oba"><span>Oba</span><small>Modern yaşam ve denize yakınlık</small></a>
+        <a href="buy.html?loc=Mahmutlar" class="location-card location-mahmutlar"><span>Mahmutlar</span><small>Sahil boyunca canlı bir yaşam</small></a>
+        <a href="buy.html?loc=Kargıcak" class="location-card location-kargicak"><span>Kargıcak</span><small>Manzaralı, sakin ve seçkin</small></a>
+        <a href="buy.html?loc=Alanya%20Merkez" class="location-card location-center"><span>Alanya Merkez</span><small>Şehrin ritmine yakın</small></a>
       </div>
     </section>
 
@@ -232,7 +247,7 @@
           <h2 data-i18n="sec_sale">Son Eklenen Satılık Mülkler</h2>
           <a href="buy.html"><span data-i18n="sec_sale_all">Tüm Satılıklar</span> <i class="fa-solid fa-arrow-right"></i></a>
         </div>
-        <div class="property-list" id="prop-list"></div>
+        <div class="property-list" id="sale-prop-list"></div>
       </section>
       
       <!-- RECENTLY ADDED FOR RENT -->
@@ -241,7 +256,7 @@
           <h2 data-i18n="sec_rent">Son Eklenen Kiralık Mülkler</h2>
           <a href="rent.html"><span data-i18n="sec_rent_all">Tüm Kiralıklar</span> <i class="fa-solid fa-arrow-right"></i></a>
         </div>
-        <div class="property-list" id="prop-list"></div>
+        <div class="property-list" id="rent-prop-list"></div>
       </section>
     </div>
 
@@ -253,22 +268,22 @@
       </div>
       <div class="why-choose-grid">
         <div class="why-choose-card">
-          <span class="why-choose-icon">🏅</span>
+          <span class="why-choose-icon"><i class="fa-solid fa-medal"></i></span>
           <h4>14+ Yıllık Tecrübe</h4>
           <p>2010'dan bu yana Alanya emlak sektöründe güvenilir hizmet sunuyoruz.</p>
         </div>
         <div class="why-choose-card">
-          <span class="why-choose-icon">🌍</span>
+          <span class="why-choose-icon"><i class="fa-solid fa-globe"></i></span>
           <h4>9 Dilde Hizmet</h4>
           <p>Türkçe, İngilizce, Rusça, Almanca, Fransızca dahil 9 farklı dilde profesyonel destek.</p>
         </div>
         <div class="why-choose-card">
-          <span class="why-choose-icon">🔒</span>
+          <span class="why-choose-icon"><i class="fa-solid fa-lock"></i></span>
           <h4>Güvenli Alım Garantisi</h4>
           <p>Tapu işlemleri, hukuki süreçler ve vatandaşlık başvurularında tam destek.</p>
         </div>
         <div class="why-choose-card">
-          <span class="why-choose-icon">🤝</span>
+          <span class="why-choose-icon"><i class="fa-solid fa-handshake"></i></span>
           <h4>1.500+ Mutlu Müşteri</h4>
           <p>Binlerce yerli ve yabancı müşteriye başarıyla hizmet verdik.</p>
         </div>
