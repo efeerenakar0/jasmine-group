@@ -54,8 +54,8 @@ const translations = {
     "hero_2_sub": "Özel havuzlu ve panoramik manzaralı elit yaşam alanları.",
     "hero_3": "Merkezi Konumda Eşsiz Yatırımlar",
     "hero_3_sub": "Şehrin kalbinde yüksek kira getirili ticari ve konut fırsatları.",
-    "about_title": "Alanya'nın Lider Emlak Şirketi | Jasmine Group ®",
-    "about_desc": "Jasmine Group, 2010 yılından bu yana Alanya ve çevresinde binlerce yerli ve yabancı müşteriye güvenilir gayrimenkul danışmanlığı hizmetleri sunmaktadır.",
+    "about_title": "Alanya'da Gayrimenkul Danışmanlığı | Jasmine Group ®",
+    "about_desc": "Jasmine Group, Alanya ve çevresinde ev veya yatırım arayan müşterilere portföy seçimi, gösterim ve işlem koordinasyonu sunar.",
     "about_more": "Hakkımızda Daha Fazla",
     "stat_sales": "Tamamlanan Satış",
     "stat_exp": "Yıllık Deneyim",
@@ -69,7 +69,7 @@ const translations = {
     "sec_sale_all": "Tüm Satılıklar",
     "sec_rent": "Son Eklenen Kiralık Mülkler",
     "sec_rent_all": "Tüm Kiralıklar",
-    "footer_desc": "Alanya'nın lider gayrimenkul şirketi. 2010'dan bu yana Alanya ve çevresinde binlerce mutlu müşteriye hizmet veriyoruz.",
+    "footer_desc": "Alanya ve çevresinde portföy seçimi, gösterim ve gayrimenkul işlem koordinasyonu sunuyoruz.",
     "footer_links": "Hızlı Linkler",
     "footer_regions": "Alanya Bölgeleri",
     "footer_contact": "İletişim",
@@ -124,7 +124,7 @@ const translations = {
     "hero_3": "Unique Investments in Central Location",
     "hero_3_sub": "High rental income commercial and residential opportunities in the heart of the city.",
     "about_title": "Alanya's Leading Real Estate Company | Jasmine Group ®",
-    "about_desc": "Since 2010, Jasmine Group has been providing reliable real estate consultancy services to thousands of domestic and foreign customers in and around Alanya.",
+    "about_desc": "Jasmine Group provides property selection, viewing and transaction coordination for home buyers and investors in and around Alanya.",
     "about_more": "More About Us",
     "stat_sales": "Completed Sales",
     "stat_exp": "Years Experience",
@@ -138,7 +138,7 @@ const translations = {
     "sec_sale_all": "All Properties for Sale",
     "sec_rent": "Recently Added Properties for Rent",
     "sec_rent_all": "All Properties for Rent",
-    "footer_desc": "Alanya's leading real estate company. We have been serving thousands of happy customers in and around Alanya since 2010.",
+    "footer_desc": "Property selection, viewing and real estate transaction coordination in and around Alanya.",
     "footer_links": "Quick Links",
     "footer_regions": "Alanya Regions",
     "footer_contact": "Contact",
@@ -193,7 +193,7 @@ const translations = {
     "hero_3": "Уникальные Инвестиции в Центре",
     "hero_3_sub": "Коммерческие и жилые объекты с высоким доходом от аренды.",
     "about_title": "Ведущее Агентство Недвижимости в Алании | Jasmine Group ®",
-    "about_desc": "С 2010 года Jasmine Group предоставляет надежные услуги тысячам клиентов в Алании и ее окрестностях.",
+    "about_desc": "Jasmine Group помогает покупателям жилья и инвесторам с подбором объектов, просмотрами и координацией сделки в Алании и окрестностях.",
     "about_more": "Подробнее о нас",
     "stat_sales": "Успешных продаж",
     "stat_exp": "Лет опыта",
@@ -207,7 +207,7 @@ const translations = {
     "sec_sale_all": "Все объекты на продажу",
     "sec_rent": "Недавно добавленные объекты в аренду",
     "sec_rent_all": "Все объекты в аренду",
-    "footer_desc": "Ведущее агентство недвижимости в Алании. С 2010 года обслуживаем тысячи довольных клиентов.",
+    "footer_desc": "Подбор объектов, просмотры и координация сделок с недвижимостью в Алании и окрестностях.",
     "footer_links": "Быстрые ссылки",
     "footer_regions": "Районы Алании",
     "footer_contact": "Контакты",
@@ -262,7 +262,7 @@ const translations = {
     "hero_3": "Einzigartige Investitionen im Zentrum",
     "hero_3_sub": "Hohe Mieteinnahmen bei Gewerbe- und Wohnimmobilien im Herzen der Stadt.",
     "about_title": "Das führende Immobilienunternehmen in Alanya | Jasmine Group ®",
-    "about_desc": "Seit 2010 bietet die Jasmine Group zuverlässige Immobilienberatung für Tausende von Kunden.",
+    "about_desc": "Jasmine Group unterstützt Käufer und Investoren bei Objektauswahl, Besichtigungen und Transaktionskoordination in und um Alanya.",
     "about_more": "Mehr über uns",
     "stat_sales": "Verkaufte Immobilien",
     "stat_exp": "Jahre Erfahrung",
@@ -276,7 +276,7 @@ const translations = {
     "sec_sale_all": "Alle zum Verkauf",
     "sec_rent": "Zuletzt hinzugefügte Immobilien zur Miete",
     "sec_rent_all": "Alle zur Miete",
-    "footer_desc": "Das führende Immobilienunternehmen in Alanya. Wir bedienen seit 2010 glückliche Kunden.",
+    "footer_desc": "Immobilienauswahl, Besichtigungen und Transaktionskoordination in und um Alanya.",
     "footer_links": "Schnelle Links",
     "footer_regions": "Alanya Regionen",
     "footer_contact": "Kontakt",
@@ -400,7 +400,7 @@ const translations = {
     "hero_3": "استثمارات فريدة في المركز",
     "hero_3_sub": "فرص تجارية وسكنية ذات دخل إيجار مرتفع في قلب المدينة.",
     "about_title": "شركة العقارات الرائدة في ألانيا | Jasmine Group ®",
-    "about_desc": "منذ عام 2010، تقدم مجموعة ياسمين خدمات استشارية موثوقة لآلاف العملاء.",
+    "about_desc": "تساعد مجموعة ياسمين مشتري المنازل والمستثمرين في اختيار العقارات والمعاينة وتنسيق المعاملات في ألانيا ومحيطها.",
     "about_more": "اقرأ المزيد",
     "stat_sales": "المبيعات الناجحة",
     "stat_exp": "سنوات الخبرة",
@@ -414,7 +414,7 @@ const translations = {
     "sec_sale_all": "جميع العقارات للبيع",
     "sec_rent": "عقارات مضافة حديثا للإيجار",
     "sec_rent_all": "جميع العقارات للإيجار",
-    "footer_desc": "شركة العقارات الرائدة في ألانيا. نحن نخدم آلاف العملاء السعداء منذ عام 2010.",
+    "footer_desc": "اختيار العقارات والمعاينة وتنسيق معاملات العقارات في ألانيا ومحيطها.",
     "footer_links": "روابط سريعة",
     "footer_regions": "مناطق ألانيا",
     "footer_contact": "اتصال",
@@ -469,7 +469,7 @@ const translations = {
     "hero_3": "Investissements Uniques",
     "hero_3_sub": "Revenus locatifs élevés au cœur de la ville.",
     "about_title": "L'Agence Immobilière Leader à Alanya",
-    "about_desc": "Depuis 2010, Jasmine Group offre des services fiables à des milliers de clients.",
+    "about_desc": "Jasmine Group accompagne acheteurs et investisseurs dans la sélection, les visites et la coordination des transactions à Alanya et ses environs.",
     "about_more": "En Savoir Plus",
     "stat_sales": "Ventes Réussies",
     "stat_exp": "Années d'Expérience",
@@ -483,7 +483,7 @@ const translations = {
     "sec_sale_all": "Tout à Vendre",
     "sec_rent": "Récemment Ajoutés (Location)",
     "sec_rent_all": "Tout à Louer",
-    "footer_desc": "L'agence immobilière leader à Alanya. Au service de milliers de clients depuis 2010.",
+    "footer_desc": "Sélection de biens, visites et coordination des transactions immobilières à Alanya et ses environs.",
     "footer_links": "Liens Rapides",
     "footer_regions": "Régions d'Alanya",
     "footer_contact": "Contact",
@@ -538,7 +538,7 @@ const translations = {
     "hero_3": "Unieke Investeringen",
     "hero_3_sub": "Hoge huurinkomsten in het hart van de stad.",
     "about_title": "Het Leidende Makelaarskantoor in Alanya",
-    "about_desc": "Sinds 2010 biedt Jasmine Group betrouwbare diensten aan duizenden klanten.",
+    "about_desc": "Jasmine Group helpt woningkopers en investeerders met selectie, bezichtigingen en transactiecoördinatie in en rond Alanya.",
     "about_more": "Meer Over Ons",
     "stat_sales": "Verkopen",
     "stat_exp": "Jaren Ervaring",
@@ -552,7 +552,7 @@ const translations = {
     "sec_sale_all": "Alles Te Koop",
     "sec_rent": "Recent Toegevoegd (Huur)",
     "sec_rent_all": "Alles Te Huur",
-    "footer_desc": "Het leidende makelaarskantoor in Alanya. Wij bedienen sinds 2010 duizenden klanten.",
+    "footer_desc": "Woningselectie, bezichtigingen en transactiecoördinatie in en rond Alanya.",
     "footer_links": "Snelle Links",
     "footer_regions": "Regio's Alanya",
     "footer_contact": "Contact",
@@ -607,7 +607,7 @@ const translations = {
     "hero_3": "Unika Investeringar",
     "hero_3_sub": "Höga hyresintäkter i hjärtat av staden.",
     "about_title": "Den Ledande Fastighetsbyrån i Alanya",
-    "about_desc": "Sedan 2010 erbjuder Jasmine Group pålitliga tjänster till tusentals kunder.",
+    "about_desc": "Jasmine Group hjälper bostadsköpare och investerare med urval, visningar och samordning av affären i och runt Alanya.",
     "about_more": "Mer Om Oss",
     "stat_sales": "Försäljningar",
     "stat_exp": "Års Erfarenhet",
@@ -621,7 +621,7 @@ const translations = {
     "sec_sale_all": "Alla Till Salu",
     "sec_rent": "Nyligen Tillagda (Hyra)",
     "sec_rent_all": "Alla Uthyres",
-    "footer_desc": "Den ledande fastighetsbyrån i Alanya. Vi har betjänat tusentals kunder sedan 2010.",
+    "footer_desc": "Fastighetsurval, visningar och samordning av affärer i och runt Alanya.",
     "footer_links": "Snabblänkar",
     "footer_regions": "Regioner Alanya",
     "footer_contact": "Kontakt",
@@ -853,13 +853,14 @@ function renderProperties(props) {
       return;
     }
     visibleProperties.forEach(p => {
-    let imgsHTML = p.images.map(img => `<div class="swiper-slide"><img src="${img}" alt="${p.title || 'Alanya Emlak'}" /></div>`).join('');
+    const displayTitle = formatPropertyTitle(p.title);
+    let imgsHTML = p.images.map(img => `<div class="swiper-slide"><img src="${escapeHTML(img)}" alt="${escapeHTML(displayTitle || 'Alanya Emlak')}" loading="lazy" /></div>`).join('');
     let bClass = p.badge_color ? `prop-badge ${p.badge_color}` : `prop-badge`;
-    let badgeHTML = p.badge ? `<span class="${bClass}">${p.badge}</span>` : '';
+    let badgeHTML = p.badge ? `<span class="${bClass}">${escapeHTML(p.badge)}</span>` : '';
     let suffix = p.type === 'rent' ? ' <em>/ ay</em>' : '';
     
     // desc truncate
-    let desc = p.desc || '';
+    let desc = formatPropertyDescription(p.desc);
     if (desc.length > 120) desc = desc.substring(0, 120) + '...';
     
     let html = `
@@ -871,24 +872,24 @@ function renderProperties(props) {
             <div class="swiper-button-prev"></div>
           </div>
           ${badgeHTML}
-          <div class="prop-code-strip"><span>${p.id}</span><span><i class="fa-solid fa-camera"></i> ${p.images.length}</span></div>
+          <div class="prop-code-strip"><span>${escapeHTML(p.id)}</span><span><i class="fa-solid fa-camera"></i> ${p.images.length}</span></div>
         </div>
         <div class="prop-info-side">
-          <a href="property-detail.html?id=${p.id}" class="prop-title">${p.title}</a>
-          <div class="prop-location"><i class="fa-solid fa-location-dot"></i> ${p.location.toUpperCase()}</div>
+          <a href="property-detail.html?id=${encodeURIComponent(p.id)}" class="prop-title">${escapeHTML(displayTitle)}</a>
+          <div class="prop-location"><i class="fa-solid fa-location-dot"></i> ${escapeHTML(p.location.toLocaleUpperCase('tr-TR'))}</div>
           <div class="prop-rooms">
             <span><i class="fa-solid fa-bed"></i> ${p.rooms}</span>
             <span><i class="fa-solid fa-bath"></i> ${p.bathrooms || '-'} Banyo</span>
-            <span><i class="fa-solid fa-maximize"></i> ${p.area_net} m²</span>
-            ${p.area_gross ? `<span><i class="fa-solid fa-vector-square"></i> ${p.area_gross} m²</span>` : ''}
+            <span><i class="fa-solid fa-maximize"></i> ${escapeHTML(formatArea(p.area_net))}</span>
+            ${p.area_gross ? `<span><i class="fa-solid fa-vector-square"></i> ${escapeHTML(formatArea(p.area_gross))}</span>` : ''}
           </div>
-          <p class="prop-desc">${desc}</p>
+          <p class="prop-desc">${escapeHTML(desc)}</p>
           <div class="prop-footer">
             <div class="prop-price" data-eur="${p.price_eur}" data-type="${p.type === 'rent' ? 'rent_month' : 'sale'}">€ ${p.price_eur.toLocaleString('de-DE')}${suffix}</div>
             <div class="prop-actions">
               <button class="wishlist-btn" style="border:none;background:transparent;cursor:pointer;margin-right:10px;" onclick="toggleWishlist('${p.id}', this)" title="Favorilere Ekle"><i class="fa-regular fa-heart"></i></button>
               <a href="contact.html" class="prop-btn"><i class="fa-solid fa-message"></i> İLETİŞİM</a>
-              <a href="property-detail.html?id=${p.id}" class="prop-btn primary"><i class="fa-solid fa-circle-info"></i> DETAYLAR</a>
+              <a href="property-detail.html?id=${encodeURIComponent(p.id)}" class="prop-btn primary"><i class="fa-solid fa-circle-info"></i> DETAYLAR</a>
             </div>
           </div>
         </div>
@@ -904,6 +905,167 @@ function renderProperties(props) {
   
   changeCurrency(localStorage.getItem('jg_currency') || 'eur');
   if(typeof updateWishlistUI === 'function') updateWishlistUI();
+}
+
+function escapeHTML(value) {
+  return String(value ?? '').replace(/[&<>"']/g, character => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#039;'
+  })[character]);
+}
+
+function formatArea(value) {
+  const area = String(value || '').trim();
+  if (!area) return '-';
+  return /m(?:²|2)/i.test(area) ? area : `${area} m²`;
+}
+
+function formatPropertyTitle(value) {
+  const title = String(value || '').trim().replace(/\s+/g, ' ');
+  if (!title || title !== title.toLocaleUpperCase('tr-TR')) return title;
+  const lower = title.toLocaleLowerCase('tr-TR');
+  return lower.charAt(0).toLocaleUpperCase('tr-TR') + lower.slice(1);
+}
+
+function formatPropertyDescription(value) {
+  return String(value || '').trim().replace(/^Sahibinden(?:\.\.\.)?\s*/i, '');
+}
+
+function setMetaContent(selector, content) {
+  let element = document.querySelector(selector);
+  if (!element) {
+    element = document.createElement('meta');
+    const attribute = selector.includes('property=') ? 'property' : 'name';
+    const match = selector.match(/["']([^"']+)["']/);
+    element.setAttribute(attribute, match ? match[1] : '');
+    document.head.appendChild(element);
+  }
+  element.setAttribute('content', content);
+}
+
+function updatePropertySEO(property, mainImage) {
+  const propertyTitle = formatPropertyTitle(property.title);
+  const title = `${propertyTitle} | Jasmine Group`;
+  const description = `${property.location} bölgesindeki ${property.rooms} ${property.type === 'rent' ? 'kiralık' : 'satılık'} gayrimenkulü inceleyin. Fiyat ve müsaitlik bilgisi danışman teyidine tabidir.`.slice(0, 160);
+  const canonicalUrl = `https://www.jasminegroup.com.tr/property-detail.html?id=${encodeURIComponent(property.id)}`;
+  const canonical = document.querySelector('link[rel="canonical"]');
+
+  document.title = title;
+  setMetaContent('meta[name="description"]', description);
+  setMetaContent('meta[property="og:title"]', title);
+  setMetaContent('meta[property="og:description"]', description);
+  setMetaContent('meta[property="og:type"]', 'website');
+  setMetaContent('meta[property="og:url"]', canonicalUrl);
+  setMetaContent('meta[property="og:image"]', mainImage);
+  if (canonical) canonical.href = canonicalUrl;
+
+  const previousSchema = document.getElementById('property-schema');
+  if (previousSchema) previousSchema.remove();
+  const schema = document.createElement('script');
+  schema.id = 'property-schema';
+  schema.type = 'application/ld+json';
+  schema.textContent = JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'RealEstateListing',
+    name: propertyTitle,
+    description: formatPropertyDescription(property.desc) || description,
+    url: canonicalUrl,
+    image: property.images || [],
+    datePosted: property.created_at || undefined,
+    offers: {
+      '@type': 'Offer',
+      price: property.price_eur,
+      priceCurrency: 'EUR'
+    },
+    address: {
+      '@type': 'PostalAddress',
+      addressLocality: property.location,
+      addressRegion: 'Antalya',
+      addressCountry: 'TR'
+    },
+    floorSize: property.area_net ? {
+      '@type': 'QuantitativeValue',
+      value: Number.parseFloat(String(property.area_net).replace(',', '.')),
+      unitCode: 'MTK'
+    } : undefined,
+    numberOfRooms: property.rooms || undefined
+  });
+  document.head.appendChild(schema);
+}
+
+function initLeadForms(root = document) {
+  root.querySelectorAll('form[data-lead-form]').forEach(form => {
+    if (form.dataset.leadReady === 'true') return;
+    form.dataset.leadReady = 'true';
+
+    form.addEventListener('submit', async event => {
+      event.preventDefault();
+      const status = form.querySelector('.form-status');
+      const button = form.querySelector('button[type="submit"]');
+
+      if (!form.checkValidity()) {
+        form.reportValidity();
+        if (status) {
+          status.className = 'form-status is-error';
+          status.textContent = 'Lütfen zorunlu alanları doldurun ve KVKK onayını işaretleyin.';
+        }
+        return;
+      }
+
+      const data = new FormData(form);
+      const payload = Object.fromEntries(data.entries());
+      payload.consent = data.get('consent') === 'on';
+      payload.pageUrl = window.location.href;
+      if (button) {
+        button.disabled = true;
+        button.dataset.originalText = button.textContent;
+        button.textContent = 'GÖNDERİLİYOR...';
+      }
+      if (status) {
+        status.className = 'form-status';
+        status.textContent = 'Talebiniz güvenli şekilde iletiliyor.';
+      }
+
+      try {
+        const response = await fetch('/api/leads', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const result = await response.json().catch(() => ({}));
+        if (!response.ok) throw new Error(result.error || 'Talep iletilemedi.');
+
+        form.reset();
+        if (status) {
+          status.className = 'form-status is-success';
+          status.textContent = result.message || 'Talebiniz alındı. En kısa sürede sizinle iletişime geçeceğiz.';
+        }
+      } catch (error) {
+        if (status) {
+          status.className = 'form-status is-error';
+          status.textContent = `${error.message} WhatsApp: 0533 085 0769`;
+        }
+      } finally {
+        if (button) {
+          button.disabled = false;
+          button.textContent = button.dataset.originalText || 'GÖNDER';
+        }
+      }
+    });
+  });
+}
+
+function initLegalFooter() {
+  document.querySelectorAll('.footer-bottom .container').forEach(container => {
+    if (container.querySelector('.footer-legal-links')) return;
+    const links = document.createElement('span');
+    links.className = 'footer-legal-links';
+    links.innerHTML = '<a href="privacy.html">Gizlilik</a><a href="kvkk.html">KVKK</a><a href="terms.html">Kullanım Koşulları</a><a href="cookie-policy.html">Çerezler</a>';
+    container.appendChild(links);
+  });
 }
 
 // --- Property Detail Page Logic ---
@@ -926,8 +1088,15 @@ async function renderPropertyDetail() {
   }
   
   let mainImg = p.images.length > 0 ? p.images[0] : 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=800&q=80';
+  updatePropertySEO(p, mainImg);
+  const safeId = escapeHTML(p.id);
+  const safeTitle = escapeHTML(formatPropertyTitle(p.title));
+  const safeLocation = escapeHTML(p.location);
+  const safeRooms = escapeHTML(p.rooms);
+  const descriptionText = formatPropertyDescription(p.desc) || 'Bu ilan hakkında ayrıntılı bilgi almak için danışmanımıza ulaşın.';
+  const safeDescription = escapeHTML(descriptionText).replace(/\n/g, '<br>');
   let thumbsHTML = p.images.map((img, i) => `
-    <img src="${img}" class="detail-thumb ${i===0?'active':''}" onclick="changeMainImage(this, '${img}')">
+    <img src="${escapeHTML(img)}" alt="${safeTitle} görseli ${i + 1}" class="detail-thumb ${i===0?'active':''}" onclick="changeMainImage(this, '${escapeHTML(img)}')">
   `).join('');
   if(p.images.length === 0) thumbsHTML = '';
   
@@ -944,11 +1113,11 @@ async function renderPropertyDetail() {
       const spImg = sp.images && sp.images.length > 0 ? sp.images[0] : '';
       const spSuffix = sp.type === 'rent' ? ' / ay' : '';
       simHTML += `
-        <a href="property-detail.html?id=${sp.id}" style="text-decoration:none; background:var(--card-bg); border-radius:10px; overflow:hidden; border:1px solid var(--border); transition:0.3s; display:block;" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 8px 25px rgba(0,0,0,0.12)'" onmouseout="this.style.transform=''; this.style.boxShadow=''">
-          <img src="${spImg}" style="width:100%; height:180px; object-fit:cover;" alt="${sp.title}" />
+        <a href="property-detail.html?id=${encodeURIComponent(sp.id)}" class="similar-property-card">
+          <img src="${escapeHTML(spImg)}" alt="${escapeHTML(formatPropertyTitle(sp.title))}" loading="lazy" />
           <div style="padding:15px;">
-            <h4 style="color:var(--navy); font-size:15px; margin:0 0 8px; line-height:1.3;">${sp.title}</h4>
-            <p style="color:var(--text-muted); font-size:13px; margin:0 0 8px;"><i class="fa-solid fa-location-dot"></i> ${sp.location}</p>
+            <h4>${escapeHTML(formatPropertyTitle(sp.title))}</h4>
+            <p><i class="fa-solid fa-location-dot"></i> ${escapeHTML(sp.location)}</p>
             <div style="color:var(--red); font-weight:800; font-size:16px;">€ ${sp.price_eur.toLocaleString('de-DE')}${spSuffix}</div>
           </div>
         </a>`;
@@ -965,17 +1134,17 @@ async function renderPropertyDetail() {
       <span class="separator"><i class="fa-solid fa-chevron-right"></i></span>
       <a href="buy.html">Alanya</a>
       <span class="separator"><i class="fa-solid fa-chevron-right"></i></span>
-      <span style="color:var(--navy);">${p.title}</span>
+      <span style="color:var(--navy);">${safeTitle}</span>
     </div>
 
     <div class="detail-page-wrapper">
       <!-- LEFT COLUMN -->
       <div class="detail-left-col">
         
-        <h1 class="detail-main-title">${p.title}</h1>
+        <h1 class="detail-main-title">${safeTitle}</h1>
         <div class="detail-location-subtitle">
-          <i class="fa-solid fa-location-dot"></i> ${p.location}
-          ${p.badge ? `<span class="${bClass}" style="margin-left:15px; font-size:11px; padding:2px 8px; position:static;">${p.badge}</span>` : ''}
+          <i class="fa-solid fa-location-dot"></i> ${safeLocation}
+          ${p.badge ? `<span class="${bClass}" style="margin-left:15px; font-size:11px; padding:2px 8px; position:static;">${escapeHTML(p.badge)}</span>` : ''}
         </div>
 
         <!-- GALLERY -->
@@ -995,23 +1164,19 @@ async function renderPropertyDetail() {
         <div class="detail-specs-box">
           <div class="detail-specs-title"><i class="fa-solid fa-list" style="color:var(--red); margin-right:8px;"></i> İlan Özellikleri</div>
           <div class="detail-specs-grid">
-            <div class="spec-item"><span class="spec-label">İlan No</span><span class="spec-value">${p.id}</span></div>
-            <div class="spec-item"><span class="spec-label">Emlak Tipi</span><span class="spec-value">Daire</span></div>
+            <div class="spec-item"><span class="spec-label">İlan No</span><span class="spec-value">${safeId}</span></div>
             <div class="spec-item"><span class="spec-label">Durumu</span><span class="spec-value">${typeLabel}</span></div>
-            <div class="spec-item"><span class="spec-label">Oda Sayısı</span><span class="spec-value">${p.rooms}</span></div>
-            <div class="spec-item"><span class="spec-label">Banyo</span><span class="spec-value">${p.bathrooms || '-'}</span></div>
-            <div class="spec-item"><span class="spec-label">Brüt / Arsa Alanı</span><span class="spec-value">${p.area_gross || '-'}</span></div>
-            <div class="spec-item"><span class="spec-label">Net Alan</span><span class="spec-value">${p.area_net}</span></div>
-            <div class="spec-item"><span class="spec-label">Bina Yaşı</span><span class="spec-value">0 (Yeni)</span></div>
-            <div class="spec-item"><span class="spec-label">Bulunduğu Kat</span><span class="spec-value">Ara Kat</span></div>
-            <div class="spec-item"><span class="spec-label">Isıtma Tipi</span><span class="spec-value">Klima</span></div>
+            <div class="spec-item"><span class="spec-label">Oda Sayısı</span><span class="spec-value">${safeRooms || '-'}</span></div>
+            <div class="spec-item"><span class="spec-label">Banyo</span><span class="spec-value">${escapeHTML(p.bathrooms || '-')}</span></div>
+            <div class="spec-item"><span class="spec-label">Brüt / Arsa Alanı</span><span class="spec-value">${escapeHTML(formatArea(p.area_gross))}</span></div>
+            <div class="spec-item"><span class="spec-label">Net Alan</span><span class="spec-value">${escapeHTML(formatArea(p.area_net))}</span></div>
           </div>
         </div>
 
         <!-- DESCRIPTION -->
         <div class="detail-desc-box">
           <div class="detail-specs-title"><i class="fa-solid fa-align-left" style="color:var(--red); margin-right:8px;"></i> İlan Açıklaması</div>
-          <div class="detail-desc-text">${p.desc.replace(/\n/g, '<br>')}</div>
+          <div class="detail-desc-text">${safeDescription}</div>
         </div>
 
         <!-- SIMILAR PROPERTIES -->
@@ -1025,28 +1190,40 @@ async function renderPropertyDetail() {
         <!-- PRICE BOX -->
         <div class="sidebar-price-box">
           <div class="sidebar-price prop-price" data-eur="${p.price_eur}" data-type="${p.type === 'rent' ? 'rent_month' : 'sale'}">€ ${p.price_eur.toLocaleString('de-DE')}${suffix}</div>
-          <div class="sidebar-ref">İlan Kodu: ${p.id}</div>
+          <div class="sidebar-ref">İlan Kodu: ${safeId}</div>
+          <p class="price-verification"><i class="fa-solid fa-circle-check"></i> Fiyat ve müsaitlik danışman tarafından teyit edilir.</p>
         </div>
 
         <!-- AGENT & CONTACT FORM -->
         <div class="sidebar-contact-box">
           <div class="sidebar-agent">
-            <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=200&q=80" class="sidebar-agent-img" alt="Agent">
+            <div class="sidebar-agent-mark" aria-hidden="true"><i class="fa-solid fa-house-chimney-window"></i></div>
             <div class="sidebar-agent-info">
-              <h4>Jasmine Group</h4>
-              <p>Gayrimenkul Danışmanı</p>
-              <div style="color:gold; font-size:12px; margin-top:3px;"><i class="fa-solid fa-star"></i> 4.9 (120)</div>
+              <h4>Jasmine Group Portföy Ekibi</h4>
+              <p>Alanya bölge danışmanlığı</p>
             </div>
           </div>
 
-          <div class="sidebar-form">
-            <h4 style="color:var(--navy); margin-bottom:15px; font-size:15px;">Bilgi Alın</h4>
-            <input type="text" placeholder="Adınız Soyadınız">
-            <input type="text" placeholder="Telefon Numaranız">
-            <input type="email" placeholder="E-posta Adresiniz">
-            <textarea rows="3" placeholder="Merhaba, ${p.id} referans numaralı ilan hakkında bilgi almak istiyorum."></textarea>
-            <button type="button" onclick="alert('Mesajınız başarıyla iletildi. En kısa sürede dönüş yapacağız.')">GÖNDER</button>
-          </div>
+          <form class="sidebar-form" data-lead-form novalidate>
+            <h4>İlan Hakkında Bilgi Alın</h4>
+            <input type="hidden" name="source" value="property-detail">
+            <input type="hidden" name="propertyId" value="${safeId}">
+            <div class="hp-field" aria-hidden="true"><label>Web sitesi<input type="text" name="website" tabindex="-1" autocomplete="off"></label></div>
+            <label for="lead-name">Adınız Soyadınız</label>
+            <input id="lead-name" name="name" type="text" autocomplete="name" required maxlength="100">
+            <label for="lead-phone">Telefon Numaranız</label>
+            <input id="lead-phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" required maxlength="30">
+            <label for="lead-email">E-posta Adresiniz <small>(isteğe bağlı)</small></label>
+            <input id="lead-email" name="email" type="email" autocomplete="email" maxlength="120">
+            <label for="lead-message">Mesajınız</label>
+            <textarea id="lead-message" name="message" rows="3" required maxlength="2000">Merhaba, ${safeId} referans numaralı ilan hakkında bilgi almak istiyorum.</textarea>
+            <label class="consent-field">
+              <input type="checkbox" name="consent" required>
+              <span><a href="kvkk.html" target="_blank">KVKK metnini</a> okudum ve talebim için iletişime geçilmesini kabul ediyorum.</span>
+            </label>
+            <button type="submit">TALEBİ GÖNDER</button>
+            <div class="form-status" role="status" aria-live="polite"></div>
+          </form>
 
           <div class="sidebar-actions">
             <a href="https://wa.me/905330850769?text=${encodeURIComponent('Merhaba, ' + p.id + ' ilanınız hakkında bilgi alabilir miyim? ' + window.location.href)}" target="_blank" class="sidebar-action-btn wa"><i class="fa-brands fa-whatsapp"></i> WhatsApp</a>
@@ -1066,6 +1243,7 @@ async function renderPropertyDetail() {
   
   // Para birimi vs uygula
   changeCurrency(localStorage.getItem('jg_currency') || 'eur');
+  initLeadForms(container);
   
   // Re-run language translation for dynamic content if any
   const lang = localStorage.getItem('jg_lang') || 'tr';
@@ -1081,6 +1259,8 @@ async function renderPropertyDetail() {
 
 // Add to DOMContentLoaded
 document.addEventListener('DOMContentLoaded', () => {
+  initLeadForms();
+  initLegalFooter();
   renderPropertyDetail();
 });
 
@@ -1383,31 +1563,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Global Floating WhatsApp Button
 document.addEventListener('DOMContentLoaded', () => {
+    const preferredButton = document.querySelector('.float-wa');
+    if (preferredButton) {
+        document.querySelectorAll('.wa-float').forEach(button => button.remove());
+        return;
+    }
     if (document.querySelector('.wa-float')) return;
     const waBtn = document.createElement('a');
+    waBtn.className = 'float-wa';
     waBtn.href = "https://wa.me/905330850769";
     waBtn.target = "_blank";
+    waBtn.setAttribute('aria-label', 'WhatsApp ile yazın');
     waBtn.innerHTML = '<i class="fa-brands fa-whatsapp"></i>';
-    Object.assign(waBtn.style, {
-        position: 'fixed',
-        bottom: '30px',
-        right: '30px',
-        backgroundColor: '#25D366',
-        color: '#fff',
-        width: '60px',
-        height: '60px',
-        borderRadius: '50%',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        fontSize: '35px',
-        boxShadow: '0 4px 15px rgba(37, 211, 102, 0.4)',
-        zIndex: '9999',
-        textDecoration: 'none',
-        transition: 'transform 0.3s'
-    });
-    waBtn.onmouseover = () => waBtn.style.transform = 'scale(1.1)';
-    waBtn.onmouseout = () => waBtn.style.transform = 'scale(1)';
     document.body.appendChild(waBtn);
 });
 

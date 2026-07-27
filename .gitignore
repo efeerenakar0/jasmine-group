@@ -10,3 +10,6 @@ Sahibinden 6/
 .codebase-memory/
 dist/
 uploads/
+.env
+.env.local
+.env.*.local

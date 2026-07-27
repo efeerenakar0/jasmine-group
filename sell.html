@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="tr" lang="tr">
+<html lang="tr">
 <head>
   <meta charset="UTF-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -14,7 +14,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css?v=1784895421304" />
+  <link rel="stylesheet" href="style.css?v=20260727" />
   <link rel="icon" type="image/jpeg" href="images/favicon.jpg">
 
   <meta property="og:title" content="Jasmine Group - Alanya Emlak Proje Pazarlama" />
@@ -27,7 +27,7 @@
   <meta name="twitter:description" content="Alanya'da Profesyonel Emlak Hizmetleri, Lüks Daireler ve Villalar." />
   <meta name="twitter:image" content="https://www.jasminegroup.com.tr/images/favicon.jpg" />
   <meta name="keywords" content="Alanya satılık daire, Alanya emlak, Jasmine Group, satılık ev Alanya, Alanya kiralık daire, Alanya gayrimenkul" />
-  <link rel="canonical" href="https://www.jasminegroup.com.tr/" />
+  <link rel="canonical" href="https://www.jasminegroup.com.tr/sell.html" />
 
 </head>
 <body>
@@ -38,9 +38,9 @@
       <div class="tb-divider">|</div>
       <div class="tb-phone-group">
         <span class="tb-phone-label" data-i18n="nav_call">HEMEN ARA</span>
-        <a href="tel:+902420000000" class="tb-phone-num">444 6 407</a>
+        <a href="tel:4446407" class="tb-phone-num">444 6 407</a>
         <span class="tb-phone-label mobil" data-i18n="nav_mobile">MOBİL</span>
-        <a href="tel:+905320000000" class="tb-phone-num">0533 085 0769</a>
+        <a href="tel:+905330850769" class="tb-phone-num">0533 085 0769</a>
         <a href="https://wa.me/905330850769" target="_blank" class="tb-whatsapp"><i class="fa-brands fa-whatsapp"></i></a>
       </div>
       <div class="tb-divider">|</div>
@@ -88,28 +88,38 @@
         <div class="sell-step">
           <div class="sell-step-icon"><i class="fa-solid fa-handshake"></i></div>
           <h3>Hızlı ve Güvenli Satış</h3>
-          <p>Hukuki süreçler ve tapu işlemleri ekibimiz tarafından sıfır hata ile yönetilir.</p>
+          <p>Hukuki süreç ve tapu adımları, ilgili uzmanlarla koordineli ve şeffaf biçimde takip edilir.</p>
         </div>
       </div>
 
       <div class="contact-form-card" style="max-width:800px;margin:0 auto 60px;">
         <h2>Hemen Ücretsiz Değerleme İsteyin</h2>
-        <form>
+        <form data-lead-form novalidate>
+          <input type="hidden" name="source" value="valuation-page" />
+          <div class="hp-field" aria-hidden="true">
+            <label for="sell-website">Web sitesi</label>
+            <input id="sell-website" type="text" name="website" tabindex="-1" autocomplete="off" />
+          </div>
           <div class="form-row">
             <div class="form-group">
-              <label>Adınız Soyadınız</label>
-              <input type="text" class="form-control" />
+              <label for="sell-name">Adınız Soyadınız</label>
+              <input id="sell-name" name="name" type="text" class="form-control" autocomplete="name" required maxlength="100" />
             </div>
             <div class="form-group">
-              <label>Telefon Numaranız</label>
-              <input type="text" class="form-control" />
+              <label for="sell-phone">Telefon Numaranız</label>
+              <input id="sell-phone" name="phone" type="tel" class="form-control" autocomplete="tel" inputmode="tel" required maxlength="30" />
             </div>
           </div>
           <div class="form-group">
-            <label>Mülkünüzün Türü ve Bölgesi</label>
-            <input type="text" class="form-control" placeholder="Örn: Oba'da 2+1 Daire" />
+            <label for="sell-message">Mülkünüzün Türü ve Bölgesi</label>
+            <textarea id="sell-message" name="message" class="form-control" required maxlength="2000" placeholder="Örn: Oba'da 2+1 daire; yaklaşık m² ve bina yaşı"></textarea>
           </div>
-          <button type="submit" class="btn-submit">GÖNDER</button>
+          <label class="consent-field">
+            <input type="checkbox" name="consent" required />
+            <span><a href="kvkk.html" target="_blank">KVKK Aydınlatma Metni</a>'ni okudum; değerleme talebim için benimle iletişime geçilmesini kabul ediyorum.</span>
+          </label>
+          <button type="submit" class="btn-submit">DEĞERLEME TALEBİ GÖNDER</button>
+          <div class="form-status" role="status" aria-live="polite"></div>
         </form>
       </div>
     </div>
@@ -120,7 +130,7 @@
       <div class="footer-grid">
         <div class="footer-col footer-col-logo">
           <a href="index.html" class="site-logo">JASMINE <span>GROUP</span></a>
-          <p>Alanya'nın lider gayrimenkul şirketi. 2010'dan bu yana Alanya ve çevresinde binlerce mutlu müşteriye hizmet veriyoruz.</p>
+          <p>Alanya ve çevresinde portföy seçimi, gösterim ve gayrimenkul işlem koordinasyonu sunuyoruz.</p>
           <div class="footer-social">
             <a href="#" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
             <a href="#" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
@@ -160,7 +170,7 @@
           </div>
           <div class="footer-contact-item">
             <i class="fa-solid fa-phone"></i>
-            <span><a href="tel:+902420000000">444 6 407</a></span>
+            <span><a href="tel:4446407">444 6 407</a></span>
           </div>
           <div class="footer-contact-item">
             <i class="fa-brands fa-whatsapp"></i>
@@ -187,7 +197,7 @@
 
   <!-- Swiper JS -->
   <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
-  <script src="script.js?v=1784895421304"></script>
+  <script src="script.js?v=20260727"></script>
 
 <!-- MEGA MENU MODAL -->
 <div id="megaMenuOverlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:9998;" onclick="closeMegaMenu()"></div>
