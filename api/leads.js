@@ -8,7 +8,12 @@ const MAX_LENGTHS = {
   message: 2000,
   source: 80,
   propertyId: 80,
+  contactPreference: 20,
+  availability: 30,
 };
+
+const CONTACT_PREFERENCES = ['phone', 'whatsapp', 'email'];
+const AVAILABILITY_OPTIONS = ['weekday_morning', 'weekday_afternoon', 'weekday_evening', 'weekend', 'flexible'];
 
 function clean(value, maxLength) {
   return String(value || '').trim().slice(0, maxLength);
@@ -63,6 +68,8 @@ async function notifyByEmail(lead) {
     ['Ad soyad', lead.name],
     ['Telefon', lead.phone],
     ['E-posta', lead.email || '-'],
+    ['Tercih edilen iletişim', lead.contact_preference || '-'],
+    ['Uygun zaman', lead.availability || '-'],
     ['Mesaj', lead.message],
   ];
   const html = lines
@@ -117,6 +124,8 @@ module.exports = async function handler(request, response) {
     message: clean(body.message, MAX_LENGTHS.message),
     source: clean(body.source, MAX_LENGTHS.source) || 'website',
     property_id: clean(body.propertyId, MAX_LENGTHS.propertyId) || null,
+    contact_preference: CONTACT_PREFERENCES.includes(body.contactPreference) ? body.contactPreference : null,
+    availability: AVAILABILITY_OPTIONS.includes(body.availability) ? body.availability : null,
     consent: body.consent === true,
     consent_at: new Date().toISOString(),
     page_url: clean(body.pageUrl, 500) || null,

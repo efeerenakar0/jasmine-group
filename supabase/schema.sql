@@ -7,6 +7,8 @@ create table if not exists public.leads (
   message text not null,
   source text not null default 'website',
   property_id text,
+  contact_preference text,
+  availability text,
   consent boolean not null default false,
   consent_at timestamptz,
   page_url text,
@@ -18,8 +20,24 @@ create table if not exists public.leads (
   status text not null default 'new',
   notes text,
   updated_at timestamptz not null default now(),
-  constraint leads_status_check check (status in ('new', 'contacted', 'qualified', 'viewing', 'won', 'lost'))
+  constraint leads_status_check check (status in ('new', 'contacted', 'qualified', 'viewing', 'won', 'lost')),
+  constraint leads_contact_preference_check check (contact_preference is null or contact_preference in ('phone', 'whatsapp', 'email')),
+  constraint leads_availability_check check (availability is null or availability in ('weekday_morning', 'weekday_afternoon', 'weekday_evening', 'weekend', 'flexible'))
 );
+
+alter table public.leads add column if not exists contact_preference text;
+alter table public.leads add column if not exists availability text;
+
+do $$
+begin
+  if not exists (select 1 from pg_constraint where conname = 'leads_contact_preference_check') then
+    alter table public.leads add constraint leads_contact_preference_check check (contact_preference is null or contact_preference in ('phone', 'whatsapp', 'email'));
+  end if;
+  if not exists (select 1 from pg_constraint where conname = 'leads_availability_check') then
+    alter table public.leads add constraint leads_availability_check check (availability is null or availability in ('weekday_morning', 'weekday_afternoon', 'weekday_evening', 'weekend', 'flexible'));
+  end if;
+end
+$$;
 
 alter table public.leads enable row level security;
 

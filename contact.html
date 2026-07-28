@@ -14,7 +14,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css?v=2026072810" />
+  <link rel="stylesheet" href="style.css?v=2026072811" />
   <link rel="icon" type="image/jpeg" href="images/favicon.jpg">
 
   <meta property="og:title" content="Jasmine Group - Alanya Emlak Proje Pazarlama" />
@@ -122,6 +122,26 @@
               <input id="contact-email" name="email" type="email" class="form-control" autocomplete="email" maxlength="120" />
             </div>
             <div class="form-group">
+              <label for="contact-preference">Size nasıl ulaşalım?</label>
+              <select id="contact-preference" name="contactPreference" class="form-control">
+                <option value="">Fark etmez</option>
+                <option value="phone">Telefon</option>
+                <option value="whatsapp">WhatsApp</option>
+                <option value="email">E-posta</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="contact-availability">Sizin için uygun zaman</label>
+              <select id="contact-availability" name="availability" class="form-control">
+                <option value="">Fark etmez</option>
+                <option value="weekday_morning">Hafta içi sabah</option>
+                <option value="weekday_afternoon">Hafta içi öğleden sonra</option>
+                <option value="weekday_evening">Hafta içi akşam</option>
+                <option value="weekend">Hafta sonu</option>
+                <option value="flexible">Esnek</option>
+              </select>
+            </div>
+            <div class="form-group">
               <label for="contact-message">Mesajınız</label>
               <textarea id="contact-message" name="message" class="form-control" required maxlength="2000"></textarea>
             </div>
@@ -206,7 +226,7 @@
 
   <!-- Swiper JS -->
   <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
-  <script src="script.js?v=2026072810"></script>
+  <script src="script.js?v=2026072811"></script>
 
 <!-- MEGA MENU MODAL -->
 <div id="megaMenuOverlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:9998;" onclick="closeMegaMenu()"></div>
