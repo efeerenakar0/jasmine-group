@@ -157,5 +157,13 @@ statik SEO sayfasi, FAQ/Breadcrumb semasi ve sitemap kaydi uretir. Merkez ve
 detay sayfalarindaki `data-region-count` alanlari yayindaki ilan verisinden
 guncellenir. Aktif ilani bulunmayan bir bolge, aktif portfoy baglantisi olarak
 sunulmamalidir.
+
+Alim ve hizmet rehberlerinin iki dilli icerik kaynagi
+`guides-content.json` dosyasidir. Her rehber resmi kurum baglantilari,
+islem adimlari, kontrol listesi ve SSS verisi tasir. Derleme, Turkce ve
+Ingilizce detay sayfalarini Article/FAQ/Breadcrumb semalariyla uretir.
+Degisebilecek harc, esik veya basvuru kosullari sabit bir sonuc gibi
+yayinlanmamali; ilgili TKGM, GIB, Goc Idaresi, e-Devlet veya DASK sayfasina
+dogrudan dogrulama baglantisi verilmelidir.
 Bu bilgiler hazir oldugunda marka diline uygun sekilde admin/editorial
 surecinden gecirilerek yayinlanmalidir.

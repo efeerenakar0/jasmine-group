@@ -2,259 +2,55 @@
 <html lang="tr">
 <head>
   <meta charset="UTF-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Alım Rehberi | Jasmine Group®</title>
-  <meta name="description" content="Alanya'da Profesyonel Emlak Hizmetleri" />
-  <!-- Swiper -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" />
-  <!-- Font Awesome -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-  <!-- Google Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css?v=2026072806" />
-  <link rel="icon" type="image/jpeg" href="images/favicon.jpg">
-
-  <meta property="og:title" content="Jasmine Group - Alanya Emlak Proje Pazarlama" />
-  <meta property="og:description" content="Alanya'da Profesyonel Emlak Hizmetleri, Lüks Daireler ve Villalar." />
-  <meta property="og:image" content="https://jasmine-group.vercel.app/images/favicon.jpg" />
-  <meta property="og:url" content="https://jasmine-group.vercel.app/" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Türkiye'de Gayrimenkul Alım ve İşlem Rehberleri | Jasmine Group</title>
+  <meta name="description" content="Satın alma, tapu kontrolü, masraf planlaması, vekaletname, DASK, ikamet ve vatandaşlık ayrımı için resmi kaynaklı rehberler." />
+  <meta property="og:title" content="Gayrimenkul Alım ve İşlem Rehberleri | Jasmine Group" />
+  <meta property="og:description" content="Türkiye'de gayrimenkul kararını resmi kaynaklar ve bağımsız uzman kontrolüyle hazırlayın." />
   <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://jasmine-group.vercel.app/buying-guide.html" />
+  <meta property="og:image" content="https://jasmine-group.vercel.app/images/office.jpg" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Jasmine Group - Alanya Emlak Proje Pazarlama" />
-  <meta name="twitter:description" content="Alanya'da Profesyonel Emlak Hizmetleri, Lüks Daireler ve Villalar." />
-  <meta name="twitter:image" content="https://jasmine-group.vercel.app/images/favicon.jpg" />
-  <meta name="keywords" content="Alanya satılık daire, Alanya emlak, Jasmine Group, satılık ev Alanya, Alanya kiralık daire, Alanya gayrimenkul" />
   <link rel="canonical" href="https://jasmine-group.vercel.app/buying-guide.html" />
   <link rel="alternate" hreflang="tr" href="https://jasmine-group.vercel.app/buying-guide.html" />
   <link rel="alternate" hreflang="en" href="https://jasmine-group.vercel.app/en/buying-guide.html" />
   <link rel="alternate" hreflang="x-default" href="https://jasmine-group.vercel.app/buying-guide.html" />
-
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;family=Playfair+Display:wght@500;600;700&amp;display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="style.css?v=2026072807" />
 </head>
 <body>
-  <!-- TOP BAR -->
-  <div class="top-bar">
-    <div class="container">
-      <button class="tb-mega-btn" id="megaMenuTrigger" onclick="openMegaMenu()"><i class="fa-solid fa-globe"></i> TR / EUR <i class="fa-solid fa-chevron-down"></i></button>
-      <div class="tb-divider">|</div>
-      <div class="tb-phone-group">
-        <span class="tb-phone-label mobil" data-i18n="nav_mobile">MOBİL</span>
-        <a href="tel:+905330850769" class="tb-phone-num">0533 085 0769</a>
-        <a href="https://wa.me/905330850769" target="_blank" class="tb-whatsapp"><i class="fa-brands fa-whatsapp"></i></a>
-      </div>
-      <div class="tb-divider">|</div>
-      <a href="buy.html" class="tb-btn tb-btn-find" data-i18n="nav_find">EMLAK BUL</a>
-      <a href="contact.html" class="tb-btn tb-btn-appt" data-i18n="nav_appt">RANDEVU AL</a>
-    </div>
-  </div>
-
-  <!-- MAIN HEADER -->
-  <header class="main-header">
-    <div class="container">
-      <a href="index.html" class="site-logo">JASMINE <span>GROUP</span></a>
-      <nav class="main-nav">
-        <a href="buy.html" data-i18n="nav_sale">SATILIK</a>
-        <a href="rent.html" data-i18n="nav_rent">KİRALIK</a>
-        <a href="sell.html" data-i18n="nav_sell">MÜLK SATIŞI</a>
-        <a href="buying-guide.html" class="active" data-i18n="nav_guide">ALIM REHBERİ</a>
-        <a href="corporate.html" data-i18n="nav_corporate">KURUMSAL</a>
-        <a href="blog.html" data-i18n="nav_blog">BLOG</a>
-        <a href="contact.html" data-i18n="nav_contact">İLETİŞİM</a>
-      </nav>
-      <div class="mobile-menu-btn" onclick="toggleMobileMenu()"><i class="fa-solid fa-bars"></i></div>
-    </div>
-  </header>
+  <header class="main-header"><div class="container">
+    <a href="index.html" class="site-logo">JASMINE <span>GROUP</span></a>
+    <nav class="main-nav"><a href="buy.html">SATILIK</a><a href="rent.html">KİRALIK</a><a href="services.html">HİZMETLER</a><a href="regions.html">BÖLGELER</a><a href="buying-guide.html" class="active">ALIM REHBERİ</a><a href="corporate.html">KURUMSAL</a><a href="blog.html">BLOG</a><a href="contact.html">İLETİŞİM</a><a href="en/buying-guide.html">EN</a></nav>
+    <button class="mobile-menu-btn" type="button" onclick="toggleMobileMenu()" aria-label="Menüyü aç"><i class="fa-solid fa-bars"></i></button>
+  </div></header>
   <main>
-    <div class="page-header text-center">
-      <div class="container">
-        <p class="section-kicker">TÜRKİYE'DE GAYRİMENKUL</p>
-        <h1>Alım Rehberi</h1>
-        <div class="breadcrumb justify-center" style="justify-content:center">
-          <a href="index.html">Ana Sayfa</a> <i class="fa-solid fa-chevron-right"></i> Alım Rehberi
-        </div>
-      </div>
-    </div>
-    <div class="page-content container" style="max-width:900px;">
-      <div class="section-intro">
-        <h2>Süreci adım adım ve doğru uzmanlarla yönetin</h2>
-        <p>Gayrimenkul alımında gereklilikler vatandaşlık, mülk ve işlem koşullarına göre değişebilir. Jasmine Group, portföy ve operasyon adımlarını koordine eder; hukuki ve mali konularda lisanslı bağımsız uzman görüşü alınmasını önerir.</p>
-      </div>
-      <div class="guide-steps">
-        <div class="guide-step">
-          <div class="guide-step-num">1</div>
-          <div class="guide-step-body">
-            <h3>İstek Listesinin Oluşturulması</h3>
-            <p>Bütçeniz, tercih ettiğiniz bölge ve ihtiyaçlarınız doğrultusunda sizin için en uygun emlakları belirleyip bir portföy sunuyoruz.</p>
-          </div>
-        </div>
-        <div class="guide-step">
-          <div class="guide-step-num">2</div>
-          <div class="guide-step-body">
-            <h3>Görüntüleme Turu (Viewing Tour)</h3>
-            <p>Seçilen mülkleri yerinde ziyaret ediyoruz. İsterseniz TeleProperty hizmetimizle online olarak da mülkleri canlı gezdirebiliriz.</p>
-          </div>
-        </div>
-        <div class="guide-step">
-          <div class="guide-step-num">3</div>
-          <div class="guide-step-body">
-            <h3>Satış Sözleşmesi ve Kapora</h3>
-            <p>Teklif ve sözleşme koşulları netleştirilir. İmzadan önce belgelerin bağımsız bir hukuk uzmanı tarafından incelenmesi önerilir.</p>
-          </div>
-        </div>
-        <div class="guide-step">
-          <div class="guide-step-num">4</div>
-          <div class="guide-step-body">
-            <h3>Tapu Devri ve Teslimat</h3>
-            <p>Güncel resmi gereklilikler tamamlandıktan sonra devir ve teslim adımları ilgili kurum ve uzmanlarla koordine edilir.</p>
-          </div>
-        </div>
-      </div>
-    </div>
+    <section class="editorial-hero guide-hub-hero"><div class="container editorial-hero-grid"><div><p class="section-kicker">JASMINE BİLGİ MERKEZİ</p><h1>Daha iyi kararlar, daha iyi sorularla başlar.</h1><p>Gayrimenkul alımını ilan seçiminden tapu, ödeme, sigorta ve resmi başvurulara kadar anlaşılır kontrol dosyalarına ayırın.</p><a href="contact.html" class="editorial-cta">Kişisel işlem planı isteyin <i class="fa-solid fa-arrow-right"></i></a></div><div class="editorial-hero-note"><span>06</span><strong>Resmi kaynaklı karar rehberi</strong><p>Her rehber ilgili kamu kurumuna doğrudan bağlantı verir; değişken tutar veya sonuç garantisi yayınlamaz.</p></div></div></section>
+
+    <section class="container guide-hub-intro"><div><p class="section-kicker">KONUYA GÖRE İLERLEYİN</p><h2>Tek bir uzun metin yerine, ihtiyacınız olan işlem dosyasını açın.</h2></div><p>Bu içerikler genel hazırlık içindir. Taşınmaza ve kişiye özel hukuki, mali, teknik veya göçmenlik değerlendirmesi için ilgili alanda yetkili bağımsız uzman kullanın.</p></section>
+
+    <section class="container guide-hub-grid">
+      <article><i class="fa-solid fa-route"></i><span>01</span><p class="section-kicker">ALIM YOL HARİTASI</p><h2><a href="guides/gayrimenkul-satin-alma-sureci.html">Türkiye'de Gayrimenkul Satın Alma Süreci</a></h2><p>İlk ihtiyaç analizinden tapu devri ve teslim tutanağına kadar karar, doğrulama ve koordinasyon adımlarını izleyin.</p><a href="guides/gayrimenkul-satin-alma-sureci.html">Rehberi aç <i class="fa-solid fa-arrow-right"></i></a></article>
+      <article><i class="fa-solid fa-file-shield"></i><span>02</span><p class="section-kicker">MÜLKİYET VE BELGE KONTROLÜ</p><h2><a href="guides/tapu-ve-hukuki-kontrol.html">Tapu ve Hukuki Kontrol Dosyası</a></h2><p>Mülkiyet, taraf yetkisi, takyidatlar, yapı belgeleri ve sözleşme koşullarını karar öncesinde sistemli biçimde inceleyin.</p><a href="guides/tapu-ve-hukuki-kontrol.html">Rehberi aç <i class="fa-solid fa-arrow-right"></i></a></article>
+      <article><i class="fa-solid fa-calculator"></i><span>03</span><p class="section-kicker">MALİ HAZIRLIK</p><h2><a href="guides/masraflar-vergi-ve-odeme-planlamasi.html">Masraflar, Vergi ve Ödeme Planlaması</a></h2><p>Satış fiyatının ötesindeki resmi, profesyonel ve teslim sonrası kalemleri işlem öncesinde tek bütçede toplayın.</p><a href="guides/masraflar-vergi-ve-odeme-planlamasi.html">Rehberi aç <i class="fa-solid fa-arrow-right"></i></a></article>
+      <article><i class="fa-solid fa-video"></i><span>04</span><p class="section-kicker">UZAKTAN İŞLEM</p><h2><a href="guides/uzaktan-alim-ve-vekaletname.html">Uzaktan Alım ve Vekaletname Rehberi</a></h2><p>Online görüntüleme, dijital belge akışı ve sınırlı vekaletname kullanımını güvenli bir işlem planında birleştirin.</p><a href="guides/uzaktan-alim-ve-vekaletname.html">Rehberi aç <i class="fa-solid fa-arrow-right"></i></a></article>
+      <article><i class="fa-solid fa-house-shield"></i><span>05</span><p class="section-kicker">TESLİM SONRASI HAZIRLIK</p><h2><a href="guides/dask-sigorta-ve-abonelikler.html">DASK, Konut Sigortası ve Abonelikler</a></h2><p>Devir öncesi poliçe kontrolünden elektrik ve su aboneliklerine, teslim sonrası koruma dosyasını hazırlayın.</p><a href="guides/dask-sigorta-ve-abonelikler.html">Rehberi aç <i class="fa-solid fa-arrow-right"></i></a></article>
+      <article><i class="fa-solid fa-passport"></i><span>06</span><p class="section-kicker">RESMİ BAŞVURU AYRIMI</p><h2><a href="guides/ikamet-izni-ve-vatandaslik.html">Taşınmaz, İkamet İzni ve Vatandaşlık Ayrımı</a></h2><p>Gayrimenkul alımını ikamet ve vatandaşlık süreçleriyle karıştırmadan, her başlığı kendi resmi koşullarıyla değerlendirin.</p><a href="guides/ikamet-izni-ve-vatandaslik.html">Rehberi aç <i class="fa-solid fa-arrow-right"></i></a></article>
+    </section>
+
+    <section class="source-standard-band"><div class="container"><div><p class="section-kicker">YAYIN STANDARDI</p><h2>Resmi kaynağa gitmeden karar vermeyin.</h2><p>TKGM, GİB, Göç İdaresi, e-Devlet ve DASK bağlantıları her rehberde ilgili başlığın altında sunulur.</p></div><div class="source-authorities"><span>TKGM</span><span>GİB</span><span>GÖÇ İDARESİ</span><span>e-DEVLET</span><span>DASK</span></div></div></section>
+
+    <section class="container process-band-light"><div><p class="section-kicker">JASMINE ÇALIŞMA MODELİ</p><h2>Koordinasyon ile bağımsız uzman görüşünü birbirinden ayırıyoruz.</h2></div><ol><li><span>01</span><strong>İhtiyaç dosyası</strong><p>Hedef, bütçe ve zamanlama</p></li><li><span>02</span><strong>Portföy karşılaştırması</strong><p>Doğrulanabilir kısa liste</p></li><li><span>03</span><strong>Uzman kontrolü</strong><p>Hukuk, mali ve teknik inceleme</p></li><li><span>04</span><strong>İşlem koordinasyonu</strong><p>Ödeme, devir ve teslim planı</p></li></ol></section>
+
+    <section class="container content-cta"><div><p class="section-kicker">KİŞİSEL SORUNUZ</p><h2>Rehberi kendi bütçe, bölge ve kullanım planınıza dönüştürün.</h2></div><a href="contact.html">Danışmanla görüşün</a></section>
   </main>
-  <!-- FOOTER -->
-  <footer class="main-footer">
-    <div class="container">
-      <div class="footer-grid">
-        <div class="footer-col footer-col-logo">
-          <a href="index.html" class="site-logo">JASMINE <span>GROUP</span></a>
-          <p>Alanya ve çevresinde portföy seçimi, gösterim ve gayrimenkul işlem koordinasyonu sunuyoruz.</p>
-          <div class="footer-social">
-            <a href="https://wa.me/905330850769" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
-          </div>
-        </div>
-        <div class="footer-col">
-          <h4>Hızlı Linkler</h4>
-          <ul>
-            <li><a href="buy.html"><i class="fa-solid fa-chevron-right"></i> Satılık Emlaklar</a></li>
-            <li><a href="rent.html"><i class="fa-solid fa-chevron-right"></i> Kiralık Emlaklar</a></li>
-            <li><a href="sell.html"><i class="fa-solid fa-chevron-right"></i> Mülkünüzü Satın</a></li>
-            <li><a href="buying-guide.html"><i class="fa-solid fa-chevron-right"></i> Alım Rehberi</a></li>
-            <li><a href="corporate.html"><i class="fa-solid fa-chevron-right"></i> Hakkımızda</a></li>
-            <li><a href="blog.html"><i class="fa-solid fa-chevron-right"></i> Blog</a></li>
-            <li><a href="contact.html"><i class="fa-solid fa-chevron-right"></i> İletişim</a></li>
-          </ul>
-        </div>
-        <div class="footer-col">
-          <h4>Alanya Bölgeleri</h4>
-          <ul>
-            <li><a href="buy.html"><i class="fa-solid fa-location-dot"></i> Alanya Merkez</a></li>
-            <li><a href="buy.html"><i class="fa-solid fa-location-dot"></i> Oba</a></li>
-            <li><a href="buy.html"><i class="fa-solid fa-location-dot"></i> Mahmutlar</a></li>
-            <li><a href="buy.html"><i class="fa-solid fa-location-dot"></i> Kargıcak</a></li>
-            <li><a href="buy.html"><i class="fa-solid fa-location-dot"></i> Tepe & Bektaş</a></li>
-            <li><a href="buy.html"><i class="fa-solid fa-location-dot"></i> Kestel</a></li>
-            <li><a href="buy.html"><i class="fa-solid fa-location-dot"></i> Avsallar</a></li>
-          </ul>
-        </div>
-        <div class="footer-col">
-          <h4>İletişim</h4>
-          <div class="footer-contact-item">
-            <i class="fa-solid fa-location-dot"></i>
-            <span>Oba Mah.Mesut Cad.13.Sok.Best Home Comfort 7.A-Block No:40/18-19, 07400 Alanya/Antalya</span>
-          </div>
-          <div class="footer-contact-item">
-            <i class="fa-solid fa-phone"></i>
-            <span><a href="tel:+905330850769">0533 085 0769</a></span>
-          </div>
-          <div class="footer-contact-item">
-            <i class="fa-brands fa-whatsapp"></i>
-            <span><a href="https://wa.me/905330850769">0533 085 0769</a></span>
-          </div>
-          <div class="footer-contact-item">
-            <i class="fa-solid fa-envelope"></i>
-            <span><a href="mailto:jasminegroupemlak@gmail.com">jasminegroupemlak@gmail.com</a></span>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="footer-bottom">
-      <div class="container">
-        © 2024 Jasmine Group® — Tüm hakları saklıdır. | Alanya, Antalya
-      </div>
-    </div>
-  </footer>
-
-  <!-- WhatsApp Float -->
-  <a href="https://wa.me/905330850769" class="wa-float" target="_blank" aria-label="WhatsApp ile yazın">
-    <i class="fa-brands fa-whatsapp"></i>
-  </a>
-
-  <!-- Swiper JS -->
-  <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
-  <script src="script.js?v=2026072806"></script>
-
-<!-- MEGA MENU MODAL -->
-<div id="megaMenuOverlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:9998;" onclick="closeMegaMenu()"></div>
-<div id="megaMenuModal" style="display:none; position:fixed; top:40px; left:50%; transform:translateX(-50%); width:90%; max-width:900px; background:#fff; z-index:9999; border-radius:8px; box-shadow:0 10px 30px rgba(0,0,0,0.2); padding:30px; padding-top:40px;">
-  <button onclick="closeMegaMenu()" style="position:absolute; top:10px; right:15px; background:transparent; border:none; font-size:24px; cursor:pointer; color:#888;">&times;</button>
-  
-  <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:30px;">
-    <!-- LANGUAGE -->
-    <div>
-      <h4 style="margin:0 0 15px; font-size:13px; color:var(--navy); border-bottom:1px solid #eee; padding-bottom:10px;">LANGUAGE</h4>
-      <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; font-size:14px;">
-        <a href="#" onclick="setLangMega('en', event)" class="mega-lang mega-link">English</a>
-        <a href="#" onclick="setLangMega('tr', event)" class="mega-lang mega-link active">Türkçe</a>
-      </div>
-    </div>
-    
-    <!-- CURRENCY -->
-    <div style="border-left:1px solid #eee; padding-left:30px;">
-      <h4 style="margin:0 0 15px; font-size:13px; color:var(--navy); border-bottom:1px solid #eee; padding-bottom:10px;">CURRENCY</h4>
-      <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:10px; font-size:14px;">
-        <a href="#" onclick="setCurrMega('try', event)" class="mega-curr mega-link">TRY</a>
-        <a href="#" onclick="setCurrMega('usd', event)" class="mega-curr mega-link">USD</a>
-        <a href="#" onclick="setCurrMega('eur', event)" class="mega-curr mega-link active">EUR</a>
-        <a href="#" onclick="setCurrMega('sek', event)" class="mega-curr mega-link">SEK</a>
-        <a href="#" onclick="setCurrMega('nok', event)" class="mega-curr mega-link">NOK</a>
-        <a href="#" onclick="setCurrMega('chf', event)" class="mega-curr mega-link">CHF</a>
-        <a href="#" onclick="setCurrMega('gbp', event)" class="mega-curr mega-link">GBP</a>
-        <a href="#" onclick="setCurrMega('cny', event)" class="mega-curr mega-link">CNY</a>
-        <a href="#" onclick="setCurrMega('cad', event)" class="mega-curr mega-link">CAD</a>
-      </div>
-    </div>
-    
-    <!-- UNIT -->
-    <div style="border-left:1px solid #eee; padding-left:30px;">
-      <h4 style="margin:0 0 15px; font-size:13px; color:var(--navy); border-bottom:1px solid #eee; padding-bottom:10px;">MEASUREMENT UNIT</h4>
-      <div style="display:flex; gap:20px; font-size:14px;">
-        <a href="#" onclick="setUnitMega('metric')" class="mega-unit mega-link active">METRIC</a>
-        <a href="#" onclick="setUnitMega('imperial')" class="mega-unit mega-link">IMPERIAL</a>
-      </div>
-    </div>
-  </div>
-</div>
-
-
+  <footer class="main-footer compact-footer"><div class="container"><div><a href="index.html" class="site-logo">JASMINE <span>GROUP</span></a><p>Alanya ve çevresinde portföy seçimi, gösterim ve işlem koordinasyonu.</p></div><nav><a href="services.html">Hizmetler</a><a href="regions.html">Bölgeler</a><a href="buying-guide.html">Alım Rehberi</a><a href="privacy.html">Gizlilik</a><a href="contact.html">İletişim</a></nav></div></footer>
   <div class="msm-overlay" id="msmOverlay" onclick="toggleMobileMenu()"></div>
-  <div class="mobile-side-menu" id="mobileSideMenu">
-    <div class="msm-header">
-      <img src="images/favicon.jpg" alt="Logo">
-      <div class="msm-close" onclick="toggleMobileMenu()"><i class="fa-solid fa-xmark"></i></div>
-    </div>
-    <div class="msm-nav">
-      <a href="index.html">Ana Sayfa</a>
-      <a href="buy.html">Satılık</a>
-      <a href="rent.html">Kiralık</a>
-      <a href="corporate.html">Kurumsal</a>
-      <a href="contact.html">İletişim</a>
-    </div>
-  </div>
-  <a href="https://wa.me/905330850769" target="_blank" class="float-wa">
-    <i class="fa-brands fa-whatsapp"></i>
-  </a>
-
-
-  <nav class="mobile-bottom-nav">
-    <div class="mobile-bottom-nav-inner">
-      <a href="index.html" class="mob-nav-item"><i class="fa-solid fa-house"></i><span>Ana Sayfa</span></a>
-      <a href="buy.html" class="mob-nav-item"><i class="fa-solid fa-tag"></i><span>Satılık</span></a>
-      <a href="rent.html" class="mob-nav-item"><i class="fa-solid fa-key"></i><span>Kiralık</span></a>
-      <a href="contact.html" class="mob-nav-item"><i class="fa-solid fa-phone"></i><span>İletişim</span></a>
-    </div>
-  </nav>
-
+  <aside class="mobile-side-menu" id="mobileSideMenu"><div class="msm-header"><a href="index.html" class="site-logo">JASMINE <span>GROUP</span></a><button class="msm-close" type="button" onclick="toggleMobileMenu()" aria-label="Menüyü kapat"><i class="fa-solid fa-xmark"></i></button></div><nav class="msm-nav"><a href="index.html">Ana Sayfa</a><a href="buy.html">Satılık</a><a href="rent.html">Kiralık</a><a href="services.html">Hizmetler</a><a href="regions.html">Bölgeler</a><a href="buying-guide.html">Alım Rehberi</a><a href="contact.html">İletişim</a><a href="en/buying-guide.html">English</a></nav></aside>
+  <a href="https://wa.me/905330850769" target="_blank" class="float-wa" aria-label="WhatsApp ile yazın"><i class="fa-brands fa-whatsapp"></i></a>
+  <script src="script.js?v=2026072807"></script>
 </body>
 </html>

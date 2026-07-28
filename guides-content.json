@@ -1,0 +1,245 @@
+[
+  {
+    "slug": "gayrimenkul-satin-alma-sureci",
+    "icon": "fa-route",
+    "categoryTr": "ALIM YOL HARİTASI",
+    "categoryEn": "BUYING ROADMAP",
+    "titleTr": "Türkiye'de Gayrimenkul Satın Alma Süreci",
+    "titleEn": "Property Buying Process in Turkey",
+    "summaryTr": "İlk ihtiyaç analizinden tapu devri ve teslim tutanağına kadar karar, doğrulama ve koordinasyon adımlarını tek dosyada izleyin.",
+    "summaryEn": "Follow the decision, verification and coordination stages from the first property brief to title transfer and handover.",
+    "introTr": "Satın alma süreci yalnızca ilan seçmekten oluşmaz. Uygunluk, mülkiyet, sözleşme, para transferi ve teslim başlıklarının doğru sırada ilerlemesi gerekir. Gereklilikler alıcının uyruğuna ve taşınmazın niteliğine göre değişebileceğinden, işlem dosyanızı yetkili kurumlar ve bağımsız lisanslı uzmanlarla doğrulayın.",
+    "introEn": "Buying is more than choosing a listing. Eligibility, ownership, contract, fund transfer and handover need to progress in the right order. Requirements vary by nationality and property, so verify the transaction file with the relevant authorities and independent licensed professionals.",
+    "stepsTr": [
+      {"title": "Yazılı ihtiyaç dosyası", "body": "Bütçe, kullanım amacı, bölge, oda sayısı, teslim zamanı ve vazgeçilmez kriterleri yazılı hale getirin. Toplam bütçeyi yalnızca satış fiyatıyla sınırlandırmayın."},
+      {"title": "Karşılaştırılabilir kısa liste", "body": "Seçenekleri aynı formatta fiyat, net alan, bina durumu, ortak gider, konum ve belge hazırlığı üzerinden karşılaştırın. Ziyaretten önce fiyat ve müsaitliği yeniden teyit edin."},
+      {"title": "Bağımsız kontrol ve sözleşme", "body": "Tapu kaydı, taraf yetkisi, takyidatlar, yapı ve sözleşme koşullarını bağımsız hukuk ve teknik uzmanlarla inceleyin. Anlamadığınız bir belgeyi imzalamayın."},
+      {"title": "Ödeme, devir ve teslim", "body": "Ödeme akışı ile resmi devir adımlarını aynı işlem planında tutun. Anahtar, sayaç, demirbaş, borç ve eksik iş durumunu teslim tutanağına bağlayın."}
+    ],
+    "stepsEn": [
+      {"title": "Written property brief", "body": "Record budget, intended use, area, rooms, timing and non-negotiable criteria. Do not treat the asking price as the complete acquisition budget."},
+      {"title": "Comparable shortlist", "body": "Compare price, verified net area, building condition, communal cost, location and document readiness in one consistent format. Reconfirm price and availability before travelling."},
+      {"title": "Independent checks and contract", "body": "Ask independent legal and technical professionals to review ownership, authority, encumbrances, building status and contract terms. Do not sign documents you do not understand."},
+      {"title": "Payment, transfer and handover", "body": "Keep the payment flow and official transfer in one transaction plan. Record keys, meters, fixtures, debts and incomplete work in a written handover document."}
+    ],
+    "checklistTr": ["Pasaport veya kimlik belgelerinin güncel kopyaları", "Yazılı bütçe ve kısa liste karşılaştırması", "Bağımsız hukuki ve teknik inceleme raporları", "Ödeme, devir ve teslim kontrol çizelgesi"],
+    "checklistEn": ["Current passport or identity documents", "Written budget and shortlist comparison", "Independent legal and technical review records", "Payment, transfer and handover checklist"],
+    "faqTr": [
+      {"question": "Kapora ödemeden önce ne yapılmalı?", "answer": "Fiyat ve müsaitlik yeniden teyit edilmeli; mülk, taraf yetkisi, iade koşulları ve sözleşme metni bağımsız uzman tarafından incelenmelidir."},
+      {"question": "İlan fiyatı toplam bütçe midir?", "answer": "Hayır. Vergi, harç, döner sermaye, ekspertiz, tercüme, sigorta, hukuki ve teknik hizmet gibi kalemler işlem dosyasına göre ayrıca planlanmalıdır."},
+      {"question": "Jasmine Group hukuki onay verir mi?", "answer": "Jasmine Group portföy ve operasyon koordinasyonu sunar. Hukuki, mali ve teknik görüş için ilgili alanda yetkili bağımsız uzman kullanılmalıdır."}
+    ],
+    "faqEn": [
+      {"question": "What should happen before paying a deposit?", "answer": "Reconfirm price and availability, then have the property, seller authority, refund conditions and contract reviewed by an independent professional."},
+      {"question": "Is the listing price the total budget?", "answer": "No. Taxes, official fees, valuation, translation, insurance, legal and technical services may need separate budgeting for the specific transaction."},
+      {"question": "Does Jasmine Group provide legal approval?", "answer": "Jasmine Group coordinates property and operational stages. Use an appropriately licensed independent professional for legal, tax and technical advice."}
+    ],
+    "sources": [
+      {"authority": "TKGM", "labelTr": "Yabancı İşler Sık Sorulan Sorular", "labelEn": "Foreign Affairs Property FAQ", "url": "https://www.tkgm.gov.tr/sss/yabanci-isler-dairesi-baskanligi"},
+      {"authority": "e-Devlet / TKGM", "labelTr": "Web Tapu İşlemleri", "labelEn": "Web Title Deed Services", "url": "https://www.turkiye.gov.tr/tkgm-web-tapu"}
+    ]
+  },
+  {
+    "slug": "tapu-ve-hukuki-kontrol",
+    "icon": "fa-file-shield",
+    "categoryTr": "MÜLKİYET VE BELGE KONTROLÜ",
+    "categoryEn": "OWNERSHIP AND DOCUMENT CHECKS",
+    "titleTr": "Tapu ve Hukuki Kontrol Dosyası",
+    "titleEn": "Title Deed and Legal Review File",
+    "summaryTr": "Mülkiyet, taraf yetkisi, takyidatlar, yapı belgeleri ve sözleşme koşullarını karar öncesinde sistemli biçimde inceleyin.",
+    "summaryEn": "Review ownership, party authority, encumbrances, building documentation and contract terms systematically before committing.",
+    "introTr": "Tapu senedinin görülmesi tek başına yeterli inceleme değildir. Güncel kayıt, hak sahibi, temsil yetkisi, taşınmaz niteliği, takyidatlar ve yapı belgeleri birlikte değerlendirilmelidir. İnceleme yalnızca ilgili kayıtları görmeye yetkili taraflar ve bağımsız uzmanlar üzerinden yapılmalıdır.",
+    "introEn": "Seeing a title deed copy is not a complete review. Current registry information, ownership, representative authority, property classification, encumbrances and building documentation need to be evaluated together by authorised parties and independent professionals.",
+    "stepsTr": [
+      {"title": "Kimlik ve temsil yetkisi", "body": "Satıcı ile tapudaki hak sahibinin aynı kişi veya geçerli yetkili temsilci olduğunu doğrulayın. Şirket, miras veya vekalet durumunda yetki zincirini ayrıca inceleyin."},
+      {"title": "Güncel tapu kaydı", "body": "Ada, parsel, bağımsız bölüm, nitelik ve arsa payı bilgilerini taşınmazla eşleştirin. İpotek, haciz, şerh, intifa veya başka sınırlamaları işlem özelinde değerlendirin."},
+      {"title": "Yapı ve fiili durum", "body": "Onaylı proje, ruhsat, yapı kullanım durumu ve fiili plan arasındaki uyumu teknik ve hukuki uzmanlarla kontrol edin. İlan metnini resmi belge yerine kullanmayın."},
+      {"title": "Sözleşme ve çıkış koşulları", "body": "Bedel, ödeme tarihi, teslim, eksik iş, iade, temerrüt ve uyuşmazlık maddelerini açıkça yazın. Sözlü vaatleri imzalı metne dönüştürmeden kabul etmeyin."}
+    ],
+    "stepsEn": [
+      {"title": "Identity and authority", "body": "Confirm that the seller is the registered owner or a valid authorised representative. Review the authority chain separately for companies, inheritance and powers of attorney."},
+      {"title": "Current registry record", "body": "Match block, parcel, independent unit, classification and land share to the actual property. Assess mortgages, attachments, annotations, usufruct and other restrictions for the transaction."},
+      {"title": "Building and physical status", "body": "Ask legal and technical professionals to compare approved plans, permits, occupancy status and the actual layout. A listing description is not an official record."},
+      {"title": "Contract and exit conditions", "body": "State price, payment dates, handover, incomplete work, refund, default and dispute terms clearly. Do not rely on verbal promises that are absent from the signed text."}
+    ],
+    "checklistTr": ["Taraf kimliği ve temsil yetkisi", "Güncel tapu kaydı ve takyidat incelemesi", "Onaylı proje ile fiili durum karşılaştırması", "Bağımsız uzman tarafından incelenmiş sözleşme"],
+    "checklistEn": ["Party identity and representative authority", "Current registry and encumbrance review", "Approved plan compared with actual condition", "Contract reviewed by an independent professional"],
+    "faqTr": [
+      {"question": "Tapu fotoğrafı hukuki kontrol için yeterli mi?", "answer": "Hayır. Kopya güncel olmayabilir ve tüm kayıt ayrıntılarını göstermeyebilir. Yetkili erişimle güncel kayıt ve işlem dosyası incelenmelidir."},
+      {"question": "İpotekli taşınmaz satın alınabilir mi?", "answer": "İşlemin yapısı ve ipoteğin nasıl kaldırılacağı bağımsız hukuk uzmanı ve ilgili kurumlarla planlanmadan ödeme veya taahhüt verilmemelidir."},
+      {"question": "Net metrekare nasıl doğrulanır?", "answer": "İlan veya beyan yerine onaylı proje, resmi kayıtlar ve gerektiğinde yerinde teknik ölçüm birlikte değerlendirilmelidir."}
+    ],
+    "faqEn": [
+      {"question": "Is a title deed photo enough for legal due diligence?", "answer": "No. A copy may be outdated and may not show the complete current record. Review the registry and transaction file through authorised access."},
+      {"question": "Can a mortgaged property be purchased?", "answer": "Do not commit funds until an independent legal professional and relevant institutions have structured how the mortgage will be handled or released."},
+      {"question": "How is net area verified?", "answer": "Compare approved plans and official records and, where appropriate, obtain an on-site technical measurement instead of relying on the listing alone."}
+    ],
+    "sources": [
+      {"authority": "e-Devlet / TKGM", "labelTr": "Tapu Bilgileri ve Web Tapu Hizmetleri", "labelEn": "Title Information and Web Title Services", "url": "https://www.turkiye.gov.tr/tapu-ve-kadastro-genel-mudurlugu?theme=default"},
+      {"authority": "TKGM", "labelTr": "Yabancılara İlişkin Taşınmaz Mevzuatı", "labelEn": "Property Legislation for Foreign Buyers", "url": "https://www.tkgm.gov.tr/yabancii-db/tasinmaz-hukukunda-yabancilara-iliskin-mevzuat"}
+    ]
+  },
+  {
+    "slug": "masraflar-vergi-ve-odeme-planlamasi",
+    "icon": "fa-calculator",
+    "categoryTr": "MALİ HAZIRLIK",
+    "categoryEn": "FINANCIAL PREPARATION",
+    "titleTr": "Masraflar, Vergi ve Ödeme Planlaması",
+    "titleEn": "Costs, Tax and Payment Planning",
+    "summaryTr": "Satış fiyatının ötesindeki resmi, profesyonel ve teslim sonrası kalemleri işlem öncesinde tek bütçede toplayın.",
+    "summaryEn": "Build one transaction budget covering official, professional and post-handover items beyond the asking price.",
+    "introTr": "Oranlar, matrahlar ve zorunlu belgeler zaman içinde veya işlem türüne göre değişebilir. Bu nedenle sabit bir internet tablosunu nihai maliyet olarak kullanmayın. Güncel resmi tahakkuk, banka belgesi ve bağımsız vergi danışmanı hesabını işlem dosyanıza bağlayın.",
+    "introEn": "Rates, assessment bases and required documents can change over time and by transaction. Do not use a static online table as the final cost. Link current official assessments, bank documents and independent tax advice to the transaction file.",
+    "stepsTr": [
+      {"title": "Vergi kimliği ve banka hazırlığı", "body": "Gerekliyse resmi GİB kanalı üzerinden potansiyel vergi numarası sürecini tamamlayın. Banka hesabı, kimlik teyidi ve para kaynağı belgelerini bankanın güncel kurallarına göre hazırlayın."},
+      {"title": "Resmi işlem kalemleri", "body": "Tapu harcı, döner sermaye ve işlem özelindeki diğer resmi tahakkukları yalnızca resmi bildirim veya sorgu üzerinden teyit edin. Sahte ödeme bağlantılarına karşı alıcı bilgilerini kontrol edin."},
+      {"title": "Profesyonel hizmet bütçesi", "body": "Tercüme, ekspertiz, hukuk, teknik kontrol, sigorta ve danışmanlık kalemlerini kapsam ve vergi dahil olacak şekilde yazılı tekliflerle karşılaştırın."},
+      {"title": "Teslim sonrası rezerv", "body": "Aidat, abonelik, taşınma, eşya, bakım, yıllık vergi ve sigorta yenilemelerini ilk yıl nakit planına ekleyin."}
+    ],
+    "stepsEn": [
+      {"title": "Tax identity and banking readiness", "body": "Where required, use the official Revenue Administration channel for a potential tax number. Prepare account, identity and source-of-funds documents under the bank's current rules."},
+      {"title": "Official transaction items", "body": "Confirm title fees, revolving-fund charges and other official assessments only through official notices or services. Check recipient details before any payment."},
+      {"title": "Professional service budget", "body": "Compare written quotations for translation, valuation, legal review, technical inspection, insurance and advisory services, including scope and applicable tax."},
+      {"title": "Post-handover reserve", "body": "Add service charges, utilities, moving, furnishing, maintenance, annual tax and insurance renewals to the first-year cash plan."}
+    ],
+    "checklistTr": ["Resmi vergi numarası veya kimlik hazırlığı", "Güncel resmi harç ve tahakkuk belgesi", "Kapsamı yazılı profesyonel hizmet teklifleri", "İlk yıl işletme ve yenileme bütçesi"],
+    "checklistEn": ["Official tax identity preparation", "Current official fee and assessment notice", "Written professional service quotations", "First-year operating and renewal budget"],
+    "faqTr": [
+      {"question": "Tapu harcı oranı bu rehberde neden yazmıyor?", "answer": "Oran, matrah, istisna ve uygulama değişebilir. Nihai tutar işlem anındaki resmi tahakkuk ve bağımsız vergi görüşüyle doğrulanmalıdır."},
+      {"question": "Yabancı alıcı vergi numarasını nereden almalı?", "answer": "GİB Dijital Vergi Dairesi'nin yabancılar için resmi başvuru sayfası kullanılmalı; üçüncü taraf sitelere hassas bilgi verilmemelidir."},
+      {"question": "Döviz Alım Belgesi her işlemde aynı şekilde mi uygulanır?", "answer": "Yabancı gerçek kişi edinimlerinde güncel TKGM ve banka uygulaması işlem özelinde teyit edilmelidir. Belge ve para akışını ödeme öncesinde planlayın."}
+    ],
+    "faqEn": [
+      {"question": "Why does this guide not publish a fixed title fee rate?", "answer": "Rates, assessment bases, exemptions and practice can change. Confirm the final amount from the official assessment and independent tax advice at the time of transaction."},
+      {"question": "Where should a foreign buyer obtain a tax number?", "answer": "Use the Revenue Administration's official Digital Tax Office application for foreigners and do not submit sensitive data to unofficial websites."},
+      {"question": "Is the foreign exchange purchase document handled identically in every case?", "answer": "Confirm current Land Registry and bank practice for the specific foreign-buyer transaction and plan the document and fund flow before payment."}
+    ],
+    "sources": [
+      {"authority": "GİB", "labelTr": "Yabancılar İçin Potansiyel Vergi Numarası", "labelEn": "Potential Tax Number for Foreigners", "url": "https://dijital.gib.gov.tr/foreigners/kimlikNoBasvuru"},
+      {"authority": "e-Devlet / TKGM", "labelTr": "Tapu Harç ve Döner Sermaye Sorgulama", "labelEn": "Title Fee and Revolving Fund Enquiry", "url": "https://www.turkiye.gov.tr/tapu-harc-sorgulama"},
+      {"authority": "TKGM", "labelTr": "Yabancı Alıcılar İçin Döviz Alım Belgesi", "labelEn": "Foreign Exchange Purchase Document Notice", "url": "https://www.tkgm.gov.tr/en/node/9109"}
+    ]
+  },
+  {
+    "slug": "uzaktan-alim-ve-vekaletname",
+    "icon": "fa-video",
+    "categoryTr": "UZAKTAN İŞLEM",
+    "categoryEn": "REMOTE TRANSACTION",
+    "titleTr": "Uzaktan Alım ve Vekaletname Rehberi",
+    "titleEn": "Remote Buying and Power of Attorney Guide",
+    "summaryTr": "Online görüntüleme, dijital belge akışı ve sınırlı vekaletname kullanımını güvenli bir işlem planında birleştirin.",
+    "summaryEn": "Combine online viewing, digital document flow and limited powers of attorney in a controlled transaction plan.",
+    "introTr": "Uzaktan süreç kolaylık sağlayabilir ancak kimlik, yetki ve ödeme risklerini ortadan kaldırmaz. Vekaletnamenin düzenleneceği ülke, tasdik yöntemi, tercüme ve kapsam şartları değişebilir. Metni düzenlemeden önce işlemi yapacak tapu birimi ve bağımsız hukuk uzmanıyla teyit edin.",
+    "introEn": "Remote processing adds convenience but does not remove identity, authority or payment risk. Execution country, authentication, translation and scope requirements can vary. Confirm the draft with the relevant land registry office and independent lawyer before issuance.",
+    "stepsTr": [
+      {"title": "Canlı ve kayıtlı görüntüleme", "body": "Video turunda dış çevre, bina girişi, ortak alanlar, manzara, gürültü ve kusurları planlı kontrol listesiyle gösterin. Kurgu video yerine canlı soru-cevap imkanı isteyin."},
+      {"title": "Belge veri odası", "body": "Paylaşılan dosyaları sürüm ve tarih bilgisiyle saklayın. Kimlik ve tapu belgelerini yalnızca güvenli, yetkili taraflarla ve gerekli kapsamda paylaşın."},
+      {"title": "Sınırlı vekalet taslağı", "body": "Yetkileri işlem, taşınmaz ve süre bakımından mümkün olduğunca açık tanımlayın. Para alma, borçlanma veya başka taşınmaz işlemleri gibi gereksiz geniş yetkileri bağımsız hukuk uzmanıyla ayıklayın."},
+      {"title": "İki kanallı işlem teyidi", "body": "Ödeme talimatı, hesap değişikliği ve kritik belgeyi yalnızca e-postaya dayanarak kabul etmeyin. Bilinen telefon numarası ve bağımsız ikinci kanal üzerinden doğrulayın."}
+    ],
+    "stepsEn": [
+      {"title": "Live, structured viewing", "body": "Use a checklist to show surroundings, entrance, communal areas, views, noise and defects. Request live questions rather than relying only on an edited promotional video."},
+      {"title": "Document data room", "body": "Keep shared files with date and version information. Share identity and title documents only with authorised parties, securely and to the necessary extent."},
+      {"title": "Limited power-of-attorney draft", "body": "Define authority by transaction, property and duration as clearly as possible. Ask an independent lawyer to remove unnecessary powers involving funds, debt or unrelated property."},
+      {"title": "Two-channel transaction confirmation", "body": "Do not accept payment instructions, bank-account changes or critical documents from email alone. Verify through a known phone number and a separate channel."}
+    ],
+    "checklistTr": ["Canlı görüntüleme kontrol kaydı", "Tarih ve sürüm içeren belge dosyası", "Bağımsız hukuk uzmanının incelediği sınırlı vekalet", "Ödeme için iki kanallı doğrulama"],
+    "checklistEn": ["Structured live-viewing record", "Dated and versioned document file", "Limited power of attorney reviewed independently", "Two-channel payment verification"],
+    "faqTr": [
+      {"question": "Yurt dışında düzenlenen her vekaletname tapuda geçerli midir?", "answer": "Hayır. Düzenleme, tasdik, apostil veya konsolosluk, tercüme ve içerik şartları ülke ve işleme göre değerlendirilmelidir."},
+      {"question": "Vekaletname çok geniş yetki içermeli mi?", "answer": "İşlem için gerekli olmayan yetkiler eklenmemelidir. Kapsam, süre ve taşınmaz tanımı bağımsız hukuk uzmanıyla sınırlandırılmalıdır."},
+      {"question": "Uzaktan görüntüleme teknik inceleme yerine geçer mi?", "answer": "Hayır. Video turu ön eleme aracıdır; yapısal, tesisat ve belge kontrolleri uygun bağımsız uzmanlarca yapılmalıdır."}
+    ],
+    "faqEn": [
+      {"question": "Is every foreign-issued power of attorney accepted for title transactions?", "answer": "No. Execution, authentication, apostille or consular formalities, translation and content need transaction- and country-specific review."},
+      {"question": "Should a power of attorney contain broad authority?", "answer": "Do not add powers unnecessary for the transaction. Limit scope, duration and property description with independent legal advice."},
+      {"question": "Does an online viewing replace a technical inspection?", "answer": "No. A video tour is a screening tool; structural, systems and document checks require suitable independent professionals."}
+    ],
+    "sources": [
+      {"authority": "TKGM", "labelTr": "Yabancı Ülkelerde Düzenlenen Vekaletnameler", "labelEn": "Powers of Attorney Issued Abroad", "url": "https://www.tkgm.gov.tr/yabanci-ulkelerde-duzenlenen-vekaletnameler"},
+      {"authority": "TKGM", "labelTr": "Yabancıya Satış Web Tapu İşlem Rehberi", "labelEn": "Web Title Guide for Foreign-Party Transactions", "url": "https://www.tkgm.gov.tr/yabancii-db/adim-adim-yabanciya-satis-talimati-process-selling-foreigner-webtapu-step-step"}
+    ]
+  },
+  {
+    "slug": "dask-sigorta-ve-abonelikler",
+    "icon": "fa-shield-halved",
+    "categoryTr": "TESLİM SONRASI HAZIRLIK",
+    "categoryEn": "POST-HANDOVER READINESS",
+    "titleTr": "DASK, Konut Sigortası ve Abonelikler",
+    "titleEn": "Compulsory Earthquake Insurance, Home Cover and Utilities",
+    "summaryTr": "Devir öncesi poliçe kontrolünden elektrik ve su aboneliklerine, teslim sonrası koruma dosyasını düzenli biçimde hazırlayın.",
+    "summaryEn": "Prepare the post-handover protection file from policy checks to electricity, water and ongoing home cover.",
+    "introTr": "Zorunlu Deprem Sigortası ile isteğe bağlı konut sigortası aynı ürün değildir. Kapsam, istisna, sigorta bedeli, adres ve yenileme tarihlerini ayrı ayrı inceleyin. Abonelik şartları hizmet sağlayıcıya ve taşınmaza göre değişebileceğinden güncel belge listesini doğrudan kurumdan alın.",
+    "introEn": "Compulsory Earthquake Insurance and optional home insurance are not the same product. Review scope, exclusions, insured amount, address and renewal dates separately. Utility requirements vary by provider and property, so obtain the current document list directly.",
+    "stepsTr": [
+      {"title": "Poliçe ve adres eşleşmesi", "body": "DASK poliçesindeki adres, bağımsız bölüm ve sigortalı bilgilerinin devralınan konutla eşleştiğini kontrol edin. Süre ve yenileme tarihini işlem dosyasına ekleyin."},
+      {"title": "Ek konut koruması", "body": "DASK kapsamının dışındaki riskler için ihtiyaca uygun konut, eşya, sorumluluk ve diğer teminatları yetkili sigorta danışmanıyla karşılaştırın."},
+      {"title": "Sayaç ve abonelik teslimi", "body": "Elektrik, su, internet ve varsa doğalgaz sayaç numarası ile son endeksleri teslim tutanağına yazın. Eski borç ve kapatma durumunu sağlayıcıdan doğrulayın."},
+      {"title": "Yıllık yenileme takvimi", "body": "DASK, diğer poliçeler, aidat, vergi ve bakım tarihlerini tek yıllık takvimde izleyin. İletişim bilgileri değiştiğinde kurum kayıtlarını güncelleyin."}
+    ],
+    "stepsEn": [
+      {"title": "Policy and address match", "body": "Check that the policy address, independent unit and insured details match the acquired home. Add expiry and renewal dates to the transaction file."},
+      {"title": "Additional home protection", "body": "Compare optional home, contents, liability and other cover for risks outside compulsory earthquake insurance with an authorised insurance professional."},
+      {"title": "Meters and utility handover", "body": "Record electricity, water, internet and any gas meter numbers and readings in the handover document. Confirm previous account closure and debt status with providers."},
+      {"title": "Annual renewal calendar", "body": "Track compulsory insurance, other policies, service charges, tax and maintenance dates in one annual calendar. Update institutional records when contact details change."}
+    ],
+    "checklistTr": ["Doğru adresli ve geçerli DASK poliçesi", "İhtiyaca göre ek konut teminatı karşılaştırması", "Sayaç numarası ve teslim endeksleri", "Yıllık yenileme ve ödeme takvimi"],
+    "checklistEn": ["Valid compulsory policy with the correct address", "Comparison of optional home cover", "Meter numbers and handover readings", "Annual renewal and payment calendar"],
+    "faqTr": [
+      {"question": "DASK konuttaki tüm zararları karşılar mı?", "answer": "Hayır. DASK'ın resmi kapsam ve istisnaları incelenmeli; diğer riskler için isteğe bağlı konut sigortası ayrıca değerlendirilmelidir."},
+      {"question": "Abonelikte DASK kontrol edilir mi?", "answer": "Kapsama giren konutlarda su ve elektrik abonelik işlemlerinde zorunlu deprem sigortasının varlığı resmi düzenlemeler kapsamında kontrol edilir."},
+      {"question": "Poliçedeki adres hatası önemli mi?", "answer": "Evet. Poliçe kaydındaki adresin sigortalanan ve abonelik yapılacak konutla eşleşmesi kontrol edilmelidir."}
+    ],
+    "faqEn": [
+      {"question": "Does compulsory earthquake insurance cover every loss in the home?", "answer": "No. Review official scope and exclusions and consider optional home insurance separately for other risks."},
+      {"question": "Is compulsory insurance checked for utility subscriptions?", "answer": "For homes within scope, the existence of compulsory earthquake insurance is checked under the applicable rules for water and electricity subscription procedures."},
+      {"question": "Does an address error on the policy matter?", "answer": "Yes. Confirm that the policy address matches the insured home and the property for which the utility account is being opened."}
+    ],
+    "sources": [
+      {"authority": "DASK", "labelTr": "Zorunlu Deprem Sigortası Resmi Bilgileri", "labelEn": "Official Compulsory Earthquake Insurance Information", "url": "https://dask.gov.tr/"},
+      {"authority": "DASK", "labelTr": "Elektrik Aboneliğinde DASK Uygulaması", "labelEn": "Compulsory Insurance in Electricity Subscriptions", "url": "https://dask.gov.tr/tr/elektrik-aboneligi"},
+      {"authority": "DASK", "labelTr": "DASK Sık Sorulan Sorular", "labelEn": "Compulsory Insurance FAQ", "url": "https://www.dask.gov.tr/tr/sss"}
+    ]
+  },
+  {
+    "slug": "ikamet-izni-ve-vatandaslik",
+    "icon": "fa-passport",
+    "categoryTr": "RESMİ BAŞVURU AYRIMI",
+    "categoryEn": "OFFICIAL APPLICATION DISTINCTION",
+    "titleTr": "Taşınmaz, İkamet İzni ve Vatandaşlık Ayrımı",
+    "titleEn": "Property, Residence Permit and Citizenship",
+    "summaryTr": "Gayrimenkul alımını ikamet ve vatandaşlık süreçleriyle karıştırmadan, her başlığı kendi resmi koşulları üzerinden değerlendirin.",
+    "summaryEn": "Evaluate property ownership, residence permits and citizenship as separate processes under their own current official conditions.",
+    "introTr": "Taşınmaz satın almak otomatik ikamet izni veya vatandaşlık sağlamaz. Başvuru türü, taşınmaz niteliği, değerleme, başvuru sahibinin durumu ve güncel mevzuat ayrı ayrı incelenir. Başvurularınızı yalnızca resmi sistemlerden yürütün ve kişisel uygunluğu bağımsız göç hukuku uzmanıyla değerlendirin.",
+    "introEn": "Buying property does not automatically grant residence or citizenship. Application type, property use, valuation, applicant circumstances and current rules are assessed separately. Use official systems and obtain independent immigration-law advice for personal eligibility.",
+    "stepsTr": [
+      {"title": "Amaçları birbirinden ayırın", "body": "Mülk edinimi, kısa dönem ikamet ve vatandaşlık başlıkları için ayrı hedef ve belge listesi oluşturun. Bir sürecin diğerini otomatik başlattığını varsaymayın."},
+      {"title": "Resmi uygunluk kontrolü", "body": "İkamet türlerini Göç İdaresi'nden, taşınmaz edinim ve vatandaşlık amaçlı tapu düzenlemelerini TKGM'den kontrol edin. Reklam metinlerini resmi şart yerine kullanmayın."},
+      {"title": "Kişisel dosya ve zamanlama", "body": "Pasaport, giriş, sağlık sigortası, adres, gelir veya diğer belgeler başvuruya göre değişebilir. Güncel listeyi resmi başvuru ekranından alın ve süreleri kendi durumunuza göre planlayın."},
+      {"title": "Bağımsız hukuki temsil", "body": "Uygunluk, ret riski, aile dosyası ve yatırım amacı gibi konularda yetkili bağımsız hukuk uzmanına başvurun. Sonuç garantisi veren aracı iddialarından kaçının."}
+    ],
+    "stepsEn": [
+      {"title": "Separate the objectives", "body": "Create different objectives and document lists for ownership, short-term residence and citizenship. Do not assume that one process automatically starts or guarantees another."},
+      {"title": "Official eligibility check", "body": "Check residence categories with the Presidency of Migration Management and property or citizenship-related title rules with the Land Registry. Advertising copy is not an official condition."},
+      {"title": "Personal file and timing", "body": "Passport, entry, health insurance, address, income and other documents can vary by application. Obtain the current list from the official system and plan timing for your circumstances."},
+      {"title": "Independent legal representation", "body": "Use an independent authorised lawyer for eligibility, refusal risk, family files and investment-purpose questions. Avoid intermediaries who promise a result."}
+    ],
+    "checklistTr": ["Mülk, ikamet ve vatandaşlık için ayrı hedef dosyaları", "Göç İdaresi ve TKGM'den güncel resmi koşullar", "Kişiye özel belge ve süre planı", "Sonuç garantisi vermeyen bağımsız hukuk görüşü"],
+    "checklistEn": ["Separate ownership, residence and citizenship files", "Current official conditions from Migration and Land Registry", "Applicant-specific document and timing plan", "Independent legal advice without result guarantees"],
+    "faqTr": [
+      {"question": "Ev almak otomatik ikamet izni verir mi?", "answer": "Hayır. Taşınmaz sahibi yabancılar için ilgili ikamet kategorisi bulunabilse de taşınmazın konut olması, bu amaçla kullanılması ve diğer güncel koşullar ayrıca değerlendirilir."},
+      {"question": "Vatandaşlık için sabit tutarı neden yazmıyorsunuz?", "answer": "Tutar, değerleme, ödeme, taahhüt ve başvuru uygulaması değişebilir. Güncel TKGM mevzuatı ve bağımsız hukuk görüşü işlem anında doğrulanmalıdır."},
+      {"question": "İkamet başvurusu nereden yapılmalı?", "answer": "Başvuru yalnızca Göç İdaresi Başkanlığının resmi e-İkamet sistemi üzerinden yürütülmelidir. Resmi sistem üçüncü kişilerle çalışmadığını özellikle belirtmektedir."}
+    ],
+    "faqEn": [
+      {"question": "Does buying a home automatically grant a residence permit?", "answer": "No. A residence category may exist for property owners, but residential use and all other current eligibility conditions are assessed separately."},
+      {"question": "Why is no fixed citizenship threshold published here?", "answer": "Thresholds, valuation, payment, commitment and application practice can change. Verify current Land Registry rules and independent legal advice at the time of the transaction."},
+      {"question": "Where should a residence application be made?", "answer": "Use only the Presidency of Migration Management's official e-Residence system. The official system specifically warns applicants about third-party intermediaries."}
+    ],
+    "sources": [
+      {"authority": "Göç İdaresi", "labelTr": "İkamet İzni Çeşitleri", "labelEn": "Residence Permit Categories", "url": "https://www.goc.gov.tr/ikamet-izni-cesitleri"},
+      {"authority": "Göç İdaresi", "labelTr": "Resmi e-İkamet Başvuru Sistemi", "labelEn": "Official e-Residence Application", "url": "https://e-ikamet.goc.gov.tr/Ikamet/IlkBasvuru"},
+      {"authority": "TKGM", "labelTr": "Vatandaşlık İçin Taşınmaz Mevzuatı", "labelEn": "Property Legislation for Citizenship", "url": "https://www.tkgm.gov.tr/yabancii-db/vatandaslik-icin-tasinmaz-edinimi-hakkinda-mevzuat"}
+    ]
+  }
+]

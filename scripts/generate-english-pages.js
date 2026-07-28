@@ -4,8 +4,9 @@ const path = require('path');
 const root = path.resolve(__dirname, '..');
 const output = path.join(root, 'en');
 const baseUrl = 'https://jasmine-group.vercel.app';
-const assetVersion = '2026072806';
+const assetVersion = '2026072807';
 const regionContent = JSON.parse(fs.readFileSync(path.join(root, 'regions-content.json'), 'utf8'));
+const guideContent = JSON.parse(fs.readFileSync(path.join(root, 'guides-content.json'), 'utf8'));
 
 function header(active, turkishPath) {
   const links = [
@@ -75,11 +76,11 @@ ${page.schema ? `  <script type="application/ld+json">${JSON.stringify(page.sche
 
 const serviceCards = [
   ['fa-magnifying-glass-location', 'Property Advisory', 'A comparable shortlist shaped around budget, intended use, preferred area and daily-life priorities.', 'buy.html', 'Explore properties'],
-  ['fa-video', 'Online and In-person Viewings', 'Structured video calls and planned tours help you screen options before making a decision.', 'contact.html', 'Plan a viewing'],
-  ['fa-chart-line', 'Investment Comparison', 'Review location, use potential and total acquisition considerations within one consistent framework.', 'buying-guide.html', 'Read the guide'],
+  ['fa-video', 'Online and In-person Viewings', 'Structured video calls and planned tours help you screen options before making a decision.', 'guides/uzaktan-alim-ve-vekaletname.html', 'Remote buying guide'],
+  ['fa-chart-line', 'Investment Comparison', 'Review location, use potential and total acquisition considerations within one consistent framework.', 'guides/masraflar-vergi-ve-odeme-planlamasi.html', 'Cost planning guide'],
   ['fa-house-circle-check', 'Seller Preparation', 'Positioning and launch preparation based on the property, its location and comparable portfolio evidence.', 'sell.html', 'Request an assessment'],
-  ['fa-file-signature', 'Transaction Coordination', 'A clear checklist and coordination with the relevant licensed legal, financial and technical professionals.', 'buying-guide.html', 'Review the process'],
-  ['fa-key', 'After-sale Contact', 'Practical direction for utilities, moving and settlement through appropriate service providers.', 'contact.html', 'Ask for support'],
+  ['fa-file-signature', 'Transaction Coordination', 'A clear checklist and coordination with the relevant licensed legal, financial and technical professionals.', 'guides/tapu-ve-hukuki-kontrol.html', 'Title review guide'],
+  ['fa-key', 'After-sale Contact', 'Practical direction for utilities, moving and settlement through appropriate service providers.', 'guides/dask-sigorta-ve-abonelikler.html', 'Post-handover guide'],
 ];
 
 const pages = [
@@ -160,11 +161,14 @@ const pages = [
     file: 'buying-guide.html',
     turkishPath: 'buying-guide.html',
     active: 'guide',
-    title: 'Buying Property in Turkey: Alanya Guide | Jasmine Group',
-    description: 'A practical overview of defining criteria, viewing, professional checks, contracts, title transfer and after-sale steps.',
-    content: `<section class="editorial-hero"><div class="container editorial-hero-grid"><div><p class="section-kicker">BUYING GUIDE</p><h1>A clearer path from property brief to handover.</h1><p>Understand the main decision points and know where independent legal, financial and technical advice is required.</p></div><div class="editorial-hero-note"><span>06</span><strong>Core decision stages</strong><p>This guide is general information, not legal, tax, investment or technical advice.</p></div></div></section>
-    <section class="container guide-steps"><article><span>01</span><div><h2>Define the brief</h2><p>Set the intended use, budget range, preferred areas, room needs and non-negotiable criteria before browsing.</p></div></article><article><span>02</span><div><h2>Compare like with like</h2><p>Use the same format for price, fees, net area, age, location, condition and ongoing costs.</p></div></article><article><span>03</span><div><h2>View and verify</h2><p>Inspect in person or by structured video and ask the advisor to reconfirm price and availability.</p></div></article><article><span>04</span><div><h2>Obtain independent checks</h2><p>Use appropriately licensed legal, tax and technical professionals for documents, obligations and property-specific risk.</p></div></article><article><span>05</span><div><h2>Review agreements before payment</h2><p>Understand the parties, property, amount, conditions, deadlines and refund terms before signing or transferring funds.</p></div></article><article><span>06</span><div><h2>Plan transfer and handover</h2><p>Coordinate title transfer, keys, meter readings, utilities, insurance and any agreed post-completion items.</p></div></article></section>
-    <section class="container proof-standard"><div><p class="section-kicker">IMPORTANT</p><h2>Every property and buyer situation is different.</h2></div><p>Rules, costs and eligibility can change. Confirm current requirements with the relevant official authority and independent licensed professionals before committing.</p></section><section class="container content-cta"><div><p class="section-kicker">PERSONAL CHECKLIST</p><h2>Turn your criteria into a structured property brief.</h2></div><a href="contact.html">Prepare my shortlist</a></section>`,
+    title: 'Property Buying and Transaction Guides | Jasmine Group',
+    description: 'Official-source guides for buying, title checks, costs, remote transactions, insurance, residence permits and citizenship distinctions.',
+    content: `<section class="editorial-hero guide-hub-hero"><div class="container editorial-hero-grid"><div><p class="section-kicker">JASMINE KNOWLEDGE CENTRE</p><h1>Better decisions start with better questions.</h1><p>Separate the property journey into practical files covering selection, title, payment, insurance and official applications.</p><a href="contact.html" class="editorial-cta">Request a personal transaction plan <i class="fa-solid fa-arrow-right"></i></a></div><div class="editorial-hero-note"><span>${String(guideContent.length).padStart(2, '0')}</span><strong>Official-source decision guides</strong><p>Every guide links directly to the relevant public authority and avoids fixed figures or outcome guarantees.</p></div></div></section>
+    <section class="container guide-hub-intro"><div><p class="section-kicker">CHOOSE YOUR TOPIC</p><h2>Open the transaction file you need instead of one long generic article.</h2></div><p>These pages support general preparation. Use an appropriately licensed independent professional for property- and applicant-specific legal, tax, technical or immigration advice.</p></section>
+    <section class="container guide-hub-grid">${guideContent.map((guide, index) => `<article><i class="fa-solid ${guide.icon}"></i><span>${String(index + 1).padStart(2, '0')}</span><p class="section-kicker">${guide.categoryEn}</p><h2><a href="guides/${guide.slug}.html">${guide.titleEn}</a></h2><p>${guide.summaryEn}</p><a href="guides/${guide.slug}.html">Open guide <i class="fa-solid fa-arrow-right"></i></a></article>`).join('')}</section>
+    <section class="source-standard-band"><div class="container"><div><p class="section-kicker">PUBLISHING STANDARD</p><h2>Do not decide without opening the official source.</h2><p>Direct links to the Land Registry, Revenue Administration, Migration Management, e-Government and DASK appear inside the relevant guide.</p></div><div class="source-authorities"><span>TKGM</span><span>GİB</span><span>MIGRATION</span><span>e-GOVERNMENT</span><span>DASK</span></div></div></section>
+    <section class="container process-band-light"><div><p class="section-kicker">JASMINE WORKING MODEL</p><h2>We separate coordination from independent professional advice.</h2></div><ol><li><span>01</span><strong>Property brief</strong><p>Objectives, budget and timing</p></li><li><span>02</span><strong>Portfolio comparison</strong><p>A verifiable shortlist</p></li><li><span>03</span><strong>Professional review</strong><p>Legal, tax and technical checks</p></li><li><span>04</span><strong>Transaction coordination</strong><p>Payment, transfer and handover plan</p></li></ol></section>
+    <section class="container content-cta"><div><p class="section-kicker">YOUR QUESTION</p><h2>Turn the guides into a plan for your budget, area and intended use.</h2></div><a href="contact.html">Speak to an advisor</a></section>`,
   },
   {
     file: 'privacy.html',
