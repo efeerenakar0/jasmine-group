@@ -1,9 +1,10 @@
 const fs = require('fs');
 const path = require('path');
+const { pages: englishPages, shell: englishShell } = require('./generate-english-pages');
 
 const root = path.resolve(__dirname, '..');
 const output = path.join(root, 'dist');
-const filesToCopy = new Set(['404.html', 'admin-login.html', 'admin.html', 'admin-login.js', 'admin.js', 'admin.css', 'blog-detail.html', 'blog.html', 'buy.html', 'buying-guide.html', 'contact.html', 'corporate.html', 'customer-stories.html', 'index.html', 'property-detail.html', 'regions.html', 'rent.html', 'sell.html', 'services.html', 'team.html', 'privacy.html', 'kvkk.html', 'terms.html', 'cookie-policy.html', 'style.css', 'script.js', 'blogs.json', 'robots.txt', 'sitemap.xml']);
+const filesToCopy = new Set(['404.html', 'admin-login.html', 'admin.html', 'admin-login.js', 'admin.js', 'admin.css', 'blog-detail.html', 'blog.html', 'buy.html', 'buying-guide.html', 'contact.html', 'corporate.html', 'customer-stories.html', 'index.html', 'property-detail.html', 'regions.html', 'rent.html', 'sell.html', 'services.html', 'team.html', 'privacy.html', 'kvkk.html', 'terms.html', 'cookie-policy.html', 'style.css', 'script.js', 'blogs.json', 'blogs-en.json', 'robots.txt', 'sitemap.xml']);
 
 fs.rmSync(output, { recursive: true, force: true });
 fs.mkdirSync(output, { recursive: true });
@@ -34,6 +35,11 @@ function isoDate(turkishDate) {
   };
   const [day, month, year] = String(turkishDate || '').split(' ');
   return year && months[month] ? `${year}-${months[month]}-${String(day).padStart(2, '0')}` : '2026-07-27';
+}
+
+function isoEnglishDate(englishDate) {
+  const parsed = new Date(String(englishDate || ''));
+  return Number.isNaN(parsed.getTime()) ? '2026-07-28' : parsed.toISOString().slice(0, 10);
 }
 
 const blogs = JSON.parse(fs.readFileSync(path.join(root, 'blogs.json'), 'utf8'));
@@ -96,9 +102,55 @@ for (const blog of blogs) {
       '  <div class="container" id="blog-detail-container">\n    <div style="text-align:center; padding:50px;"><i class="fa-solid fa-spinner fa-spin fa-3x"></i><p style="margin-top:20px;">Blog Yükleniyor...</p></div>\n  </div>',
       `  <div class="container" id="blog-detail-container">${article}</div>`,
     )
-    .replace('</head>', `  <script type="application/ld+json">${JSON.stringify(schema)}</script>\n</head>`);
+    .replace(
+      '</head>',
+      `  <link rel="alternate" hreflang="tr" href="${canonical}" />\n  <link rel="alternate" hreflang="en" href="https://jasmine-group.vercel.app/en/blog/${encodeURIComponent(blog.id)}.html" />\n  <script type="application/ld+json">${JSON.stringify(schema)}</script>\n</head>`,
+    );
 
   fs.writeFileSync(path.join(blogOutput, `${blog.id}.html`), page);
+}
+
+const englishBlogs = JSON.parse(fs.readFileSync(path.join(root, 'blogs-en.json'), 'utf8'));
+const englishBlogOutput = path.join(output, 'en', 'blog');
+fs.mkdirSync(englishBlogOutput, { recursive: true });
+
+for (const blog of englishBlogs) {
+  const canonical = `https://jasmine-group.vercel.app/en/blog/${encodeURIComponent(blog.id)}.html`;
+  const absoluteImage = `https://jasmine-group.vercel.app/${blog.image}`;
+  const schema = {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: blog.title,
+    description: blog.excerpt,
+    image: absoluteImage,
+    datePublished: isoEnglishDate(blog.date),
+    dateModified: '2026-07-28',
+    inLanguage: 'en',
+    author: { '@type': 'Organization', name: 'Jasmine Group' },
+    publisher: {
+      '@type': 'Organization',
+      name: 'Jasmine Group',
+      logo: { '@type': 'ImageObject', url: 'https://jasmine-group.vercel.app/images/logo.jpg' },
+    },
+    mainEntityOfPage: canonical,
+  };
+  const content = `<section class="container content-section"><article class="blog-static-article">
+    <a href="blog.html" class="blog-back-link"><i class="fa-solid fa-arrow-left"></i> All guides</a>
+    <header><span>${escapeHtml(blog.category)}</span><h1>${escapeHtml(blog.title)}</h1><p>${escapeHtml(blog.excerpt)}</p><time datetime="${isoEnglishDate(blog.date)}">${escapeHtml(blog.date)}</time></header>
+    <img class="blog-static-cover" src="../${escapeHtml(blog.image)}" alt="${escapeHtml(blog.title)}" />
+    <div class="blog-static-content">${blog.content}</div>
+    <aside class="blog-static-note"><strong>Important note</strong><p>This guide is general information. Confirm current legal, financial and technical requirements with the relevant authorities and licensed professionals.</p><a href="contact.html">Share your criteria <i class="fa-solid fa-arrow-right"></i></a></aside>
+  </article></section>`;
+  const page = englishShell({
+    file: `blog/${blog.id}.html`,
+    turkishPath: `blog/${blog.id}.html`,
+    active: 'blog',
+    title: `${blog.title} | Jasmine Group`,
+    description: blog.excerpt,
+    content,
+    schema,
+  }).replace('<head>', '<head>\n  <base href="../" />');
+  fs.writeFileSync(path.join(englishBlogOutput, `${blog.id}.html`), page);
 }
 
 const sitemapPath = path.join(output, 'sitemap.xml');
@@ -108,9 +160,27 @@ const blogSitemapEntries = blogs.map(blog => `  <url>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>`).join('\n');
+const englishStaticSitemapEntries = englishPages
+  .filter(page => page.file !== 'property-detail.html')
+  .map(page => `  <url>
+    <loc>https://jasmine-group.vercel.app/en/${page.file}</loc>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://jasmine-group.vercel.app/${page.turkishPath}" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://jasmine-group.vercel.app/en/${page.file}" />
+    <lastmod>2026-07-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>`).join('\n');
+const englishBlogSitemapEntries = englishBlogs.map(blog => `  <url>
+    <loc>https://jasmine-group.vercel.app/en/blog/${encodeURIComponent(blog.id)}.html</loc>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://jasmine-group.vercel.app/blog/${encodeURIComponent(blog.id)}.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://jasmine-group.vercel.app/en/blog/${encodeURIComponent(blog.id)}.html" />
+    <lastmod>${isoEnglishDate(blog.date)}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>`).join('\n');
 fs.writeFileSync(
   sitemapPath,
-  fs.readFileSync(sitemapPath, 'utf8').replace('</urlset>', `${blogSitemapEntries}\n</urlset>`),
+  fs.readFileSync(sitemapPath, 'utf8').replace('</urlset>', `${blogSitemapEntries}\n${englishStaticSitemapEntries}\n${englishBlogSitemapEntries}\n</urlset>`),
 );
 
 const analyticsConfig = {
