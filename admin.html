@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-  <link rel="stylesheet" href="admin.css?v=2026072803" />
+  <link rel="stylesheet" href="admin.css?v=2026072805" />
 </head>
 <body class="admin-page">
   <aside class="admin-sidebar">
@@ -19,6 +19,7 @@
       <button class="admin-nav" data-view="properties"><i class="fa-solid fa-building"></i> Portföy</button>
       <button class="admin-nav" data-view="leads"><i class="fa-solid fa-user-group"></i> CRM Talepleri</button>
       <button class="admin-nav" data-view="media"><i class="fa-solid fa-photo-film"></i> Medya Kalitesi</button>
+      <button class="admin-nav" data-view="readiness"><i class="fa-solid fa-shield-halved"></i> Sistem Durumu</button>
     </nav>
     <div class="admin-sidebar-footer">
       <span id="admin-user">Yönetici</span>
@@ -73,16 +74,21 @@
     <section class="admin-view" data-panel="leads">
       <div class="view-actions">
         <div><p class="admin-kicker">SATIŞ HATTI</p><h2>Müşteri talepleri</h2></div>
-        <select id="lead-filter" aria-label="Talep durumuna göre filtrele">
-          <option value="">Tüm durumlar</option>
-          <option value="new">Yeni</option>
-          <option value="contacted">İletişim kuruldu</option>
-          <option value="qualified">Nitelikli</option>
-          <option value="viewing">Gösterim</option>
-          <option value="won">Kazanıldı</option>
-          <option value="lost">Kaybedildi</option>
-        </select>
+        <div class="crm-toolbar">
+          <label class="admin-search"><i class="fa-solid fa-magnifying-glass"></i><input id="lead-search" type="search" placeholder="Ad, telefon, ilan veya kaynak ara" /></label>
+          <select id="lead-filter" aria-label="Talep durumuna göre filtrele">
+            <option value="">Tüm durumlar</option>
+            <option value="new">Yeni</option>
+            <option value="contacted">İletişim kuruldu</option>
+            <option value="qualified">Nitelikli</option>
+            <option value="viewing">Gösterim</option>
+            <option value="won">Kazanıldı</option>
+            <option value="lost">Kaybedildi</option>
+          </select>
+          <button id="export-leads-button" class="admin-secondary"><i class="fa-solid fa-file-csv"></i> CSV dışa aktar</button>
+        </div>
       </div>
+      <div id="lead-summary" class="pipeline-summary"></div>
       <div id="lead-board" class="lead-board"></div>
     </section>
 
@@ -91,9 +97,35 @@
         <p class="admin-kicker">MEDYA GÖÇÜ</p>
         <h2>Harici ilan görsellerini Jasmine kütüphanesine taşıyın</h2>
         <p>Harici bağlantılar yayın ekranında güvenli yer tutucuyla değiştirilir. İlan düzenleme ekranından size ait JPEG, PNG veya WebP görsellerini yüklediğinizde Supabase Storage bağlantısı otomatik eklenir.</p>
-        <div class="media-audit-stats"><strong id="media-external-count">0</strong><span>harici görsel bağlantısı taşıma bekliyor</span></div>
+        <div class="media-stat-grid">
+          <div class="media-audit-stats"><strong id="media-ready-count">0</strong><span>doğrulanmış medyası bulunan ilan</span></div>
+          <div class="media-audit-stats"><strong id="media-missing-count">0</strong><span>görsel yükleme bekleyen ilan</span></div>
+          <div class="media-audit-stats"><strong id="media-external-count">0</strong><span>harici bağlantısı taşınacak ilan</span></div>
+        </div>
       </div>
       <div id="media-property-list" class="media-property-list"></div>
+    </section>
+
+    <section class="admin-view" data-panel="readiness">
+      <article class="admin-card readiness-hero">
+        <div>
+          <p class="admin-kicker">CANLI ORTAM KONTROLÜ</p>
+          <h2>Servis aktivasyon durumu</h2>
+          <p>Bu ekran yalnızca yapılandırmanın varlığını ve güvenli sunucu bağlantılarını kontrol eder; hiçbir anahtar veya gizli değer tarayıcıya gönderilmez.</p>
+        </div>
+        <div class="readiness-score"><strong id="readiness-score">0/0</strong><span id="readiness-label">Kontrol ediliyor</span></div>
+      </article>
+      <div id="readiness-grid" class="readiness-grid"></div>
+      <article class="admin-card activation-card">
+        <div><p class="admin-kicker">AKTİVASYON SIRASI</p><h2>Eksikleri güvenli sırayla tamamlayın</h2></div>
+        <ol>
+          <li><span>1</span><div><strong>Supabase</strong><small>SQL şemasını çalıştırın, sunucu anahtarlarını Vercel'e ekleyin ve statik ilanları aktarın.</small></div></li>
+          <li><span>2</span><div><strong>Admin ve gizlilik</strong><small>Parola hash'i, oturum imza anahtarı ve talep gizlilik tuzunu üretin.</small></div></li>
+          <li><span>3</span><div><strong>E-posta ve analitik</strong><small>Doğrulanmış Resend göndericisini ve onaylı ölçüm kimliklerini ekleyin.</small></div></li>
+          <li><span>4</span><div><strong>Gerçek medya</strong><small>Her ilan için kullanım hakkı doğrulanmış fotoğrafları yükleyin ve yayını kontrol edin.</small></div></li>
+        </ol>
+        <div class="readiness-actions"><span id="readiness-checked-at"></span><button id="refresh-readiness-button" class="admin-primary"><i class="fa-solid fa-rotate"></i> Yeniden kontrol et</button></div>
+      </article>
     </section>
   </main>
 
@@ -124,6 +156,6 @@
     </form>
   </dialog>
 
-  <script src="admin.js?v=2026072803" defer></script>
+  <script src="admin.js?v=2026072805" defer></script>
 </body>
 </html>

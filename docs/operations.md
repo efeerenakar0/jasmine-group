@@ -71,7 +71,9 @@ LEAD_PRIVACY_SALT
 alan adi dogrulanmadan e-posta teslimi aktif kabul edilmemelidir.
 
 Admin panelindeki CRM ekraninda talepler goruntulenebilir, durumlari
-degistirilebilir ve operasyon notlari eklenebilir.
+degistirilebilir, operasyon notlari eklenebilir ve aktif filtre sonucu
+CSV olarak disa aktarilabilir. CSV cikisi hesap tablosu formul enjeksiyonuna
+karsi korumali uretilir.
 
 ## 4. Ilan ve medya operasyonu
 
@@ -87,6 +89,8 @@ degistirilebilir ve operasyon notlari eklenebilir.
 
 Harici ilan sitelerinden fotograflar veya metinler kopyalanmamalidir. Medya
 dosyalari Supabase Storage'daki `property-media` bucket'ina yuklenir.
+Admin panelindeki Medya Kalitesi ekrani hem harici baglantilari hem de
+gorselsiz ilanlari tek kuyrukta gosterir.
 
 ## 5. Analitik ve reklam
 
@@ -100,14 +104,31 @@ PUBLIC_META_PIXEL_ID
 
 Analitik ve reklam betikleri ziyaretci cerez tercihini kabul etmeden
 yuklenmez. Form gonderimi, ilan goruntuleme ve WhatsApp tiklamalari donusum
-olayi olarak kaydedilir.
+olayi olarak Turkce ve Ingilizce rotalarda kaydedilir. GA4/GTM ile birlikte
+Meta Pixel de ayni onay kuralina tabidir.
+
+## 6. Sistem durumu ekrani
+
+Admin panelindeki `Sistem Durumu` ekrani su kontrolleri gizli degerleri
+istemciye gondermeden yapar:
+
+- Admin oturum degiskenleri
+- Supabase ilan ve CRM tablolarina gercek okuma erisimi
+- Medya bucket yapilandirmasi
+- Resend bildirim yapilandirmasi
+- Talep gizlilik tuzu
+- GA4, GTM veya Meta Pixel aktivasyonu
+
+Kontroller `/api/admin/readiness` uzerinden yalnizca gecerli admin oturumuna
+sunulur. Ekrandaki `Yeniden kontrol et` dugmesi Vercel degiskenleri
+guncellendikten sonra sonucu tekrar sinar.
 
 Fiyatlarin farkli para birimlerinde gosterimi `/api/rates` uzerinden Avrupa
 Merkez Bankasi'nin gunluk EUR referans kurlarini kullanir. Kaynak erisilemezse
 yanlis veya eski bir kur gostermek yerine arayuz yalnizca EUR secenegini
 sunmaya devam eder.
 
-## 6. Yayin kontrol listesi
+## 7. Yayin kontrol listesi
 
 ```bash
 npm install
@@ -125,7 +146,7 @@ Her yayin oncesinde asagidakileri manuel olarak da dogrulayin:
 - Cerez reddinde analitik betiklerinin yuklenmemesi
 - Telefon, WhatsApp, adres ve yasal metinlerin guncelligi
 
-## 7. Icerik yayin politikasi
+## 8. Icerik yayin politikasi
 
 Odul, satis adedi, pazar liderligi, musteri yorumu veya ekip uyesi gibi
 kanit gerektiren hicbir ifade belge ve acik yayin izni olmadan eklenmemelidir.

@@ -4,7 +4,7 @@ const path = require('path');
 const root = path.resolve(__dirname, '..');
 const output = path.join(root, 'en');
 const baseUrl = 'https://jasmine-group.vercel.app';
-const assetVersion = '2026072803';
+const assetVersion = '2026072805';
 
 function header(active, turkishPath) {
   const links = [

@@ -841,11 +841,22 @@ async function fetchProperties() {
 function isTrustedPropertyImage(url) {
   const value = String(url || '').trim();
   if (!value) return false;
-  if (!/^https?:\/\//i.test(value)) return /^images\/[a-z0-9._/-]+$/i.test(value);
+  const safeSegments = pathname => {
+    try {
+      return decodeURIComponent(pathname).split('/').every(segment => segment !== '.' && segment !== '..');
+    } catch {
+      return false;
+    }
+  };
+  if (!/^https?:\/\//i.test(value)) {
+    return /^images\/[a-z0-9._/-]+$/i.test(value) && safeSegments(value);
+  }
   try {
     const parsed = new URL(value);
-    return parsed.origin === window.location.origin
-      || /(?:^|\.)supabase\.co$/i.test(parsed.hostname) && parsed.pathname.includes('/storage/v1/object/public/');
+    const localImage = parsed.origin === window.location.origin && parsed.pathname.startsWith('/images/');
+    const storageImage = /(?:^|\.)supabase\.co$/i.test(parsed.hostname)
+      && parsed.pathname.includes('/storage/v1/object/public/');
+    return (localImage || storageImage) && safeSegments(parsed.pathname);
   } catch {
     return false;
   }

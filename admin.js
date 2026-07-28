@@ -1,5 +1,5 @@
 (() => {
-  const state = { properties: [], leads: [], editingId: null };
+  const state = { properties: [], leads: [], readiness: null, editingId: null };
   const statusLabels = {
     published: 'Yayında', draft: 'Taslak', sold: 'Satıldı', rented: 'Kiralandı',
     new: 'Yeni', contacted: 'İletişim kuruldu', qualified: 'Nitelikli',
@@ -36,6 +36,22 @@
     const alert = document.getElementById('admin-alert');
     alert.textContent = message;
     alert.hidden = !message;
+  }
+
+  function formatDate(value) {
+    const date = new Date(value);
+    return Number.isNaN(date.getTime())
+      ? '-'
+      : new Intl.DateTimeFormat('tr-TR', { dateStyle: 'medium', timeStyle: 'short' }).format(date);
+  }
+
+  function filteredLeads() {
+    const filter = document.getElementById('lead-filter').value;
+    const query = document.getElementById('lead-search').value.toLocaleLowerCase('tr-TR').trim();
+    return state.leads.filter(lead => {
+      const haystack = `${lead.name} ${lead.phone} ${lead.email || ''} ${lead.property_id || ''} ${lead.source || ''} ${lead.message || ''}`.toLocaleLowerCase('tr-TR');
+      return (!filter || lead.status === filter) && (!query || haystack.includes(query));
+    });
   }
 
   function setView(view) {
@@ -88,31 +104,63 @@
   }
 
   function renderLeads() {
-    const filter = document.getElementById('lead-filter').value;
-    const leads = state.leads.filter(lead => !filter || lead.status === filter);
+    const leads = filteredLeads();
+    const summaryStatuses = ['new', 'contacted', 'qualified', 'viewing', 'won'];
+    document.getElementById('lead-summary').innerHTML = summaryStatuses.map(status => `
+      <div><span>${escapeHTML(statusLabels[status])}</span><strong>${state.leads.filter(lead => lead.status === status).length}</strong></div>`).join('');
     document.getElementById('lead-board').innerHTML = leads.map(lead => `
-      <article class="lead-card">
-        <span class="status-pill ${escapeHTML(lead.status)}">${escapeHTML(statusLabels[lead.status] || lead.status)}</span>
+      <article class="lead-card" data-lead-card="${escapeHTML(lead.id)}">
+        <div class="lead-card-top"><span class="status-pill ${escapeHTML(lead.status)}">${escapeHTML(statusLabels[lead.status] || lead.status)}</span><time>${escapeHTML(formatDate(lead.created_at))}</time></div>
         <h3>${escapeHTML(lead.name)}</h3>
-        <a href="tel:${escapeHTML(lead.phone)}">${escapeHTML(lead.phone)}</a>
+        <a href="tel:${escapeHTML(String(lead.phone || '').replace(/[^\d+]/g, ''))}">${escapeHTML(lead.phone)}</a>
         ${lead.email ? `<p><a href="mailto:${escapeHTML(lead.email)}">${escapeHTML(lead.email)}</a></p>` : ''}
-        <p>${escapeHTML(lead.message)}</p>
-        <p>${escapeHTML(lead.property_id || 'Genel talep')} · ${escapeHTML(lead.source)}</p>
+        <p class="lead-message">${escapeHTML(lead.message)}</p>
+        <div class="lead-context"><span><i class="fa-solid fa-house"></i> ${escapeHTML(lead.property_id || 'Genel talep')}</span><span><i class="fa-solid fa-link"></i> ${escapeHTML(lead.source)}</span>${lead.locale ? `<span><i class="fa-solid fa-language"></i> ${escapeHTML(String(lead.locale).toUpperCase())}</span>` : ''}</div>
+        ${(lead.utm_source || lead.utm_medium || lead.utm_campaign) ? `<p class="lead-campaign">Kampanya: ${escapeHTML([lead.utm_source, lead.utm_medium, lead.utm_campaign].filter(Boolean).join(' / '))}</p>` : ''}
         <select data-lead-status="${lead.id}" aria-label="${escapeHTML(lead.name)} talep durumu">
           ${Object.entries(statusLabels).filter(([value]) => ['new','contacted','qualified','viewing','won','lost'].includes(value)).map(([value, label]) => `<option value="${value}" ${lead.status === value ? 'selected' : ''}>${label}</option>`).join('')}
         </select>
-      </article>`).join('') || '<p>Bu durumda talep bulunmuyor.</p>';
+        <label class="lead-notes">Operasyon notu<textarea data-lead-notes rows="3" maxlength="4000" placeholder="Son görüşme, ihtiyaç, sonraki adım...">${escapeHTML(lead.notes || '')}</textarea></label>
+        <button class="admin-secondary lead-save" data-save-lead="${escapeHTML(lead.id)}"><i class="fa-solid fa-floppy-disk"></i> Notu kaydet</button>
+      </article>`).join('') || '<p>Bu filtreyle eşleşen talep bulunmuyor.</p>';
   }
 
   function renderMedia() {
-    const externalCount = state.properties.reduce((total, item) => total + (item.images || []).filter(isExternalImage).length, 0);
+    const mediaState = state.properties.map(property => ({
+      ...property,
+      external: (property.images || []).filter(isExternalImage).length,
+      missing: !(property.images || []).length,
+    }));
+    const externalCount = mediaState.filter(item => item.external).length;
+    const missingCount = mediaState.filter(item => item.missing).length;
+    const readyCount = mediaState.filter(item => !item.missing && !item.external).length;
+    document.getElementById('media-ready-count').textContent = readyCount;
+    document.getElementById('media-missing-count').textContent = missingCount;
     document.getElementById('media-external-count').textContent = externalCount;
-    document.getElementById('media-property-list').innerHTML = state.properties
-      .map(property => ({ ...property, external: (property.images || []).filter(isExternalImage).length }))
-      .filter(property => property.external)
-      .slice(0, 60)
-      .map(property => `<article class="media-item"><strong>${escapeHTML(property.id)} · ${escapeHTML(property.title)}</strong><span>${property.external} bağlantı taşınmalı</span><button class="admin-primary" data-edit="${escapeHTML(property.id)}">Görsel yükle</button></article>`).join('')
-      || '<p>Harici görsel bağlantısı bulunmuyor.</p>';
+    document.getElementById('media-property-list').innerHTML = mediaState
+      .filter(property => property.missing || property.external)
+      .map(property => `<article class="media-item"><span class="status-pill ${property.external ? 'draft' : ''}">${property.external ? 'Harici bağlantı' : 'Görsel bekliyor'}</span><strong>${escapeHTML(property.id)} · ${escapeHTML(property.title)}</strong><span>${property.external ? `${property.external} bağlantı taşınmalı` : 'İlan yer tutucu görselle yayında'}</span><button class="admin-primary" data-edit="${escapeHTML(property.id)}">Görsel yükle</button></article>`).join('')
+      || '<p>Tüm ilanların doğrulanmış medyası hazır.</p>';
+  }
+
+  function renderReadiness() {
+    const readiness = state.readiness;
+    if (!readiness) {
+      document.getElementById('readiness-score').textContent = '0/0';
+      document.getElementById('readiness-label').textContent = 'Kontrol bekliyor';
+      document.getElementById('readiness-grid').innerHTML = '<p>Sistem durumu alınamadı.</p>';
+      return;
+    }
+    document.getElementById('readiness-score').textContent = `${readiness.summary.ready}/${readiness.summary.total}`;
+    document.getElementById('readiness-label').textContent = readiness.summary.productionReady ? 'Operasyonel servisler hazır' : 'Aktivasyon adımları bekliyor';
+    document.getElementById('readiness-checked-at').textContent = `Son kontrol: ${formatDate(readiness.checkedAt)}`;
+    const icons = { ready: 'fa-circle-check', missing: 'fa-circle-minus', error: 'fa-triangle-exclamation', optional: 'fa-circle-info' };
+    document.getElementById('readiness-grid').innerHTML = readiness.services.map(service => `
+      <article class="readiness-item ${escapeHTML(service.status)}">
+        <i class="fa-solid ${icons[service.status] || icons.optional}"></i>
+        <div><strong>${escapeHTML(service.label)}</strong><span>${escapeHTML(service.detail)}</span></div>
+        <small>${service.status === 'ready' ? 'Hazır' : (service.status === 'optional' ? 'İsteğe bağlı' : service.status === 'error' ? 'Kontrol gerekli' : 'Eksik')}</small>
+      </article>`).join('');
   }
 
   function renderAll() {
@@ -120,12 +168,14 @@
     renderProperties();
     renderLeads();
     renderMedia();
+    renderReadiness();
   }
 
   async function loadData() {
-    const results = await Promise.allSettled([api('/api/admin/properties'), api('/api/admin/leads')]);
+    const results = await Promise.allSettled([api('/api/admin/properties'), api('/api/admin/leads'), api('/api/admin/readiness')]);
     if (results[0].status === 'fulfilled') state.properties = results[0].value.properties || [];
     if (results[1].status === 'fulfilled') state.leads = results[1].value.leads || [];
+    if (results[2].status === 'fulfilled') state.readiness = results[2].value;
     const errors = results.filter(result => result.status === 'rejected').map(result => result.reason.message);
     showAlert(errors.length ? `Kurulum gerekli: ${[...new Set(errors)].join(' ')}` : '');
     renderAll();
@@ -215,14 +265,48 @@
     renderAll();
   }
 
-  async function updateLeadStatus(id, status) {
+  async function updateLead(id, status, notes) {
     const result = await api(`/api/admin/leads?id=${encodeURIComponent(id)}`, {
       method: 'PATCH',
-      body: JSON.stringify({ status }),
+      body: JSON.stringify({ status, notes }),
     });
     const lead = state.leads.find(item => String(item.id) === String(id));
-    if (lead) Object.assign(lead, result.lead || { status });
+    if (lead) Object.assign(lead, result.lead || { status, notes });
     renderAll();
+  }
+
+  function csvCell(value) {
+    let text = String(value ?? '').replace(/\r?\n/g, ' ');
+    if (/^\s*[=+\-@]/.test(text)) text = `'${text}`;
+    return `"${text.replace(/"/g, '""')}"`;
+  }
+
+  function exportLeadsCsv() {
+    const columns = ['id', 'created_at', 'status', 'name', 'phone', 'email', 'property_id', 'source', 'locale', 'utm_source', 'utm_medium', 'utm_campaign', 'message', 'notes'];
+    const rows = filteredLeads().map(lead => columns.map(column => csvCell(lead[column])).join(','));
+    const csv = `\uFEFF${columns.join(',')}\n${rows.join('\n')}`;
+    const url = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' }));
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `jasmine-crm-${new Date().toISOString().slice(0, 10)}.csv`;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(url);
+  }
+
+  async function refreshReadiness() {
+    const button = document.getElementById('refresh-readiness-button');
+    button.disabled = true;
+    try {
+      state.readiness = await api('/api/admin/readiness');
+      renderReadiness();
+      showAlert('');
+    } catch (error) {
+      showAlert(error.message);
+    } finally {
+      button.disabled = false;
+    }
   }
 
   document.addEventListener('DOMContentLoaded', async () => {
@@ -240,7 +324,10 @@
     document.querySelectorAll('[data-close-dialog]').forEach(button => button.addEventListener('click', () => document.getElementById('property-dialog').close()));
     document.getElementById('admin-menu-button').addEventListener('click', () => document.body.classList.toggle('menu-open'));
     document.getElementById('property-search').addEventListener('input', renderProperties);
+    document.getElementById('lead-search').addEventListener('input', renderLeads);
     document.getElementById('lead-filter').addEventListener('change', renderLeads);
+    document.getElementById('export-leads-button').addEventListener('click', exportLeadsCsv);
+    document.getElementById('refresh-readiness-button').addEventListener('click', refreshReadiness);
     document.getElementById('add-property-button').addEventListener('click', () => openPropertyDialog());
     document.getElementById('property-form').addEventListener('submit', saveProperty);
     document.getElementById('logout-button').addEventListener('click', async () => {
@@ -250,12 +337,23 @@
     document.addEventListener('click', event => {
       const edit = event.target.closest('[data-edit]');
       const remove = event.target.closest('[data-delete]');
+      const saveLead = event.target.closest('[data-save-lead]');
       if (edit) openPropertyDialog(edit.dataset.edit);
       if (remove) deleteProperty(remove.dataset.delete).catch(error => showAlert(error.message));
+      if (saveLead) {
+        const card = saveLead.closest('[data-lead-card]');
+        const lead = state.leads.find(item => String(item.id) === String(saveLead.dataset.saveLead));
+        const notes = card?.querySelector('[data-lead-notes]')?.value || '';
+        if (lead) updateLead(lead.id, lead.status, notes).catch(error => showAlert(error.message));
+      }
     });
     document.addEventListener('change', event => {
       const select = event.target.closest('[data-lead-status]');
-      if (select) updateLeadStatus(select.dataset.leadStatus, select.value).catch(error => showAlert(error.message));
+      if (select) {
+        const card = select.closest('[data-lead-card]');
+        const notes = card?.querySelector('[data-lead-notes]')?.value || '';
+        updateLead(select.dataset.leadStatus, select.value, notes).catch(error => showAlert(error.message));
+      }
     });
 
     await loadData();

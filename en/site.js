@@ -6,10 +6,22 @@
 
   function trustedImage(url) {
     if (!url) return false;
-    if (!/^https?:\/\//i.test(url)) return /^(?:\.\.\/)?images\/[a-z0-9._/-]+$/i.test(url);
+    const safeSegments = pathname => {
+      try {
+        return decodeURIComponent(pathname).split('/').every(segment => segment !== '.' && segment !== '..');
+      } catch {
+        return false;
+      }
+    };
+    if (!/^https?:\/\//i.test(url)) {
+      const localPath = String(url).replace(/^\.\.\//, '');
+      return /^images\/[a-z0-9._/-]+$/i.test(localPath) && safeSegments(localPath);
+    }
     try {
       const parsed = new URL(url);
-      return /(?:^|\.)supabase\.co$/i.test(parsed.hostname) && parsed.pathname.includes('/storage/v1/object/public/');
+      return /(?:^|\.)supabase\.co$/i.test(parsed.hostname)
+        && parsed.pathname.includes('/storage/v1/object/public/')
+        && safeSegments(parsed.pathname);
     } catch {
       return false;
     }
@@ -50,8 +62,32 @@
     return `${property.rooms || 'Residential'} ${propertyKind(property).toLowerCase()} offered for ${use} in ${district || 'Alanya'}. Request current availability, approved media, exact specifications and property-specific documents from an advisor.`;
   }
 
+  function englishBathrooms(value) {
+    const match = String(value || '').match(/\d+(?:[.,]\d+)?/);
+    if (!match) return '-';
+    const count = match[0].replace(',', '.');
+    return `${count} ${Number(count) === 1 ? 'bathroom' : 'bathrooms'}`;
+  }
+
+  function trackEvent(name, parameters = {}) {
+    if (localStorage.getItem('jg_cookie_consent') !== 'accepted') return;
+    if (typeof window.gtag === 'function') window.gtag('event', name, parameters);
+    if (typeof window.fbq === 'function') window.fbq('trackCustom', name, parameters);
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({ event: name, ...parameters });
+  }
+
+  function trackPropertyView() {
+    if (!window.__jasminePropertyContext || window.__jasminePropertyViewTracked) return;
+    if (localStorage.getItem('jg_cookie_consent') !== 'accepted') return;
+    trackEvent('view_item', window.__jasminePropertyContext);
+    window.__jasminePropertyViewTracked = true;
+  }
+
   function loadAnalytics() {
+    if (window.__jasmineAnalyticsLoaded) return;
     const config = window.JASMINE_ANALYTICS || {};
+    window.__jasmineAnalyticsLoaded = true;
     if (config.gtmId) {
       window.dataLayer = window.dataLayer || [];
       window.dataLayer.push({ 'gtm.start': Date.now(), event: 'gtm.js' });
@@ -69,6 +105,16 @@
       window.gtag('js', new Date());
       window.gtag('config', config.ga4Id, { anonymize_ip: true });
     }
+    if (config.metaPixelId) {
+      window.fbq = window.fbq || function fbq() { (window.fbq.queue = window.fbq.queue || []).push(arguments); };
+      const pixel = document.createElement('script');
+      pixel.async = true;
+      pixel.src = 'https://connect.facebook.net/en_US/fbevents.js';
+      document.head.appendChild(pixel);
+      window.fbq('init', config.metaPixelId);
+      window.fbq('track', 'PageView');
+    }
+    trackPropertyView();
   }
 
   function initConsent() {
@@ -207,10 +253,19 @@
       document.head.appendChild(schema);
 
       const message = encodeURIComponent(`Hello, I would like verified information about property ${property.id}.`);
+      window.__jasminePropertyContext = {
+        item_id: property.id,
+        item_name: title,
+        item_category: property.type,
+        value: Number(property.price_eur || 0),
+        currency: 'EUR',
+        locale: 'en',
+      };
+      trackPropertyView();
       container.innerHTML = `<div class="en-detail-layout">
         <div class="en-detail-media"><img src="${escapeHTML(image)}" alt="${escapeHTML(title)}">${approvedImages.length ? '' : '<span class="media-pending-badge"><i class="fa-solid fa-camera"></i> Verified property photos on request</span>'}</div>
         <article class="en-detail-summary"><p class="section-kicker">${isRental ? 'FOR RENT' : 'FOR SALE'} · ${escapeHTML(property.id)}</p><h2>${escapeHTML(title)}</h2><p class="prop-location"><i class="fa-solid fa-location-dot"></i> ${escapeHTML(englishLocation(property.location))}</p><strong class="en-detail-price">€ ${Number(property.price_eur || 0).toLocaleString('en-GB')}${isRental ? ' / month' : ''}</strong>
-          <div class="en-detail-facts"><span><small>Rooms</small>${escapeHTML(property.rooms || '-')}</span><span><small>Bathrooms</small>${escapeHTML(property.bathrooms || '-')}</span><span><small>Net area</small>${escapeHTML(property.area_net || '-')}</span><span><small>Reference</small>${escapeHTML(property.id)}</span></div>
+          <div class="en-detail-facts"><span><small>Rooms</small>${escapeHTML(property.rooms || '-')}</span><span><small>Bathrooms</small>${escapeHTML(englishBathrooms(property.bathrooms))}</span><span><small>Net area</small>${escapeHTML(property.area_net || '-')}</span><span><small>Reference</small>${escapeHTML(property.id)}</span></div>
           <p>${escapeHTML(description)}</p><div class="property-card-verification"><i class="fa-solid fa-circle-check"></i> Price, availability, media and property-specific documents are subject to advisor confirmation.</div>
           <div class="en-hero-actions"><a href="https://wa.me/905330850769?text=${message}">Ask on WhatsApp</a><a href="contact.html?property=${encodeURIComponent(property.id)}">Request a consultation</a></div>
         </article>
@@ -276,7 +331,7 @@
       form.reset();
       status.className = 'form-status is-success';
       status.textContent = 'Thank you. Our team will contact you shortly.';
-      if (typeof window.gtag === 'function') window.gtag('event', 'generate_lead', { source: 'en-contact' });
+      trackEvent('generate_lead', { source: 'en-contact', locale: 'en' });
     } catch {
       status.className = 'form-status is-error';
       status.textContent = 'Please contact us on WhatsApp: +90 533 085 0769.';
@@ -287,6 +342,7 @@
     document.querySelectorAll('[data-en-lead]').forEach(form => form.addEventListener('submit', submitLead));
     ['en-search', 'en-location', 'en-rooms', 'en-sort'].forEach(id => document.getElementById(id)?.addEventListener('input', renderProperties));
     initMobileNavigation();
+    document.querySelectorAll('a[href*="wa.me"]').forEach(link => link.addEventListener('click', () => trackEvent('contact_whatsapp', { page: window.location.pathname, locale: 'en' })));
     loadAnalyticsConfiguration();
     loadProperties();
     loadPropertyDetail();
