@@ -4,8 +4,8 @@
   <meta charset="UTF-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Blog | Jasmine Group®</title>
-  <meta name="description" content="Alanya'da Profesyonel Emlak Hizmetleri" />
+  <title>Alanya Gayrimenkul Rehberleri | Jasmine Group</title>
+  <meta name="description" content="Alanya bölgeleri, konut seçimi, tapu süreci, kiralama ve mülk satışı hakkında açık ve uygulanabilir Jasmine Group rehberleri." />
   <!-- Swiper -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" />
   <!-- Font Awesome -->
@@ -14,13 +14,13 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css?v=20260727" />
+  <link rel="stylesheet" href="style.css?v=2026072802" />
   <link rel="icon" type="image/jpeg" href="images/favicon.jpg">
 
-  <meta property="og:title" content="Jasmine Group - Alanya Emlak Proje Pazarlama" />
-  <meta property="og:description" content="Alanya'da Profesyonel Emlak Hizmetleri, Lüks Daireler ve Villalar." />
-  <meta property="og:image" content="https://www.jasminegroup.com.tr/images/favicon.jpg" />
-  <meta property="og:url" content="https://www.jasminegroup.com.tr/" />
+  <meta property="og:title" content="Alanya Gayrimenkul Rehberleri | Jasmine Group" />
+  <meta property="og:description" content="Bölge seçimi, konut inceleme ve işlem planlama için hazırlanmış rehberler." />
+  <meta property="og:image" content="https://www.jasminegroup.com.tr/images/hero1.jpg" />
+  <meta property="og:url" content="https://www.jasminegroup.com.tr/blog.html" />
   <meta property="og:type" content="website" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Jasmine Group - Alanya Emlak Proje Pazarlama" />
@@ -37,8 +37,6 @@
       <button class="tb-mega-btn" id="megaMenuTrigger" onclick="openMegaMenu()"><i class="fa-solid fa-globe"></i> TR / EUR <i class="fa-solid fa-chevron-down"></i></button>
       <div class="tb-divider">|</div>
       <div class="tb-phone-group">
-        <span class="tb-phone-label" data-i18n="nav_call">HEMEN ARA</span>
-        <a href="tel:4446407" class="tb-phone-num">444 6 407</a>
         <span class="tb-phone-label mobil" data-i18n="nav_mobile">MOBİL</span>
         <a href="tel:+905330850769" class="tb-phone-num">0533 085 0769</a>
         <a href="https://wa.me/905330850769" target="_blank" class="tb-whatsapp"><i class="fa-brands fa-whatsapp"></i></a>
@@ -65,17 +63,21 @@
       <div class="mobile-menu-btn" onclick="toggleMobileMenu()"><i class="fa-solid fa-bars"></i></div>
     </div>
   </header>
-  <main style="padding: 60px 0; background: var(--off-white); min-height: 80vh;">
-  <div class="container">
-    <div style="text-align:center; margin-bottom: 50px;">
-        <h1 style="font-size:36px; color:var(--navy);">Emlak Blogu</h1>
-        <p style="color:#666; font-size:16px;">Gayrimenkul dünyasından en güncel haberler ve rehberler.</p>
-    </div>
-    <div id="blog-list" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap:30px;">
+  <main class="blog-index">
+    <section class="blog-index-hero">
+      <div class="container">
+        <p class="section-kicker">JASMINE JOURNAL</p>
+        <h1>Doğru sorularla başlayan<br />gayrimenkul rehberleri.</h1>
+        <p>Alanya'da bölge seçimi, mülk inceleme ve işlem planlamasını daha anlaşılır hale getiren editoryal içerikler.</p>
+      </div>
+    </section>
+    <section class="container blog-index-content">
+      <div class="section-heading"><div><p class="section-kicker">GÜNCEL REHBERLER</p><h2>Araştırmanıza sağlam bir temel oluşturun</h2></div><a href="contact.html" class="text-link">Bir uzmana sorun <i class="fa-solid fa-arrow-right"></i></a></div>
+      <div id="blog-list" class="blog-editorial-grid">
         <!-- Filled by JS -->
-    </div>
-  </div>
-</main>
+      </div>
+    </section>
+  </main>
   <!-- FOOTER -->
   <footer class="main-footer">
     <div class="container">
@@ -84,9 +86,6 @@
           <a href="index.html" class="site-logo">JASMINE <span>GROUP</span></a>
           <p>Alanya ve çevresinde portföy seçimi, gösterim ve gayrimenkul işlem koordinasyonu sunuyoruz.</p>
           <div class="footer-social">
-            <a href="#" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
-            <a href="#" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
-            <a href="#" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
             <a href="https://wa.me/905330850769" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
           </div>
         </div>
@@ -122,7 +121,7 @@
           </div>
           <div class="footer-contact-item">
             <i class="fa-solid fa-phone"></i>
-            <span><a href="tel:4446407">444 6 407</a></span>
+            <span><a href="tel:+905330850769">0533 085 0769</a></span>
           </div>
           <div class="footer-contact-item">
             <i class="fa-brands fa-whatsapp"></i>
@@ -149,7 +148,7 @@
 
   <!-- Swiper JS -->
   <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
-  <script src="script.js?v=20260727"></script>
+  <script src="script.js?v=2026072802"></script>
 
 <!-- MEGA MENU MODAL -->
 <div id="megaMenuOverlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:9998;" onclick="closeMegaMenu()"></div>
@@ -161,15 +160,8 @@
     <div>
       <h4 style="margin:0 0 15px; font-size:13px; color:var(--navy); border-bottom:1px solid #eee; padding-bottom:10px;">LANGUAGE</h4>
       <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; font-size:14px;">
-        <a href="#" onclick="setLangMega('en')" class="mega-lang mega-link">English</a>
-        <a href="#" onclick="setLangMega('tr')" class="mega-lang mega-link active">Türkçe</a>
-        <a href="#" onclick="setLangMega('ru')" class="mega-lang mega-link">Русский</a>
-        <a href="#" onclick="setLangMega('fr')" class="mega-lang mega-link">Français</a>
-        <a href="#" onclick="setLangMega('de')" class="mega-lang mega-link">Deutsch</a>
-        <a href="#" onclick="setLangMega('nl')" class="mega-lang mega-link">Nederlands</a>
-        <a href="#" onclick="setLangMega('sv')" class="mega-lang mega-link">Svenska</a>
-        <a href="#" onclick="setLangMega('fa')" class="mega-lang mega-link">فارسی</a>
-        <a href="#" onclick="setLangMega('ar')" class="mega-lang mega-link">العربية</a>
+        <a href="#" onclick="setLangMega('en', event)" class="mega-lang mega-link">English</a>
+        <a href="#" onclick="setLangMega('tr', event)" class="mega-lang mega-link active">Türkçe</a>
       </div>
     </div>
     
@@ -177,18 +169,15 @@
     <div style="border-left:1px solid #eee; padding-left:30px;">
       <h4 style="margin:0 0 15px; font-size:13px; color:var(--navy); border-bottom:1px solid #eee; padding-bottom:10px;">CURRENCY</h4>
       <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:10px; font-size:14px;">
-        <a href="#" onclick="setCurrMega('try')" class="mega-curr mega-link">TRY</a>
-        <a href="#" onclick="setCurrMega('usd')" class="mega-curr mega-link">USD</a>
-        <a href="#" onclick="setCurrMega('eur')" class="mega-curr mega-link active">EUR</a>
-        <a href="#" onclick="setCurrMega('sek')" class="mega-curr mega-link">SEK</a>
-        <a href="#" onclick="setCurrMega('rub')" class="mega-curr mega-link">RUB</a>
-        <a href="#" onclick="setCurrMega('nok')" class="mega-curr mega-link">NOK</a>
-        <a href="#" onclick="setCurrMega('chf')" class="mega-curr mega-link">CHF</a>
-        <a href="#" onclick="setCurrMega('gbp')" class="mega-curr mega-link">GBP</a>
-        <a href="#" onclick="setCurrMega('cny')" class="mega-curr mega-link">CNY</a>
-        <a href="#" onclick="setCurrMega('cad')" class="mega-curr mega-link">CAD</a>
-        <a href="#" onclick="setCurrMega('sar')" class="mega-curr mega-link">SAR</a>
-        <a href="#" onclick="setCurrMega('aed')" class="mega-curr mega-link">AED</a>
+        <a href="#" onclick="setCurrMega('try', event)" class="mega-curr mega-link">TRY</a>
+        <a href="#" onclick="setCurrMega('usd', event)" class="mega-curr mega-link">USD</a>
+        <a href="#" onclick="setCurrMega('eur', event)" class="mega-curr mega-link active">EUR</a>
+        <a href="#" onclick="setCurrMega('sek', event)" class="mega-curr mega-link">SEK</a>
+        <a href="#" onclick="setCurrMega('nok', event)" class="mega-curr mega-link">NOK</a>
+        <a href="#" onclick="setCurrMega('chf', event)" class="mega-curr mega-link">CHF</a>
+        <a href="#" onclick="setCurrMega('gbp', event)" class="mega-curr mega-link">GBP</a>
+        <a href="#" onclick="setCurrMega('cny', event)" class="mega-curr mega-link">CNY</a>
+        <a href="#" onclick="setCurrMega('cad', event)" class="mega-curr mega-link">CAD</a>
       </div>
     </div>
     

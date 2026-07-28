@@ -123,7 +123,7 @@ const translations = {
     "hero_2_sub": "Elite living spaces with private pools and panoramic views.",
     "hero_3": "Unique Investments in Central Location",
     "hero_3_sub": "High rental income commercial and residential opportunities in the heart of the city.",
-    "about_title": "Alanya's Leading Real Estate Company | Jasmine Group ®",
+    "about_title": "Property Guidance in Alanya | Jasmine Group ®",
     "about_desc": "Jasmine Group provides property selection, viewing and transaction coordination for home buyers and investors in and around Alanya.",
     "about_more": "More About Us",
     "stat_sales": "Completed Sales",
@@ -650,21 +650,11 @@ const translations = {
 };
 
 const rates = {
-  eur: { rate: 1, symbol: '€' },
-  try: { rate: 35.5, symbol: '₺' },
-  usd: { rate: 1.08, symbol: '$' },
-  sek: { rate: 11.5, symbol: 'kr' },
-  rub: { rate: 100, symbol: '₽' },
-  nok: { rate: 11.6, symbol: 'kr' },
-  chf: { rate: 0.95, symbol: 'CHF' },
-  gbp: { rate: 0.85, symbol: '£' },
-  cny: { rate: 7.8, symbol: '¥' },
-  cad: { rate: 1.45, symbol: 'C$' },
-  sar: { rate: 4.05, symbol: 'SAR' },
-  aed: { rate: 3.96, symbol: 'AED' }
+  eur: { rate: 1, symbol: '€' }
 };
 
 function changeCurrency(curr) {
+  if (!rates[curr]) curr = 'eur';
   localStorage.setItem('jg_currency', curr);
   const rateInfo = rates[curr] || rates.eur;
   const lang = localStorage.getItem('jg_lang') || 'tr';
@@ -701,7 +691,41 @@ function changeCurrency(curr) {
   });
 }
 
+async function initLiveCurrencyRates() {
+  const symbols = { EUR: '€', USD: '$', TRY: '₺', GBP: '£', CHF: 'CHF', SEK: 'kr', NOK: 'kr', CNY: '¥', CAD: 'C$' };
+  try {
+    const response = await fetch('/api/rates');
+    if (!response.ok || !response.headers.get('content-type')?.includes('application/json')) throw new Error('Rates unavailable');
+    const data = await response.json();
+    Object.entries(data.rates || {}).forEach(([code, rate]) => {
+      if (Number.isFinite(Number(rate)) && symbols[code]) {
+        rates[code.toLowerCase()] = { rate: Number(rate), symbol: symbols[code] };
+      }
+    });
+    document.querySelectorAll('.thb-dropbtn, #megaMenuTrigger').forEach(button => {
+      button.title = `Döviz kaynağı: Avrupa Merkez Bankası · ${data.asOf || ''}`;
+    });
+  } catch {
+    localStorage.setItem('jg_currency', 'eur');
+  }
+
+  const supported = new Set(Object.keys(rates));
+  document.querySelectorAll('[onclick*="changeCurrency("], .mega-curr').forEach(link => {
+    const match = link.getAttribute('onclick')?.match(/(?:changeCurrency|setCurrMega)\('([^']+)'\)/);
+    if (match && !supported.has(match[1])) link.remove();
+  });
+  const selected = localStorage.getItem('jg_currency') || 'eur';
+  changeCurrency(supported.has(selected) ? selected : 'eur');
+  updateMegaBtnText();
+}
+
 function changeLang(lang) {
+  if (lang === 'en') {
+    const page = window.location.pathname.split('/').pop();
+    const target = page === 'buy.html' || page === 'contact.html' ? page : '';
+    window.location.href = `/en/${target}`;
+    return;
+  }
   localStorage.setItem('jg_lang', lang);
   const dict = translations[lang] || translations.tr;
   
@@ -766,6 +790,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             if(document.getElementById('sidebar-type')) document.getElementById('sidebar-type').value = 'Tümü';
             if(document.getElementById('sidebar-pmin')) document.getElementById('sidebar-pmin').value = '';
             if(document.getElementById('sidebar-pmax')) document.getElementById('sidebar-pmax').value = '';
+            if(document.getElementById('sidebar-keyword')) document.getElementById('sidebar-keyword').value = '';
+            if(document.getElementById('sidebar-room')) document.getElementById('sidebar-room').value = '';
             window.history.pushState({}, document.title, window.location.pathname);
             renderProperties(props);
         });
@@ -790,17 +816,57 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 
 async function fetchProperties() {
+  let props = [];
   try {
-    const res = await fetch('admin/data.json?v=' + new Date().getTime());
-    if (!res.ok) throw new Error("HTTP error");
+    const res = await fetch('/api/properties?limit=500');
+    if (!res.ok) throw new Error('API unavailable');
     const data = await res.json();
-    const props = data.properties || []; 
-    if(typeof populateLocations === 'function') populateLocations(props); 
-    return props;
+    props = data.properties || [];
   } catch (e) {
-    console.error("İlanlar yüklenemedi:", e);
-    return [];
+    try {
+      const fallback = await fetch('admin/data.json');
+      if (!fallback.ok) throw new Error('Static data unavailable');
+      props = (await fallback.json()).properties || [];
+    } catch (fallbackError) {
+      console.error('İlanlar yüklenemedi:', fallbackError);
+      return [];
+    }
   }
+
+  const normalized = props.map(normalizeProperty);
+  if (typeof populateLocations === 'function') populateLocations(normalized);
+  return normalized;
+}
+
+function isTrustedPropertyImage(url) {
+  const value = String(url || '').trim();
+  if (!value) return false;
+  if (!/^https?:\/\//i.test(value)) return /^images\/[a-z0-9._/-]+$/i.test(value);
+  try {
+    const parsed = new URL(value);
+    return parsed.origin === window.location.origin
+      || /(?:^|\.)supabase\.co$/i.test(parsed.hostname) && parsed.pathname.includes('/storage/v1/object/public/');
+  } catch {
+    return false;
+  }
+}
+
+function normalizeProperty(property) {
+  const trustedImages = Array.isArray(property.images) ? property.images.filter(isTrustedPropertyImage) : [];
+  const id = String(property.id || '').replace(/[^\p{L}\p{N}._-]/gu, '').slice(0, 80);
+  const price = Number(property.price_eur);
+  return {
+    ...property,
+    id,
+    type: property.type === 'rent' ? 'rent' : 'sale',
+    price_eur: Number.isFinite(price) && price >= 0 ? price : 0,
+    badge_color: ['red', 'blue', 'green'].includes(property.badge_color) ? property.badge_color : '',
+    desc: property.description || property.desc || '',
+    status: property.status || 'published',
+    media_pending: trustedImages.length === 0,
+    verified_image_count: trustedImages.length,
+    images: trustedImages.length ? trustedImages : ['images/property-placeholder.svg'],
+  };
 }
 
 function renderProperties(props) {
@@ -816,6 +882,7 @@ function renderProperties(props) {
   if (!lists.some(({ element }) => element)) return;
   
   let renderProps = [...props];
+  if (!isIndexPage) window.currentListingProperties = props;
   
   const sortSelect = document.querySelector('.sort-bar select');
   if (sortSelect) {
@@ -834,10 +901,11 @@ function renderProperties(props) {
   
   lists.forEach(({ element: list, type: homeType }) => {
     if (!list) return;
-    const visibleProperties = (homeType ? renderProps.filter(p => p.type === homeType) : renderProps)
+    const allVisibleProperties = (homeType ? renderProps.filter(p => p.type === homeType) : renderProps)
       .filter(p => !isRentPage || p.type === 'rent')
       .filter(p => !isBuyPage || p.type === 'sale')
-      .slice(0, isIndexPage ? 4 : undefined);
+    const listingLimit = window.listingVisibleCount || 24;
+    const visibleProperties = allVisibleProperties.slice(0, isIndexPage ? 4 : listingLimit);
 
     list.innerHTML = '';
     if (visibleProperties.length === 0 && isIndexPage) {
@@ -852,48 +920,68 @@ function renderProperties(props) {
         </article>`;
       return;
     }
+    if (visibleProperties.length === 0) {
+      list.innerHTML = `
+        <article class="listing-empty-state">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <h3>Aramanızla eşleşen ilan bulunamadı.</h3>
+          <p>Filtreleri genişletebilir veya kriterlerinizi danışmanımıza iletebilirsiniz.</p>
+          <a href="contact.html">Özel portföy talebi oluştur</a>
+        </article>`;
+    }
+    const count = document.getElementById('listing-count');
+    if (count) count.textContent = `${allVisibleProperties.length} portföy`;
+    const loadMore = document.getElementById('load-more-properties');
+    if (loadMore) {
+      loadMore.hidden = visibleProperties.length >= allVisibleProperties.length;
+      loadMore.textContent = `DAHA FAZLA PORTFÖY GÖSTER (${visibleProperties.length}/${allVisibleProperties.length})`;
+    }
     visibleProperties.forEach(p => {
     const displayTitle = formatPropertyTitle(p.title);
     let imgsHTML = p.images.map(img => `<div class="swiper-slide"><img src="${escapeHTML(img)}" alt="${escapeHTML(displayTitle || 'Alanya Emlak')}" loading="lazy" /></div>`).join('');
     let bClass = p.badge_color ? `prop-badge ${p.badge_color}` : `prop-badge`;
     let badgeHTML = p.badge ? `<span class="${bClass}">${escapeHTML(p.badge)}</span>` : '';
     let suffix = p.type === 'rent' ? ' <em>/ ay</em>' : '';
+    const compareButton = document.getElementById('compare-floating')
+      ? `<button class="compare-btn" data-compare-id="${escapeHTML(p.id)}" onclick="toggleCompare('${escapeHTML(p.id)}', this)" title="Karşılaştırmaya ekle" aria-label="Karşılaştırmaya ekle" aria-pressed="false"><i class="fa-solid fa-code-compare"></i></button>`
+      : '';
     
     // desc truncate
     let desc = formatPropertyDescription(p.desc);
     if (desc.length > 120) desc = desc.substring(0, 120) + '...';
     
     let html = `
-      <div class="property-item">
-        <div class="prop-img-side">
+      <article class="property-item property-card-v2">
+        <div class="prop-img-side property-card-media">
           <div class="swiper prop-swiper">
             <div class="swiper-wrapper">${imgsHTML}</div>
             <div class="swiper-button-next"></div>
             <div class="swiper-button-prev"></div>
           </div>
           ${badgeHTML}
-          <div class="prop-code-strip"><span>${escapeHTML(p.id)}</span><span><i class="fa-solid fa-camera"></i> ${p.images.length}</span></div>
+          ${p.media_pending ? '<span class="media-pending-badge"><i class="fa-solid fa-camera"></i> Fotoğraf hazırlanıyor</span>' : ''}
+          <div class="prop-code-strip"><span>${escapeHTML(p.id)}</span><span><i class="fa-solid fa-camera"></i> ${p.verified_image_count ?? p.images.length}</span></div>
         </div>
-        <div class="prop-info-side">
+        <div class="prop-info-side property-card-content">
+          <div class="property-card-eyebrow">${p.type === 'rent' ? 'KİRALIK' : 'SATILIK'} · ${escapeHTML(p.location.split('/').slice(-1)[0].trim())}</div>
           <a href="property-detail.html?id=${encodeURIComponent(p.id)}" class="prop-title">${escapeHTML(displayTitle)}</a>
-          <div class="prop-location"><i class="fa-solid fa-location-dot"></i> ${escapeHTML(p.location.toLocaleUpperCase('tr-TR'))}</div>
+          <div class="prop-location"><i class="fa-solid fa-location-dot"></i> ${escapeHTML(p.location)}</div>
           <div class="prop-rooms">
-            <span><i class="fa-solid fa-bed"></i> ${p.rooms}</span>
-            <span><i class="fa-solid fa-bath"></i> ${p.bathrooms || '-'} Banyo</span>
+            <span><i class="fa-solid fa-bed"></i> ${escapeHTML(p.rooms || '-')}</span>
+            <span><i class="fa-solid fa-bath"></i> ${escapeHTML(p.bathrooms || '-')}</span>
             <span><i class="fa-solid fa-maximize"></i> ${escapeHTML(formatArea(p.area_net))}</span>
-            ${p.area_gross ? `<span><i class="fa-solid fa-vector-square"></i> ${escapeHTML(formatArea(p.area_gross))}</span>` : ''}
           </div>
-          <p class="prop-desc">${escapeHTML(desc)}</p>
           <div class="prop-footer">
-            <div class="prop-price" data-eur="${p.price_eur}" data-type="${p.type === 'rent' ? 'rent_month' : 'sale'}">€ ${p.price_eur.toLocaleString('de-DE')}${suffix}</div>
+            <div><small>Fiyat</small><div class="prop-price" data-eur="${p.price_eur}" data-type="${p.type === 'rent' ? 'rent_month' : 'sale'}">€ ${p.price_eur.toLocaleString('de-DE')}${suffix}</div></div>
             <div class="prop-actions">
-              <button class="wishlist-btn" style="border:none;background:transparent;cursor:pointer;margin-right:10px;" onclick="toggleWishlist('${p.id}', this)" title="Favorilere Ekle"><i class="fa-regular fa-heart"></i></button>
-              <a href="contact.html" class="prop-btn"><i class="fa-solid fa-message"></i> İLETİŞİM</a>
-              <a href="property-detail.html?id=${encodeURIComponent(p.id)}" class="prop-btn primary"><i class="fa-solid fa-circle-info"></i> DETAYLAR</a>
+              ${compareButton}
+              <button class="wishlist-btn" data-wishlist-id="${escapeHTML(p.id)}" onclick="toggleWishlist('${escapeHTML(p.id)}', this)" title="Favorilere ekle" aria-label="Favorilere ekle" aria-pressed="false"><i class="fa-regular fa-heart"></i></button>
+              <a href="property-detail.html?id=${encodeURIComponent(p.id)}" class="prop-btn primary">İNCELE <i class="fa-solid fa-arrow-right"></i></a>
             </div>
           </div>
+          <p class="property-card-verification"><i class="fa-solid fa-circle-check"></i> Fiyat ve müsaitlik danışman teyidine tabidir.</p>
         </div>
-      </div>
+      </article>
     `;
       list.innerHTML += html;
     });
@@ -905,6 +993,12 @@ function renderProperties(props) {
   
   changeCurrency(localStorage.getItem('jg_currency') || 'eur');
   if(typeof updateWishlistUI === 'function') updateWishlistUI();
+  if(typeof updateCompareUI === 'function') updateCompareUI();
+}
+
+function showMoreProperties() {
+  window.listingVisibleCount = (window.listingVisibleCount || 24) + 24;
+  renderProperties(window.currentListingProperties || []);
 }
 
 function escapeHTML(value) {
@@ -931,7 +1025,7 @@ function formatPropertyTitle(value) {
 }
 
 function formatPropertyDescription(value) {
-  return String(value || '').trim().replace(/^Sahibinden(?:\.\.\.)?\s*/i, '');
+  return String(value || '').trim();
 }
 
 function setMetaContent(selector, content) {
@@ -1019,6 +1113,11 @@ function initLeadForms(root = document) {
       const payload = Object.fromEntries(data.entries());
       payload.consent = data.get('consent') === 'on';
       payload.pageUrl = window.location.href;
+      payload.locale = document.documentElement.lang || 'tr';
+      const campaign = new URLSearchParams(window.location.search);
+      payload.utmSource = campaign.get('utm_source') || '';
+      payload.utmMedium = campaign.get('utm_medium') || '';
+      payload.utmCampaign = campaign.get('utm_campaign') || '';
       if (button) {
         button.disabled = true;
         button.dataset.originalText = button.textContent;
@@ -1043,6 +1142,7 @@ function initLeadForms(root = document) {
           status.className = 'form-status is-success';
           status.textContent = result.message || 'Talebiniz alındı. En kısa sürede sizinle iletişime geçeceğiz.';
         }
+        trackEvent('generate_lead', { source: payload.source || 'website', property_id: payload.propertyId || '' });
       } catch (error) {
         if (status) {
           status.className = 'form-status is-error';
@@ -1068,6 +1168,169 @@ function initLegalFooter() {
   });
 }
 
+function initGlobalNavigation() {
+  const supportedLanguages = new Set(['tr', 'en']);
+  document.querySelectorAll('[onclick*="changeLang("], .mega-lang').forEach(link => {
+    const match = link.getAttribute('onclick')?.match(/(?:changeLang|setLangMega)\('([^']+)'\)/);
+    if (match && !supportedLanguages.has(match[1])) link.remove();
+  });
+
+  document.querySelectorAll('.main-nav').forEach(nav => {
+    if (nav.querySelector('a[href="services.html"]')) return;
+    const services = document.createElement('a');
+    services.href = 'services.html';
+    services.textContent = 'HİZMETLER';
+    const rentLink = nav.querySelector('a[href="rent.html"]');
+    if (rentLink) rentLink.insertAdjacentElement('afterend', services);
+    else nav.appendChild(services);
+  });
+
+  document.querySelectorAll('.msm-nav').forEach(nav => {
+    [['services.html', 'Hizmetler'], ['regions.html', 'Bölgeler']].forEach(([href, label]) => {
+      if (nav.querySelector(`a[href="${href}"]`)) return;
+      const link = document.createElement('a');
+      link.href = href;
+      link.textContent = label;
+      nav.appendChild(link);
+    });
+  });
+
+  document.querySelectorAll('.footer-grid .footer-col:nth-child(2) ul').forEach(list => {
+    [['services.html', 'Hizmetler'], ['regions.html', 'Bölge Rehberi'], ['team.html', 'Ekibimiz'], ['customer-stories.html', 'Müşteri Deneyimi']].forEach(([href, label]) => {
+      if (list.querySelector(`a[href="${href}"]`)) return;
+      const item = document.createElement('li');
+      item.innerHTML = `<a href="${href}"><i class="fa-solid fa-chevron-right"></i> ${label}</a>`;
+      list.appendChild(item);
+    });
+  });
+
+  document.querySelectorAll('.footer-social a[href="#"]').forEach(link => link.remove());
+  document.querySelectorAll('.mega-unit').forEach(link => {
+    const section = link.parentElement?.parentElement;
+    if (section?.querySelector('h4')?.textContent.includes('MEASUREMENT UNIT')) section.remove();
+  });
+  document.querySelectorAll('.footer-bottom').forEach(footer => {
+    footer.innerHTML = footer.innerHTML.replace(/©\s*20\d{2}/, `© ${new Date().getFullYear()}`);
+  });
+}
+
+function trackEvent(name, parameters = {}) {
+  if (localStorage.getItem('jg_cookie_consent') !== 'accepted') return;
+  if (typeof window.gtag === 'function') window.gtag('event', name, parameters);
+  if (typeof window.fbq === 'function') window.fbq('trackCustom', name, parameters);
+  window.dataLayer = window.dataLayer || [];
+  window.dataLayer.push({ event: name, ...parameters });
+}
+
+function loadApprovedAnalytics() {
+  if (window.__jasmineAnalyticsLoaded) return;
+  const config = window.JASMINE_ANALYTICS || {};
+  window.__jasmineAnalyticsLoaded = true;
+
+  if (config.gtmId) {
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({ 'gtm.start': Date.now(), event: 'gtm.js' });
+    const gtm = document.createElement('script');
+    gtm.async = true;
+    gtm.src = `https://www.googletagmanager.com/gtm.js?id=${encodeURIComponent(config.gtmId)}`;
+    document.head.appendChild(gtm);
+  } else if (config.ga4Id) {
+    const ga = document.createElement('script');
+    ga.async = true;
+    ga.src = `https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(config.ga4Id)}`;
+    document.head.appendChild(ga);
+    window.dataLayer = window.dataLayer || [];
+    window.gtag = function gtag() { window.dataLayer.push(arguments); };
+    window.gtag('js', new Date());
+    window.gtag('config', config.ga4Id, { anonymize_ip: true });
+  }
+
+  if (config.metaPixelId) {
+    window.fbq = window.fbq || function fbq() { (window.fbq.queue = window.fbq.queue || []).push(arguments); };
+    const pixel = document.createElement('script');
+    pixel.async = true;
+    pixel.src = 'https://connect.facebook.net/en_US/fbevents.js';
+    document.head.appendChild(pixel);
+    window.fbq('init', config.metaPixelId);
+    window.fbq('track', 'PageView');
+  }
+}
+
+function initCookieConsent() {
+  const consent = localStorage.getItem('jg_cookie_consent');
+  if (consent === 'accepted') {
+    loadApprovedAnalytics();
+    return;
+  }
+  if (consent === 'rejected' || document.querySelector('.cookie-consent')) return;
+
+  const banner = document.createElement('section');
+  banner.className = 'cookie-consent';
+  banner.setAttribute('aria-label', 'Çerez tercihi');
+  banner.innerHTML = `
+    <div><strong>Gizliliğiniz sizin kontrolünüzde.</strong><p>Zorunlu tercihler dışında analiz ve reklam teknolojilerini yalnızca onayınızla çalıştırırız. <a href="cookie-policy.html">Çerez politikasını inceleyin.</a></p></div>
+    <div class="cookie-actions"><button type="button" data-cookie="reject">Reddet</button><button type="button" data-cookie="accept">Kabul et</button></div>`;
+  document.body.appendChild(banner);
+  banner.querySelectorAll('[data-cookie]').forEach(button => button.addEventListener('click', () => {
+    const accepted = button.dataset.cookie === 'accept';
+    localStorage.setItem('jg_cookie_consent', accepted ? 'accepted' : 'rejected');
+    banner.remove();
+    if (accepted) loadApprovedAnalytics();
+  }));
+}
+
+function loadAnalyticsConfiguration() {
+  const script = document.createElement('script');
+  script.src = 'analytics-config.js';
+  script.onload = initCookieConsent;
+  script.onerror = initCookieConsent;
+  document.head.appendChild(script);
+}
+
+function initGlobalStructuredData() {
+  if (document.getElementById('organization-schema')) return;
+  const schema = document.createElement('script');
+  schema.id = 'organization-schema';
+  schema.type = 'application/ld+json';
+  schema.textContent = JSON.stringify({
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'RealEstateAgent',
+        '@id': 'https://www.jasminegroup.com.tr/#organization',
+        name: 'Jasmine Group',
+        url: 'https://www.jasminegroup.com.tr/',
+        logo: 'https://www.jasminegroup.com.tr/images/logo.jpg',
+        image: 'https://www.jasminegroup.com.tr/images/jasmine_office.jpg',
+        telephone: '+90 533 085 0769',
+        email: 'jasminegroupemlak@gmail.com',
+        address: {
+          '@type': 'PostalAddress',
+          streetAddress: 'Oba Mah. Mesut Cad. 13. Sok. Best Home Comfort 7, A Blok No: 40/18-19',
+          addressLocality: 'Alanya',
+          addressRegion: 'Antalya',
+          postalCode: '07400',
+          addressCountry: 'TR'
+        },
+        areaServed: ['Alanya', 'Antalya']
+      },
+      {
+        '@type': 'WebSite',
+        '@id': 'https://www.jasminegroup.com.tr/#website',
+        url: 'https://www.jasminegroup.com.tr/',
+        name: 'Jasmine Group',
+        publisher: { '@id': 'https://www.jasminegroup.com.tr/#organization' },
+        potentialAction: {
+          '@type': 'SearchAction',
+          target: 'https://www.jasminegroup.com.tr/buy.html?q={search_term_string}',
+          'query-input': 'required name=search_term_string'
+        }
+      }
+    ]
+  });
+  document.head.appendChild(schema);
+}
+
 // --- Property Detail Page Logic ---
 async function renderPropertyDetail() {
   const container = document.getElementById('detail-container');
@@ -1087,7 +1350,7 @@ async function renderPropertyDetail() {
     return;
   }
   
-  let mainImg = p.images.length > 0 ? p.images[0] : 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=800&q=80';
+  let mainImg = p.images.length > 0 ? p.images[0] : 'images/property-placeholder.svg';
   updatePropertySEO(p, mainImg);
   const safeId = escapeHTML(p.id);
   const safeTitle = escapeHTML(formatPropertyTitle(p.title));
@@ -1150,10 +1413,11 @@ async function renderPropertyDetail() {
         <!-- GALLERY -->
         <div class="detail-gallery-container">
           <div class="detail-badge-overlay">${typeLabel}</div>
-          <div class="detail-fav-overlay" onclick="toggleWishlist('${p.id}', event)"><i class="fa-regular fa-heart"></i></div>
+          <div class="detail-fav-overlay" onclick="toggleWishlist('${safeId}', event)"><i class="fa-regular fa-heart"></i></div>
+          ${p.media_pending ? '<div class="detail-media-notice"><i class="fa-solid fa-camera"></i> Doğrulanmış mülk fotoğrafları hazırlanıyor</div>' : ''}
           
           <div class="detail-main-img-box">
-             <img id="main-gallery-img" src="${mainImg}" onclick="openLightbox(${JSON.stringify(p.images).replace(/"/g, '&quot;')}, ${JSON.stringify(p.images).replace(/"/g, '&quot;')}.indexOf(this.src))" />
+             <img id="main-gallery-img" src="${escapeHTML(mainImg)}" alt="${safeTitle}" onclick="openLightbox(${JSON.stringify(p.images).replace(/"/g, '&quot;')}, 0)" />
           </div>
           <div class="detail-thumbs-scroll custom-scrollbar" id="gallery-thumbs">
             ${thumbsHTML}
@@ -1227,7 +1491,7 @@ async function renderPropertyDetail() {
 
           <div class="sidebar-actions">
             <a href="https://wa.me/905330850769?text=${encodeURIComponent('Merhaba, ' + p.id + ' ilanınız hakkında bilgi alabilir miyim? ' + window.location.href)}" target="_blank" class="sidebar-action-btn wa"><i class="fa-brands fa-whatsapp"></i> WhatsApp</a>
-            <a href="tel:4446407" class="sidebar-action-btn call"><i class="fa-solid fa-phone"></i> Hemen Ara</a>
+            <a href="tel:+905330850769" class="sidebar-action-btn call"><i class="fa-solid fa-phone"></i> Hemen Ara</a>
           </div>
         </div>
 
@@ -1244,6 +1508,7 @@ async function renderPropertyDetail() {
   // Para birimi vs uygula
   changeCurrency(localStorage.getItem('jg_currency') || 'eur');
   initLeadForms(container);
+  trackEvent('view_property', { property_id: p.id, value: p.price_eur, currency: 'EUR' });
   
   // Re-run language translation for dynamic content if any
   const lang = localStorage.getItem('jg_lang') || 'tr';
@@ -1261,6 +1526,13 @@ async function renderPropertyDetail() {
 document.addEventListener('DOMContentLoaded', () => {
   initLeadForms();
   initLegalFooter();
+  initGlobalNavigation();
+  initGlobalStructuredData();
+  loadAnalyticsConfiguration();
+  initLiveCurrencyRates();
+  document.querySelectorAll('a[href*="wa.me"]').forEach(link => {
+    link.addEventListener('click', () => trackEvent('contact_whatsapp', { page: window.location.pathname }));
+  });
   renderPropertyDetail();
 });
 
@@ -1302,6 +1574,8 @@ function applyFilters() {
 function applySidebarFilters(props) {
     const loc = document.getElementById('sidebar-loc') ? document.getElementById('sidebar-loc').value : '';
     const type = document.getElementById('sidebar-type') ? document.getElementById('sidebar-type').value : '';
+    const keyword = document.getElementById('sidebar-keyword') ? document.getElementById('sidebar-keyword').value.trim() : '';
+    const selectedRoom = document.getElementById('sidebar-room') ? document.getElementById('sidebar-room').value : '';
     const pminStr = document.getElementById('sidebar-pmin') ? document.getElementById('sidebar-pmin').value : '';
     const pmaxStr = document.getElementById('sidebar-pmax') ? document.getElementById('sidebar-pmax').value : '';
     
@@ -1309,8 +1583,8 @@ function applySidebarFilters(props) {
     const pmax = pmaxStr ? parseInt(pmaxStr) : 999999999;
     
     const urlParams = new URLSearchParams(window.location.search);
-    const q = urlParams.get('q') || '';
-    const room = urlParams.get('room') || '';
+    const q = keyword || urlParams.get('q') || '';
+    const room = selectedRoom || urlParams.get('room') || '';
     
     const filtered = props.filter(p => {
         const locLower = p.location.toLowerCase();
@@ -1348,83 +1622,9 @@ function applySidebarFilters(props) {
         }
     }
     
+    window.listingVisibleCount = 24;
     renderProperties(filtered);
 }
-
-// --- Blog Logic ---
-async function fetchBlogs() {
-    try {
-        const res = await fetch('admin/blogs.json');
-        const text = await res.text();
-        const data = JSON.parse(text);
-        return data.data || [];
-    } catch (e) {
-        console.error("Blog API error", e);
-        return [];
-    }
-}
-
-async function renderBlogList() {
-    const container = document.getElementById('blog-container');
-    if (!container) return;
-    
-    const blogs = await fetchBlogs();
-    if(blogs.length === 0) {
-        container.innerHTML = '<p>Blog yazısı bulunamadı.</p>';
-        return;
-    }
-    
-    let html = '';
-    blogs.forEach(b => {
-        html += `
-        <div class="blog-card" style="background:#fff; border-radius:8px; overflow:hidden; box-shadow:0 2px 10px rgba(0,0,0,0.05); display:flex; flex-direction:column;">
-            <img src="${b.image}" alt="${b.title || 'Jasmine Group Blog'}" style="width:100%; height:200px; object-fit:cover;">
-            <div style="padding:20px; flex:1; display:flex; flex-direction:column;">
-                <div style="color:var(--red); font-size:12px; font-weight:bold; margin-bottom:10px;">${b.date}</div>
-                <h3 style="margin:0 0 10px; color:var(--navy); font-size:20px; line-height:1.3;">${b.title}</h3>
-                <p style="color:#666; font-size:14px; margin-bottom:20px; flex:1;">${b.excerpt}</p>
-                <a href="blog-detail.html?id=${b.id}" style="color:var(--primary); font-weight:bold; text-decoration:none;">Devamını Oku <i class="fa-solid fa-arrow-right"></i></a>
-            </div>
-        </div>
-        `;
-    });
-    container.innerHTML = html;
-}
-
-async function renderBlogDetail() {
-    const container = document.getElementById('blog-detail-container');
-    if (!container) return;
-    
-    const urlParams = new URLSearchParams(window.location.search);
-    const id = urlParams.get('id');
-    if (!id) {
-        container.innerHTML = '<h2 style="text-align:center;">Yazı Bulunamadı.</h2>';
-        return;
-    }
-    
-    const blogs = await fetchBlogs();
-    const b = blogs.find(x => x.id === id);
-    if (!b) {
-        container.innerHTML = '<h2 style="text-align:center;">Yazı Bulunamadı veya Silinmiş.</h2>';
-        return;
-    }
-    
-    container.innerHTML = `
-        <a href="blog.html" style="color:var(--navy); text-decoration:none; margin-bottom:20px; display:inline-block;"><i class="fa-solid fa-arrow-left"></i> Bloglara Dön</a>
-        <div style="color:var(--red); font-weight:bold; margin-bottom:15px;">${b.date}</div>
-        <h1 style="color:var(--navy); font-size:36px; margin-top:0; margin-bottom:25px; line-height:1.2;">${b.title}</h1>
-        <img src="${b.image}" alt="${b.title || 'Jasmine Group Blog'}" style="width:100%; height:auto; max-height:450px; object-fit:cover; border-radius:8px; margin-bottom:30px;">
-        <div style="font-size:17px; line-height:1.8; color:#333;">
-            ${b.content}
-        </div>
-    `;
-}
-
-// Add to DOMContentLoaded
-document.addEventListener('DOMContentLoaded', () => {
-    renderBlogList();
-    renderBlogDetail();
-});
 
 // --- Mega Menu Logic ---
 function openMegaMenu() {
@@ -1448,24 +1648,20 @@ function closeMegaMenu() {
     document.getElementById('megaMenuModal').style.display = 'none';
 }
 
-function setLangMega(lang) {
+function setLangMega(lang, source) {
+    source?.preventDefault?.();
     document.querySelectorAll('.mega-lang').forEach(el => el.classList.remove('active'));
-    event.target.classList.add('active');
+    (source?.currentTarget || source)?.classList?.add('active');
     changeLang(lang);
     updateMegaBtnText();
 }
 
-function setCurrMega(curr) {
+function setCurrMega(curr, source) {
+    source?.preventDefault?.();
     document.querySelectorAll('.mega-curr').forEach(el => el.classList.remove('active'));
-    event.target.classList.add('active');
+    (source?.currentTarget || source)?.classList?.add('active');
     changeCurrency(curr);
     updateMegaBtnText();
-}
-
-function setUnitMega(unit) {
-    document.querySelectorAll('.mega-unit').forEach(el => el.classList.remove('active'));
-    event.target.classList.add('active');
-    // Unit logic can be implemented later (sqft vs m2)
 }
 
 function updateMegaBtnText() {
@@ -1502,16 +1698,16 @@ async function renderBlogs() {
     blogs.forEach(b => {
         html += `
         <div class="blog-card" style="background:#fff; border-radius:12px; overflow:hidden; box-shadow:0 4px 15px rgba(0,0,0,0.05); transition:transform 0.3s;">
-            <a href="blog-detail.html?id=${b.id}">
+            <a href="blog/${encodeURIComponent(b.id)}.html">
                 <img src="${b.image}" alt="${b.title}" style="width:100%; height:220px; object-fit:cover; border-bottom:3px solid var(--red);" />
             </a>
             <div style="padding:20px;">
                 <span style="background:var(--red-light); color:var(--red); padding:4px 10px; font-size:11px; font-weight:700; border-radius:4px;">${b.category}</span>
-                <h3 style="margin:15px 0 10px; font-size:18px;"><a href="blog-detail.html?id=${b.id}" style="color:var(--navy); text-decoration:none;">${b.title}</a></h3>
+                <h3 style="margin:15px 0 10px; font-size:18px;"><a href="blog/${encodeURIComponent(b.id)}.html" style="color:var(--navy); text-decoration:none;">${escapeHTML(b.title)}</a></h3>
                 <p style="color:#666; font-size:14px; line-height:1.6; margin-bottom:15px;">${b.excerpt}</p>
                 <div style="display:flex; justify-content:space-between; align-items:center; border-top:1px solid #eee; padding-top:15px;">
                     <span style="font-size:12px; color:#888;"><i class="fa-regular fa-calendar"></i> ${b.date}</span>
-                    <a href="blog-detail.html?id=${b.id}" style="color:var(--navy); font-weight:600; font-size:13px; text-decoration:none;">Devamını Oku <i class="fa-solid fa-arrow-right"></i></a>
+                    <a href="blog/${encodeURIComponent(b.id)}.html" style="color:var(--navy); font-weight:600; font-size:13px; text-decoration:none;">Devamını Oku <i class="fa-solid fa-arrow-right"></i></a>
                 </div>
             </div>
         </div>
@@ -1522,7 +1718,7 @@ async function renderBlogs() {
 
 async function renderBlogDetail() {
     const container = document.getElementById('blog-detail-container');
-    if (!container) return;
+    if (!container || document.body.dataset.staticBlog === 'true') return;
     
     const urlParams = new URLSearchParams(window.location.search);
     const id = urlParams.get('id');
@@ -1604,36 +1800,6 @@ function calculateMortgage(price) {
     document.getElementById('mortgage-result').style.display = 'block';
 }
 
-// Newsletter Footer Injection
-document.addEventListener('DOMContentLoaded', () => {
-    const cols = document.querySelectorAll('.footer-col');
-    cols.forEach(col => {
-        const h4 = col.querySelector('h4');
-        if (h4 && h4.innerText === 'Alanya Bölgeleri') {
-            col.innerHTML = `
-                <h4>Bülten Aboneliği</h4>
-                <p style="color:#aaa; font-size:14px; margin-bottom:15px; line-height:1.6;">En yeni ilanlardan ve yatırım fırsatlarından anında haberdar olmak için e-posta bültenimize kayıt olun.</p>
-                <form onsubmit="event.preventDefault(); alert('Aboneliğiniz başarıyla oluşturuldu! Teşekkür ederiz.'); this.reset();" style="display:flex; flex-direction:column; gap:10px;">
-                    <input type="email" placeholder="E-posta Adresiniz" required style="padding:12px 15px; border-radius:6px; border:none; outline:none; font-family:inherit; font-size:14px; width:100%; box-sizing:border-box;">
-                    <button type="submit" style="background:var(--red); color:#fff; border:none; padding:12px; border-radius:6px; font-weight:700; cursor:pointer; transition:0.2s;">ABONE OL</button>
-                </form>
-            `;
-        }
-    });
-});
-
-// Social Media Links Prevent Default (except WhatsApp)
-document.addEventListener('DOMContentLoaded', () => {
-    document.querySelectorAll('.footer-social a').forEach(a => {
-        if(a.getAttribute('href') === '#') {
-            a.addEventListener('click', (e) => {
-                e.preventDefault();
-                alert('Sosyal medya hesaplarımız çok yakında aktif olacaktır!');
-            });
-        }
-    });
-});
-
 window.changeMainImage = function(el, src) {
     document.getElementById('main-gallery-img').src = src;
     document.querySelectorAll('.detail-thumb').forEach(t => {
@@ -1682,24 +1848,21 @@ let wishlist = JSON.parse(localStorage.getItem('jg_wishlist') || '[]');
 function updateWishlistUI() {
   const counter = document.getElementById('wishlist-counter');
   if(counter) counter.innerText = wishlist.length;
-  
-  // Update heart colors
-  document.querySelectorAll('.fa-heart').forEach(heart => {
-    if(heart.id && heart.id.startsWith('heart-')) {
-      const pid = heart.id.replace('heart-', '');
-      if(wishlist.includes(pid)) {
-        heart.style.color = 'var(--primary)';
-        heart.parentElement.style.color = 'var(--primary)';
-      } else {
-        heart.style.color = 'inherit';
-        heart.parentElement.style.color = 'var(--text-muted)';
-      }
-    }
+
+  document.querySelectorAll('[data-wishlist-id]').forEach(button => {
+    const active = wishlist.includes(button.dataset.wishlistId);
+    button.classList.toggle('active', active);
+    button.setAttribute('aria-pressed', String(active));
+    const icon = button.querySelector('i');
+    if (icon) icon.className = active ? 'fa-solid fa-heart' : 'fa-regular fa-heart';
   });
 }
 
-function toggleWishlist(id, e) {
-  if (e) { e.preventDefault(); e.stopPropagation(); }
+function toggleWishlist(id, source) {
+  if (source?.preventDefault) {
+    source.preventDefault();
+    source.stopPropagation();
+  }
   
   if (wishlist.includes(id)) {
     wishlist = wishlist.filter(item => item !== id);
@@ -1711,12 +1874,53 @@ function toggleWishlist(id, e) {
   updateWishlistUI();
 }
 
-function openWishlist() {
-  if (wishlist.length === 0) {
-    alert('Favori listeniz boş.');
+function ensureWishlistModal() {
+  let modal = document.getElementById('wishlist-modal');
+  if (modal) return modal;
+  modal = document.createElement('section');
+  modal.id = 'wishlist-modal';
+  modal.className = 'collection-modal';
+  modal.setAttribute('aria-modal', 'true');
+  modal.setAttribute('role', 'dialog');
+  modal.setAttribute('aria-label', 'Favori portföyler');
+  modal.innerHTML = `
+    <button class="collection-modal-backdrop" type="button" onclick="closeWishlist()" aria-label="Favorileri kapat"></button>
+    <div class="collection-modal-panel">
+      <header><div><p class="section-kicker">KISA LİSTENİZ</p><h2>Favori Portföyler</h2></div><button type="button" onclick="closeWishlist()" aria-label="Favorileri kapat"><i class="fa-solid fa-xmark"></i></button></header>
+      <div class="collection-modal-content"></div>
+    </div>`;
+  document.body.appendChild(modal);
+  return modal;
+}
+
+async function openWishlist() {
+  const modal = ensureWishlistModal();
+  const content = modal.querySelector('.collection-modal-content');
+  modal.classList.add('active');
+  document.body.style.overflow = 'hidden';
+  if (!wishlist.length) {
+    content.innerHTML = '<div class="collection-empty"><i class="fa-regular fa-heart"></i><h3>Henüz favori portföyünüz yok.</h3><p>Beğendiğiniz ilanlardaki kalp simgesini kullanarak kısa listenizi oluşturabilirsiniz.</p><a href="buy.html">Portföyleri keşfet</a></div>';
     return;
   }
-  alert(wishlist.length + ' ilan favorilerinize eklendi. Seçilen İlan IDleri: ' + wishlist.join(', '));
+
+  content.innerHTML = '<div class="collection-loading"><i class="fa-solid fa-spinner fa-spin"></i> Favoriler hazırlanıyor...</div>';
+  const props = await fetchProperties();
+  const selected = props.filter(property => wishlist.includes(property.id));
+  content.innerHTML = selected.map(property => `
+    <article class="collection-item">
+      <img src="${escapeHTML(property.images[0] || 'images/property-placeholder.svg')}" alt="${escapeHTML(formatPropertyTitle(property.title))}">
+      <div><small>${escapeHTML(property.location)}</small><h3>${escapeHTML(formatPropertyTitle(property.title))}</h3><strong>€ ${property.price_eur.toLocaleString('de-DE')}</strong></div>
+      <div><a href="property-detail.html?id=${encodeURIComponent(property.id)}">İncele</a><button type="button" data-remove-wishlist="${escapeHTML(property.id)}">Kaldır</button></div>
+    </article>`).join('') || '<div class="collection-empty"><h3>Favori ilanlar artık yayında değil.</h3><a href="buy.html">Güncel portföyler</a></div>';
+  content.querySelectorAll('[data-remove-wishlist]').forEach(button => button.addEventListener('click', () => {
+    toggleWishlist(button.dataset.removeWishlist);
+    openWishlist();
+  }));
+}
+
+function closeWishlist() {
+  document.getElementById('wishlist-modal')?.classList.remove('active');
+  document.body.style.overflow = '';
 }
 
 function toggleDarkMode() {
@@ -1742,12 +1946,25 @@ document.addEventListener('DOMContentLoaded', () => {
 // --- COMPARE LOGIC ---
 let compareList = [];
 
-function toggleCompare(id, isChecked) {
-  if (isChecked) {
+function updateCompareUI() {
+  const floating = document.getElementById('compare-floating');
+  const countSpan = document.getElementById('compare-count');
+  if (countSpan) countSpan.innerText = compareList.length;
+  if (floating) floating.style.display = compareList.length ? 'block' : 'none';
+
+  document.querySelectorAll('[data-compare-id]').forEach(button => {
+    const active = compareList.includes(button.dataset.compareId);
+    button.classList.toggle('active', active);
+    button.setAttribute('aria-pressed', String(active));
+  });
+}
+
+function toggleCompare(id, source) {
+  const adding = !compareList.includes(id);
+  if (adding) {
     if (compareList.length >= 3) {
-      alert('En fazla 3 ilan karşılaştırabilirsiniz.');
-      // uncheck the box
-      event.target.checked = false;
+      source?.classList.add('limit-reached');
+      setTimeout(() => source?.classList.remove('limit-reached'), 600);
       return;
     }
     if (!compareList.includes(id)) compareList.push(id);
@@ -1755,17 +1972,8 @@ function toggleCompare(id, isChecked) {
     compareList = compareList.filter(item => item !== id);
   }
   
-  const floating = document.getElementById('compare-floating');
-  const countSpan = document.getElementById('compare-count');
-  if (floating && countSpan) {
-    countSpan.innerText = compareList.length;
-    if (compareList.length > 0) {
-      floating.style.display = 'block';
-    } else {
-      floating.style.display = 'none';
-      closeCompareModal();
-    }
-  }
+  updateCompareUI();
+  if (!compareList.length) closeCompareModal();
 }
 
 async function openCompareModal() {
@@ -1781,22 +1989,22 @@ async function openCompareModal() {
     const p = props.find(x => x.id === id);
     if (!p) return;
     
-    let img = p.images.length > 0 ? p.images[0] : 'https://via.placeholder.com/400x300';
+    let img = p.images.length > 0 ? p.images[0] : 'images/property-placeholder.svg';
     let suffix = p.type === 'rent' ? ' / ay' : '';
     
     content.innerHTML += `
       <div style="background:var(--white); border:1px solid var(--border); border-radius:8px; padding:15px; position:relative;">
-        <button onclick="toggleCompare('${id}', false); openCompareModal();" style="position:absolute; top:5px; right:5px; background:rgba(255,0,0,0.1); color:red; border:none; border-radius:50%; width:24px; height:24px; cursor:pointer;">&times;</button>
-        <img src="${img}" style="width:100%; height:150px; object-fit:cover; border-radius:6px; margin-bottom:10px;">
-        <h4 style="font-size:14px; margin:0 0 5px; color:var(--navy);">${p.title}</h4>
+        <button onclick="toggleCompare('${escapeHTML(id)}'); openCompareModal();" style="position:absolute; top:5px; right:5px; background:rgba(255,0,0,0.1); color:red; border:none; border-radius:50%; width:24px; height:24px; cursor:pointer;" aria-label="Karşılaştırmadan kaldır">&times;</button>
+        <img src="${escapeHTML(img)}" alt="${escapeHTML(formatPropertyTitle(p.title))}" style="width:100%; height:150px; object-fit:cover; border-radius:6px; margin-bottom:10px;">
+        <h4 style="font-size:14px; margin:0 0 5px; color:var(--navy);">${escapeHTML(formatPropertyTitle(p.title))}</h4>
         <div style="color:var(--red); font-weight:bold; font-size:18px; margin-bottom:10px;">€ ${p.price_eur.toLocaleString('de-DE')}${suffix}</div>
         <ul style="list-style:none; padding:0; margin:0; font-size:13px; color:var(--text-muted);">
-          <li style="padding:8px 0; border-bottom:1px solid var(--border);"><strong>Bölge:</strong> ${p.location}</li>
-          <li style="padding:8px 0; border-bottom:1px solid var(--border);"><strong>Oda:</strong> ${p.rooms}</li>
-          <li style="padding:8px 0; border-bottom:1px solid var(--border);"><strong>Alan:</strong> ${p.area_net}</li>
+          <li style="padding:8px 0; border-bottom:1px solid var(--border);"><strong>Bölge:</strong> ${escapeHTML(p.location)}</li>
+          <li style="padding:8px 0; border-bottom:1px solid var(--border);"><strong>Oda:</strong> ${escapeHTML(p.rooms)}</li>
+          <li style="padding:8px 0; border-bottom:1px solid var(--border);"><strong>Alan:</strong> ${escapeHTML(formatArea(p.area_net))}</li>
           <li style="padding:8px 0;"><strong>Durum:</strong> ${p.type === 'sale' ? 'Satılık' : 'Kiralık'}</li>
         </ul>
-        <a href="property-detail.html?id=${id}" style="display:block; text-align:center; background:var(--navy); color:#fff; padding:8px; border-radius:6px; text-decoration:none; margin-top:15px; font-weight:bold; font-size:12px;">İlana Git</a>
+        <a href="property-detail.html?id=${encodeURIComponent(id)}" style="display:block; text-align:center; background:var(--navy); color:#fff; padding:8px; border-radius:6px; text-decoration:none; margin-top:15px; font-weight:bold; font-size:12px;">İlana Git</a>
       </div>
     `;
   });

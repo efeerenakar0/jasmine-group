@@ -8,11 +8,52 @@ create table if not exists public.leads (
   source text not null default 'website',
   property_id text,
   consent boolean not null default false,
+  consent_at timestamptz,
   page_url text,
-  status text not null default 'new'
+  locale text not null default 'tr',
+  utm_source text,
+  utm_medium text,
+  utm_campaign text,
+  ip_hash text,
+  status text not null default 'new',
+  notes text,
+  updated_at timestamptz not null default now(),
+  constraint leads_status_check check (status in ('new', 'contacted', 'qualified', 'viewing', 'won', 'lost'))
 );
 
 alter table public.leads enable row level security;
 
--- Browser clients receive no direct table policy. Inserts are performed only
--- by the Vercel function with the server-side service role key.
+create table if not exists public.properties (
+  id text primary key,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now(),
+  type text not null default 'sale',
+  status text not null default 'draft',
+  title text not null,
+  location text not null,
+  rooms text,
+  bathrooms text,
+  area_net text,
+  area_gross text,
+  price_eur numeric not null,
+  description text,
+  badge text,
+  badge_color text,
+  images jsonb not null default '[]'::jsonb,
+  features jsonb not null default '[]'::jsonb,
+  constraint properties_type_check check (type in ('sale', 'rent')),
+  constraint properties_status_check check (status in ('published', 'draft', 'sold', 'rented'))
+);
+
+create index if not exists properties_status_type_idx on public.properties (status, type);
+create index if not exists properties_location_idx on public.properties (location);
+create index if not exists leads_status_created_idx on public.leads (status, created_at desc);
+
+alter table public.properties enable row level security;
+
+insert into storage.buckets (id, name, public)
+values ('property-media', 'property-media', true)
+on conflict (id) do update set public = excluded.public;
+
+-- Browser clients receive no direct write policy. All writes are performed by
+-- authenticated Vercel functions with the server-side service role key.

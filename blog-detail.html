@@ -14,7 +14,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css?v=20260727" />
+  <link rel="stylesheet" href="style.css?v=2026072802" />
   <link rel="icon" type="image/jpeg" href="images/favicon.jpg">
 
   <meta property="og:title" content="Jasmine Group - Alanya Emlak Proje Pazarlama" />
@@ -37,8 +37,6 @@
       <button class="tb-mega-btn" id="megaMenuTrigger" onclick="openMegaMenu()"><i class="fa-solid fa-globe"></i> TR / EUR <i class="fa-solid fa-chevron-down"></i></button>
       <div class="tb-divider">|</div>
       <div class="tb-phone-group">
-        <span class="tb-phone-label" data-i18n="nav_call">HEMEN ARA</span>
-        <a href="tel:4446407" class="tb-phone-num">444 6 407</a>
         <span class="tb-phone-label mobil" data-i18n="nav_mobile">MOBİL</span>
         <a href="tel:+905330850769" class="tb-phone-num">0533 085 0769</a>
         <a href="https://wa.me/905330850769" target="_blank" class="tb-whatsapp"><i class="fa-brands fa-whatsapp"></i></a>
@@ -78,9 +76,6 @@
           <a href="index.html" class="site-logo">JASMINE <span>GROUP</span></a>
           <p>Alanya ve çevresinde portföy seçimi, gösterim ve gayrimenkul işlem koordinasyonu sunuyoruz.</p>
           <div class="footer-social">
-            <a href="#" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
-            <a href="#" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
-            <a href="#" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
             <a href="https://wa.me/905330850769" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
           </div>
         </div>
@@ -116,7 +111,7 @@
           </div>
           <div class="footer-contact-item">
             <i class="fa-solid fa-phone"></i>
-            <span><a href="tel:4446407">444 6 407</a></span>
+            <span><a href="tel:+905330850769">0533 085 0769</a></span>
           </div>
           <div class="footer-contact-item">
             <i class="fa-brands fa-whatsapp"></i>
@@ -143,7 +138,7 @@
 
   <!-- Swiper JS -->
   <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
-  <script src="script.js?v=20260727"></script>
+  <script src="script.js?v=2026072802"></script>
 
 <!-- MEGA MENU MODAL -->
 <div id="megaMenuOverlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:9998;" onclick="closeMegaMenu()"></div>
@@ -155,15 +150,8 @@
     <div>
       <h4 style="margin:0 0 15px; font-size:13px; color:var(--navy); border-bottom:1px solid #eee; padding-bottom:10px;">LANGUAGE</h4>
       <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; font-size:14px;">
-        <a href="#" onclick="setLangMega('en')" class="mega-lang mega-link">English</a>
-        <a href="#" onclick="setLangMega('tr')" class="mega-lang mega-link active">Türkçe</a>
-        <a href="#" onclick="setLangMega('ru')" class="mega-lang mega-link">Русский</a>
-        <a href="#" onclick="setLangMega('fr')" class="mega-lang mega-link">Français</a>
-        <a href="#" onclick="setLangMega('de')" class="mega-lang mega-link">Deutsch</a>
-        <a href="#" onclick="setLangMega('nl')" class="mega-lang mega-link">Nederlands</a>
-        <a href="#" onclick="setLangMega('sv')" class="mega-lang mega-link">Svenska</a>
-        <a href="#" onclick="setLangMega('fa')" class="mega-lang mega-link">فارسی</a>
-        <a href="#" onclick="setLangMega('ar')" class="mega-lang mega-link">العربية</a>
+        <a href="#" onclick="setLangMega('en', event)" class="mega-lang mega-link">English</a>
+        <a href="#" onclick="setLangMega('tr', event)" class="mega-lang mega-link active">Türkçe</a>
       </div>
     </div>
     
@@ -171,18 +159,15 @@
     <div style="border-left:1px solid #eee; padding-left:30px;">
       <h4 style="margin:0 0 15px; font-size:13px; color:var(--navy); border-bottom:1px solid #eee; padding-bottom:10px;">CURRENCY</h4>
       <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:10px; font-size:14px;">
-        <a href="#" onclick="setCurrMega('try')" class="mega-curr mega-link">TRY</a>
-        <a href="#" onclick="setCurrMega('usd')" class="mega-curr mega-link">USD</a>
-        <a href="#" onclick="setCurrMega('eur')" class="mega-curr mega-link active">EUR</a>
-        <a href="#" onclick="setCurrMega('sek')" class="mega-curr mega-link">SEK</a>
-        <a href="#" onclick="setCurrMega('rub')" class="mega-curr mega-link">RUB</a>
-        <a href="#" onclick="setCurrMega('nok')" class="mega-curr mega-link">NOK</a>
-        <a href="#" onclick="setCurrMega('chf')" class="mega-curr mega-link">CHF</a>
-        <a href="#" onclick="setCurrMega('gbp')" class="mega-curr mega-link">GBP</a>
-        <a href="#" onclick="setCurrMega('cny')" class="mega-curr mega-link">CNY</a>
-        <a href="#" onclick="setCurrMega('cad')" class="mega-curr mega-link">CAD</a>
-        <a href="#" onclick="setCurrMega('sar')" class="mega-curr mega-link">SAR</a>
-        <a href="#" onclick="setCurrMega('aed')" class="mega-curr mega-link">AED</a>
+        <a href="#" onclick="setCurrMega('try', event)" class="mega-curr mega-link">TRY</a>
+        <a href="#" onclick="setCurrMega('usd', event)" class="mega-curr mega-link">USD</a>
+        <a href="#" onclick="setCurrMega('eur', event)" class="mega-curr mega-link active">EUR</a>
+        <a href="#" onclick="setCurrMega('sek', event)" class="mega-curr mega-link">SEK</a>
+        <a href="#" onclick="setCurrMega('nok', event)" class="mega-curr mega-link">NOK</a>
+        <a href="#" onclick="setCurrMega('chf', event)" class="mega-curr mega-link">CHF</a>
+        <a href="#" onclick="setCurrMega('gbp', event)" class="mega-curr mega-link">GBP</a>
+        <a href="#" onclick="setCurrMega('cny', event)" class="mega-curr mega-link">CNY</a>
+        <a href="#" onclick="setCurrMega('cad', event)" class="mega-curr mega-link">CAD</a>
       </div>
     </div>
     

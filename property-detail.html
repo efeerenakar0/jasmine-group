@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-  <link rel="stylesheet" href="style.css?v=20260727" />
+  <link rel="stylesheet" href="style.css?v=2026072802" />
   <style>
     /* Detail page specific styles */
     .detail-header-section {
@@ -283,13 +283,6 @@
           <div class="thb-dropdown-content">
             <a href="#" onclick="changeLang('tr'); return false;">🇹🇷 Türkçe</a>
             <a href="#" onclick="changeLang('en'); return false;">🇬🇧 English</a>
-            <a href="#" onclick="changeLang('ru'); return false;">🇷🇺 Русский</a>
-            <a href="#" onclick="changeLang('de'); return false;">🇩🇪 Deutsch</a>
-            <a href="#" onclick="changeLang('fr'); return false;">🇫🇷 Français</a>
-            <a href="#" onclick="changeLang('nl'); return false;">🇳🇱 Nederlands</a>
-            <a href="#" onclick="changeLang('sv'); return false;">🇸🇪 Svenska</a>
-            <a href="#" onclick="changeLang('ar'); return false;">🇸🇦 العربية</a>
-            <a href="#" onclick="changeLang('fa'); return false;">🇮🇷 فارسی</a>
           </div>
         </div>
         <div class="thb-dropdown">
@@ -298,7 +291,6 @@
             <a href="#" onclick="changeCurrency('eur'); document.querySelectorAll('#currentCurr').forEach(el=>el.textContent='EUR (€)'); return false;">EUR (€)</a>
             <a href="#" onclick="changeCurrency('usd'); document.querySelectorAll('#currentCurr').forEach(el=>el.textContent='USD ($)'); return false;">USD ($)</a>
             <a href="#" onclick="changeCurrency('try'); document.querySelectorAll('#currentCurr').forEach(el=>el.textContent='TRY (₺)'); return false;">TRY (₺)</a>
-            <a href="#" onclick="changeCurrency('rub'); document.querySelectorAll('#currentCurr').forEach(el=>el.textContent='RUB (₽)'); return false;">RUB (₽)</a>
             <a href="#" onclick="changeCurrency('gbp'); document.querySelectorAll('#currentCurr').forEach(el=>el.textContent='GBP (£)'); return false;">GBP (£)</a>
           </div>
         </div>
@@ -341,15 +333,8 @@
     <div>
       <h4 style="margin:0 0 15px; font-size:13px; color:var(--navy); border-bottom:1px solid #eee; padding-bottom:10px;">LANGUAGE</h4>
       <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; font-size:14px;">
-        <a href="#" onclick="setLangMega('en')" class="mega-lang mega-link">English</a>
-        <a href="#" onclick="setLangMega('tr')" class="mega-lang mega-link active">Türkçe</a>
-        <a href="#" onclick="setLangMega('ru')" class="mega-lang mega-link">Русский</a>
-        <a href="#" onclick="setLangMega('fr')" class="mega-lang mega-link">Français</a>
-        <a href="#" onclick="setLangMega('de')" class="mega-lang mega-link">Deutsch</a>
-        <a href="#" onclick="setLangMega('nl')" class="mega-lang mega-link">Nederlands</a>
-        <a href="#" onclick="setLangMega('sv')" class="mega-lang mega-link">Svenska</a>
-        <a href="#" onclick="setLangMega('fa')" class="mega-lang mega-link">فارسی</a>
-        <a href="#" onclick="setLangMega('ar')" class="mega-lang mega-link">العربية</a>
+        <a href="#" onclick="setLangMega('en', event)" class="mega-lang mega-link">English</a>
+        <a href="#" onclick="setLangMega('tr', event)" class="mega-lang mega-link active">Türkçe</a>
       </div>
     </div>
     
@@ -357,18 +342,15 @@
     <div style="border-left:1px solid #eee; padding-left:30px;">
       <h4 style="margin:0 0 15px; font-size:13px; color:var(--navy); border-bottom:1px solid #eee; padding-bottom:10px;">CURRENCY</h4>
       <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:10px; font-size:14px;">
-        <a href="#" onclick="setCurrMega('try')" class="mega-curr mega-link">TRY</a>
-        <a href="#" onclick="setCurrMega('usd')" class="mega-curr mega-link">USD</a>
-        <a href="#" onclick="setCurrMega('eur')" class="mega-curr mega-link active">EUR</a>
-        <a href="#" onclick="setCurrMega('sek')" class="mega-curr mega-link">SEK</a>
-        <a href="#" onclick="setCurrMega('rub')" class="mega-curr mega-link">RUB</a>
-        <a href="#" onclick="setCurrMega('nok')" class="mega-curr mega-link">NOK</a>
-        <a href="#" onclick="setCurrMega('chf')" class="mega-curr mega-link">CHF</a>
-        <a href="#" onclick="setCurrMega('gbp')" class="mega-curr mega-link">GBP</a>
-        <a href="#" onclick="setCurrMega('cny')" class="mega-curr mega-link">CNY</a>
-        <a href="#" onclick="setCurrMega('cad')" class="mega-curr mega-link">CAD</a>
-        <a href="#" onclick="setCurrMega('sar')" class="mega-curr mega-link">SAR</a>
-        <a href="#" onclick="setCurrMega('aed')" class="mega-curr mega-link">AED</a>
+        <a href="#" onclick="setCurrMega('try', event)" class="mega-curr mega-link">TRY</a>
+        <a href="#" onclick="setCurrMega('usd', event)" class="mega-curr mega-link">USD</a>
+        <a href="#" onclick="setCurrMega('eur', event)" class="mega-curr mega-link active">EUR</a>
+        <a href="#" onclick="setCurrMega('sek', event)" class="mega-curr mega-link">SEK</a>
+        <a href="#" onclick="setCurrMega('nok', event)" class="mega-curr mega-link">NOK</a>
+        <a href="#" onclick="setCurrMega('chf', event)" class="mega-curr mega-link">CHF</a>
+        <a href="#" onclick="setCurrMega('gbp', event)" class="mega-curr mega-link">GBP</a>
+        <a href="#" onclick="setCurrMega('cny', event)" class="mega-curr mega-link">CNY</a>
+        <a href="#" onclick="setCurrMega('cad', event)" class="mega-curr mega-link">CAD</a>
       </div>
     </div>
     
@@ -383,7 +365,7 @@
   </div>
 </div>
 
-<script src="script.js?v=20260727"></script>
+<script src="script.js?v=2026072802"></script>
 
 
   <div class="msm-overlay" id="msmOverlay" onclick="toggleMobileMenu()"></div>

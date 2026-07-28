@@ -1,3 +1,6 @@
+const crypto = require('crypto');
+const { checkRateLimit } = require('./_lib/rate-limit');
+
 const MAX_LENGTHS = {
   name: 100,
   phone: 30,
@@ -101,6 +104,12 @@ module.exports = async function handler(request, response) {
     return response.status(200).json({ ok: true });
   }
 
+  const attempt = checkRateLimit(request, 'public-lead', 5, 10 * 60 * 1000);
+  if (!attempt.allowed) {
+    response.setHeader('Retry-After', String(attempt.retryAfter));
+    return response.status(429).json({ error: 'Çok fazla talep gönderildi. Lütfen biraz sonra tekrar deneyin.' });
+  }
+
   const lead = {
     name: clean(body.name, MAX_LENGTHS.name),
     phone: clean(body.phone, MAX_LENGTHS.phone),
@@ -109,8 +118,20 @@ module.exports = async function handler(request, response) {
     source: clean(body.source, MAX_LENGTHS.source) || 'website',
     property_id: clean(body.propertyId, MAX_LENGTHS.propertyId) || null,
     consent: body.consent === true,
+    consent_at: new Date().toISOString(),
     page_url: clean(body.pageUrl, 500) || null,
+    locale: clean(body.locale, 10) || 'tr',
+    utm_source: clean(body.utmSource, 120) || null,
+    utm_medium: clean(body.utmMedium, 120) || null,
+    utm_campaign: clean(body.utmCampaign, 180) || null,
+    ip_hash: null,
   };
+
+  const privacySalt = process.env.LEAD_PRIVACY_SALT;
+  const forwardedIp = clean(request.headers?.['x-forwarded-for']?.split(',')[0], 80);
+  if (privacySalt && forwardedIp) {
+    lead.ip_hash = crypto.createHmac('sha256', privacySalt).update(forwardedIp).digest('hex');
+  }
 
   if (lead.name.length < 2 || !isValidPhone(lead.phone) || lead.message.length < 5 || !lead.consent || !isValidEmail(lead.email)) {
     return response.status(400).json({ error: 'Lütfen zorunlu alanları geçerli bilgilerle doldurun.' });

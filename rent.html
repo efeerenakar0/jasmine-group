@@ -14,7 +14,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css?v=20260727" />
+  <link rel="stylesheet" href="style.css?v=2026072802" />
   <link rel="icon" type="image/jpeg" href="images/favicon.jpg">
 
   <meta property="og:title" content="Jasmine Group - Alanya Emlak Proje Pazarlama" />
@@ -44,13 +44,6 @@
           <div class="thb-dropdown-content">
             <a href="#" onclick="changeLang('tr'); return false;">🇹🇷 Türkçe</a>
             <a href="#" onclick="changeLang('en'); return false;">🇬🇧 English</a>
-            <a href="#" onclick="changeLang('ru'); return false;">🇷🇺 Русский</a>
-            <a href="#" onclick="changeLang('de'); return false;">🇩🇪 Deutsch</a>
-            <a href="#" onclick="changeLang('fr'); return false;">🇫🇷 Français</a>
-            <a href="#" onclick="changeLang('nl'); return false;">🇳🇱 Nederlands</a>
-            <a href="#" onclick="changeLang('sv'); return false;">🇸🇪 Svenska</a>
-            <a href="#" onclick="changeLang('ar'); return false;">🇸🇦 العربية</a>
-            <a href="#" onclick="changeLang('fa'); return false;">🇮🇷 فارسی</a>
           </div>
         </div>
         <div class="thb-dropdown">
@@ -59,7 +52,6 @@
             <a href="#" onclick="changeCurrency('eur'); document.querySelectorAll('#currentCurr').forEach(el=>el.textContent='EUR (€)'); return false;">EUR (€)</a>
             <a href="#" onclick="changeCurrency('usd'); document.querySelectorAll('#currentCurr').forEach(el=>el.textContent='USD ($)'); return false;">USD ($)</a>
             <a href="#" onclick="changeCurrency('try'); document.querySelectorAll('#currentCurr').forEach(el=>el.textContent='TRY (₺)'); return false;">TRY (₺)</a>
-            <a href="#" onclick="changeCurrency('rub'); document.querySelectorAll('#currentCurr').forEach(el=>el.textContent='RUB (₽)'); return false;">RUB (₽)</a>
             <a href="#" onclick="changeCurrency('gbp'); document.querySelectorAll('#currentCurr').forEach(el=>el.textContent='GBP (£)'); return false;">GBP (£)</a>
           </div>
         </div>
@@ -85,39 +77,57 @@
     </div>
   </header>
   <main>
-    <div class="page-header text-center">
+    <div class="page-header listing-hero">
       <div class="container">
+        <p class="section-kicker">ALANYA KİRALIK PORTFÖYÜ</p>
         <h1 data-i18n="page_title_rent">Alanya'da Kiralık Emlaklar</h1>
+        <p class="listing-hero-lead">Yaşam sürenize ve bölge beklentinize uygun kiralık seçenekleri danışman desteğiyle keşfedin.</p>
         <div class="breadcrumb justify-center" style="justify-content:center">
           <a href="index.html">Ana Sayfa</a> <i class="fa-solid fa-chevron-right"></i> Kiralık
         </div>
+        <div class="listing-trust-points"><span><i class="fa-solid fa-check"></i> Güncel müsaitlik teyidi</span><span><i class="fa-solid fa-video"></i> Online gösterim</span><span><i class="fa-solid fa-file-signature"></i> Sözleşme koordinasyonu</span></div>
       </div>
     </div>
     
     <div class="page-content container">
-      <div class="content-with-sidebar reverse">
+      <div class="content-with-sidebar reverse listing-layout">
         <aside class="filter-sidebar">
-          <h3 data-i18n="filter_title_sidebar">FİLTRELE</h3>
+          <div class="filter-heading"><p class="section-kicker">AKILLI ARAMA</p><h3 data-i18n="filter_title_sidebar">Portföyü Filtrele</h3></div>
+          <div class="filter-group">
+            <label for="sidebar-keyword">ANAHTAR KELİME</label>
+            <input id="sidebar-keyword" type="search" placeholder="Eşyalı, denize yakın, site..." />
+          </div>
           <div class="filter-group">
             <label data-i18n="filter_rent_type">KİRALAMA TİPİ</label>
             <select><option>Tümü</option><option>Uzun Dönem</option><option>Kısa Dönem (Tatil)</option></select>
           </div>
           <div class="filter-group">
             <label data-i18n="filter_region">BÖLGE</label>
-            <select id="sidebar-loc" class="filter-loc-select"><option>Tümü</option><option>Alanya Merkez</option><option>Oba</option></select>
+            <select id="sidebar-loc" class="filter-loc-select"><option>Tümü</option></select>
+          </div>
+          <div class="filter-group">
+            <label for="sidebar-room">ODA SAYISI</label>
+            <select id="sidebar-room"><option value="">Tümü</option><option value="1">1+1</option><option value="2">2+1</option><option value="3">3+1</option><option value="4">4+ oda</option></select>
           </div>
           <button id="btn-sidebar-apply" class="btn-filter-search">UYGULA</button>
           <button id="btn-sidebar-reset" class="btn-filter-reset">TEMİZLE</button>
+          <div class="filter-advisor"><i class="fa-solid fa-headset"></i><strong>Özel kiralık talebi</strong><span>Kriterlerinizi paylaşın, portföye eklenen seçenekleri öncelikli alın.</span><a href="contact.html">Talep oluşturun</a></div>
         </aside>
         
         <div class="listings-area">
           <div class="sort-bar">
-            
-            <select><option>En Yeniler</option><option>Fiyat Artan</option></select>
+            <div><p class="section-kicker">GÜNCEL PORTFÖY</p><strong id="listing-count">0 portföy</strong></div>
+            <select id="listing-sort" aria-label="İlan sıralaması"><option>En Yeniler</option><option>Fiyat Artan</option><option>Fiyat Azalan</option></select>
           </div>
-          <div class="property-list" id="prop-list"></div>
+          <div class="property-list listing-grid" id="prop-list"></div>
+          <button id="load-more-properties" class="load-more-properties" type="button" onclick="showMoreProperties()" hidden>DAHA FAZLA PORTFÖY GÖSTER</button>
         </div>
       </div>
+      <section class="listing-support">
+        <div><p class="section-kicker">KİRALAMA DESTEĞİ</p><h2>Taşınmadan önce her adımı netleştirin.</h2></div>
+        <div class="listing-support-grid"><span><i class="fa-solid fa-location-dot"></i>Bölge seçimi</span><span><i class="fa-solid fa-wallet"></i>Bütçe planı</span><span><i class="fa-solid fa-video"></i>Uzaktan gösterim</span><span><i class="fa-solid fa-file-contract"></i>Sözleşme süreci</span></div>
+        <a href="contact.html">Kiralık danışmanına ulaşın <i class="fa-solid fa-arrow-right"></i></a>
+      </section>
           </div>
           </div>
         </div>
@@ -132,9 +142,6 @@
           <a href="index.html" class="site-logo">JASMINE <span>GROUP</span></a>
           <p data-i18n="footer_desc">Alanya ve çevresinde portföy seçimi, gösterim ve gayrimenkul işlem koordinasyonu sunuyoruz.</p>
           <div class="footer-social">
-            <a href="#" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
-            <a href="#" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
-            <a href="#" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
             <a href="https://wa.me/905330850769" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
           </div>
         </div>
@@ -170,7 +177,7 @@
           </div>
           <div class="footer-contact-item">
             <i class="fa-solid fa-phone"></i>
-            <span><a href="tel:4446407">444 6 407</a></span>
+            <span><a href="tel:+905330850769">0533 085 0769</a></span>
           </div>
           <div class="footer-contact-item">
             <i class="fa-brands fa-whatsapp"></i>
@@ -197,7 +204,7 @@
 
   <!-- Swiper JS -->
   <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
-  <script src="script.js?v=20260727"></script>
+  <script src="script.js?v=2026072802"></script>
 
 <!-- MEGA MENU MODAL -->
 <div id="megaMenuOverlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:9998;" onclick="closeMegaMenu()"></div>
@@ -209,15 +216,8 @@
     <div>
       <h4 style="margin:0 0 15px; font-size:13px; color:var(--navy); border-bottom:1px solid #eee; padding-bottom:10px;">LANGUAGE</h4>
       <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; font-size:14px;">
-        <a href="#" onclick="setLangMega('en')" class="mega-lang mega-link">English</a>
-        <a href="#" onclick="setLangMega('tr')" class="mega-lang mega-link active">Türkçe</a>
-        <a href="#" onclick="setLangMega('ru')" class="mega-lang mega-link">Русский</a>
-        <a href="#" onclick="setLangMega('fr')" class="mega-lang mega-link">Français</a>
-        <a href="#" onclick="setLangMega('de')" class="mega-lang mega-link">Deutsch</a>
-        <a href="#" onclick="setLangMega('nl')" class="mega-lang mega-link">Nederlands</a>
-        <a href="#" onclick="setLangMega('sv')" class="mega-lang mega-link">Svenska</a>
-        <a href="#" onclick="setLangMega('fa')" class="mega-lang mega-link">فارسی</a>
-        <a href="#" onclick="setLangMega('ar')" class="mega-lang mega-link">العربية</a>
+        <a href="#" onclick="setLangMega('en', event)" class="mega-lang mega-link">English</a>
+        <a href="#" onclick="setLangMega('tr', event)" class="mega-lang mega-link active">Türkçe</a>
       </div>
     </div>
     
@@ -225,18 +225,15 @@
     <div style="border-left:1px solid #eee; padding-left:30px;">
       <h4 style="margin:0 0 15px; font-size:13px; color:var(--navy); border-bottom:1px solid #eee; padding-bottom:10px;">CURRENCY</h4>
       <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:10px; font-size:14px;">
-        <a href="#" onclick="setCurrMega('try')" class="mega-curr mega-link">TRY</a>
-        <a href="#" onclick="setCurrMega('usd')" class="mega-curr mega-link">USD</a>
-        <a href="#" onclick="setCurrMega('eur')" class="mega-curr mega-link active">EUR</a>
-        <a href="#" onclick="setCurrMega('sek')" class="mega-curr mega-link">SEK</a>
-        <a href="#" onclick="setCurrMega('rub')" class="mega-curr mega-link">RUB</a>
-        <a href="#" onclick="setCurrMega('nok')" class="mega-curr mega-link">NOK</a>
-        <a href="#" onclick="setCurrMega('chf')" class="mega-curr mega-link">CHF</a>
-        <a href="#" onclick="setCurrMega('gbp')" class="mega-curr mega-link">GBP</a>
-        <a href="#" onclick="setCurrMega('cny')" class="mega-curr mega-link">CNY</a>
-        <a href="#" onclick="setCurrMega('cad')" class="mega-curr mega-link">CAD</a>
-        <a href="#" onclick="setCurrMega('sar')" class="mega-curr mega-link">SAR</a>
-        <a href="#" onclick="setCurrMega('aed')" class="mega-curr mega-link">AED</a>
+        <a href="#" onclick="setCurrMega('try', event)" class="mega-curr mega-link">TRY</a>
+        <a href="#" onclick="setCurrMega('usd', event)" class="mega-curr mega-link">USD</a>
+        <a href="#" onclick="setCurrMega('eur', event)" class="mega-curr mega-link active">EUR</a>
+        <a href="#" onclick="setCurrMega('sek', event)" class="mega-curr mega-link">SEK</a>
+        <a href="#" onclick="setCurrMega('nok', event)" class="mega-curr mega-link">NOK</a>
+        <a href="#" onclick="setCurrMega('chf', event)" class="mega-curr mega-link">CHF</a>
+        <a href="#" onclick="setCurrMega('gbp', event)" class="mega-curr mega-link">GBP</a>
+        <a href="#" onclick="setCurrMega('cny', event)" class="mega-curr mega-link">CNY</a>
+        <a href="#" onclick="setCurrMega('cad', event)" class="mega-curr mega-link">CAD</a>
       </div>
     </div>
     

@@ -14,7 +14,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css?v=20260727" />
+  <link rel="stylesheet" href="style.css?v=2026072802" />
   <link rel="icon" type="image/jpeg" href="images/favicon.jpg">
 
   <meta property="og:title" content="Jasmine Group - Alanya Emlak Proje Pazarlama" />
@@ -28,6 +28,9 @@
   <meta name="twitter:image" content="https://www.jasminegroup.com.tr/images/favicon.jpg" />
   <meta name="keywords" content="Alanya satılık daire, Alanya emlak, Jasmine Group, satılık ev Alanya, Alanya kiralık daire, Alanya gayrimenkul" />
   <link rel="canonical" href="https://www.jasminegroup.com.tr/" />
+  <link rel="alternate" hreflang="tr" href="https://www.jasminegroup.com.tr/" />
+  <link rel="alternate" hreflang="en" href="https://www.jasminegroup.com.tr/en/" />
+  <link rel="alternate" hreflang="x-default" href="https://www.jasminegroup.com.tr/" />
 
 </head>
 <body>
@@ -49,13 +52,6 @@
           <div class="thb-dropdown-content">
             <a href="#" onclick="changeLang('tr'); return false;">🇹🇷 Türkçe</a>
             <a href="#" onclick="changeLang('en'); return false;">🇬🇧 English</a>
-            <a href="#" onclick="changeLang('ru'); return false;">🇷🇺 Русский</a>
-            <a href="#" onclick="changeLang('de'); return false;">🇩🇪 Deutsch</a>
-            <a href="#" onclick="changeLang('fr'); return false;">🇫🇷 Français</a>
-            <a href="#" onclick="changeLang('nl'); return false;">🇳🇱 Nederlands</a>
-            <a href="#" onclick="changeLang('sv'); return false;">🇸🇪 Svenska</a>
-            <a href="#" onclick="changeLang('ar'); return false;">🇸🇦 العربية</a>
-            <a href="#" onclick="changeLang('fa'); return false;">🇮🇷 فارسی</a>
           </div>
         </div>
         <div class="thb-dropdown">
@@ -64,7 +60,6 @@
             <a href="#" onclick="changeCurrency('eur'); document.querySelectorAll('#currentCurr').forEach(el=>el.textContent='EUR (€)'); return false;">EUR (€)</a>
             <a href="#" onclick="changeCurrency('usd'); document.querySelectorAll('#currentCurr').forEach(el=>el.textContent='USD ($)'); return false;">USD ($)</a>
             <a href="#" onclick="changeCurrency('try'); document.querySelectorAll('#currentCurr').forEach(el=>el.textContent='TRY (₺)'); return false;">TRY (₺)</a>
-            <a href="#" onclick="changeCurrency('rub'); document.querySelectorAll('#currentCurr').forEach(el=>el.textContent='RUB (₽)'); return false;">RUB (₽)</a>
             <a href="#" onclick="changeCurrency('gbp'); document.querySelectorAll('#currentCurr').forEach(el=>el.textContent='GBP (£)'); return false;">GBP (£)</a>
           </div>
         </div>
@@ -95,15 +90,15 @@
       <div class="swiper hero-swiper">
         <div class="swiper-wrapper">
                     <div class="swiper-slide">
-            <img src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1920&q=80" alt="Lüks Villa" />
+            <img src="images/hero1.jpg" alt="Alanya sahilinde seçkin yaşam" />
             <div class="slide-caption"><h2 data-i18n="hero_1">Alanya'da Hayalinizdeki Evi Bulun</h2></div>
           </div>
           <div class="swiper-slide">
-            <img src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1920&q=80" alt="Lüks Ev" />
+            <img src="images/villa.jpg" alt="Alanya villa seçenekleri" />
             <div class="slide-caption"><h2 data-i18n="hero_2">Size Özel Ayrıcalıklı Yaşam Alanları</h2></div>
           </div>
           <div class="swiper-slide">
-            <img src="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=1920&q=80" alt="Modern Daire" />
+            <img src="images/apartment.jpg" alt="Alanya modern daire seçenekleri" />
             <div class="slide-caption"><h2 data-i18n="hero_3">Merkezi Konumda Eşsiz Yatırımlar</h2></div>
           </div>
         </div>
@@ -224,7 +219,7 @@
           </div>
         </a>
         <a href="contact.html" class="box-banner">
-          <img src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?auto=format&fit=crop&w=800&q=80" alt="Online" />
+          <img src="images/jasmine_office.jpg" alt="Jasmine Group online danışmanlık ekibi" />
           <div class="box-banner-overlay"></div>
           <div class="box-banner-content">
             <span class="box-banner-title" data-i18n="box_online">Online Randevu</span>
@@ -232,7 +227,7 @@
           </div>
         </a>
         <a href="buying-guide.html" class="box-banner">
-          <img src="https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=800&q=80" alt="Rehber" />
+          <img src="images/office.jpg" alt="Jasmine Group alım rehberliği" />
           <div class="box-banner-overlay"></div>
           <div class="box-banner-content">
             <span class="box-banner-title" data-i18n="box_guide">Alım Rehberi</span>
@@ -315,9 +310,6 @@
           <a href="index.html" class="site-logo">JASMINE <span>GROUP</span></a>
           <p data-i18n="footer_desc">Alanya ve çevresinde portföy seçimi, gösterim ve gayrimenkul işlem koordinasyonu sunuyoruz.</p>
           <div class="footer-social">
-            <a href="#" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
-            <a href="#" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
-            <a href="#" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
             <a href="https://wa.me/905330850769" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
           </div>
         </div>
@@ -353,7 +345,7 @@
           </div>
           <div class="footer-contact-item">
             <i class="fa-solid fa-phone"></i>
-            <span><a href="tel:4446407">444 6 407</a></span>
+            <span><a href="tel:+905330850769">0533 085 0769</a></span>
           </div>
           <div class="footer-contact-item">
             <i class="fa-brands fa-whatsapp"></i>
@@ -393,45 +385,9 @@
     </div>
   </div>
 
-  <!-- JASMINE AI CHATBOT MOCK -->
-<div id="ai-chat-btn" style="position:fixed; bottom:30px; right:30px; width:60px; height:60px; border-radius:50%; background:linear-gradient(135deg, var(--navy), var(--blue)); color:#fff; display:flex; justify-content:center; align-items:center; font-size:24px; box-shadow:0 10px 20px rgba(0,0,0,0.3); z-index:999; cursor:pointer; transition:0.3s;" onclick="toggleAiChat()" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">
-  <i class="fa-solid fa-robot"></i>
-  <span style="position:absolute; top:-5px; right:-5px; background:var(--red); width:15px; height:15px; border-radius:50%; border:2px solid #fff;"></span>
-</div>
-
-<div id="ai-chat-window" style="display:none; position:fixed; bottom:100px; right:30px; width:350px; background:var(--card-bg); border-radius:12px; box-shadow:0 10px 30px rgba(0,0,0,0.3); z-index:999; overflow:hidden; border:1px solid var(--border);">
-  <div style="background:linear-gradient(135deg, var(--navy), var(--blue)); padding:20px; color:#fff; display:flex; justify-content:space-between; align-items:center;">
-    <div>
-      <h3 style="margin:0; font-size:16px;"><i class="fa-solid fa-robot"></i> Jasmine AI</h3>
-      <p style="margin:0; font-size:12px; opacity:0.8;">Sizin için en iyi evi bulabilirim</p>
-    </div>
-    <button onclick="toggleAiChat()" style="background:transparent; border:none; color:#fff; font-size:20px; cursor:pointer;">&times;</button>
-  </div>
-  <div style="height:300px; padding:20px; overflow-y:auto; background:var(--bg-light); display:flex; flex-direction:column; gap:15px;">
-    <div style="align-self:flex-start; background:var(--white); padding:12px 15px; border-radius:12px 12px 12px 0; border:1px solid var(--border); font-size:14px; max-width:85%;">
-      Merhaba! Ben Jasmine AI. Alanya'da nasıl bir mülk arıyorsunuz? (Örn: "200.000 Euro deniz manzaralı")
-    </div>
-  </div>
-  <div style="padding:15px; border-top:1px solid var(--border); display:flex; gap:10px; background:var(--card-bg);">
-    <input type="text" placeholder="Bana bir şeyler yazın..." style="flex:1; padding:10px 15px; border:1px solid var(--border); border-radius:20px; outline:none; background:var(--bg-light); color:var(--text);">
-    <button style="width:40px; height:40px; border-radius:50%; background:var(--primary); color:#fff; border:none; cursor:pointer;"><i class="fa-solid fa-paper-plane"></i></button>
-  </div>
-</div>
-
-<script>
-  function toggleAiChat() {
-    const chat = document.getElementById('ai-chat-window');
-    if (chat.style.display === 'none') {
-      chat.style.display = 'block';
-    } else {
-      chat.style.display = 'none';
-    }
-  }
-</script>
-
   <!-- Swiper JS -->
   <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
-  <script src="script.js?v=20260727"></script>
+  <script src="script.js?v=2026072802"></script>
 
 <!-- MEGA MENU MODAL -->
 <div id="megaMenuOverlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:9998;" onclick="closeMegaMenu()"></div>
@@ -443,15 +399,8 @@
     <div>
       <h4 style="margin:0 0 15px; font-size:13px; color:var(--navy); border-bottom:1px solid #eee; padding-bottom:10px;">LANGUAGE</h4>
       <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; font-size:14px;">
-        <a href="#" onclick="setLangMega('en')" class="mega-lang mega-link">English</a>
-        <a href="#" onclick="setLangMega('tr')" class="mega-lang mega-link active">Türkçe</a>
-        <a href="#" onclick="setLangMega('ru')" class="mega-lang mega-link">Русский</a>
-        <a href="#" onclick="setLangMega('fr')" class="mega-lang mega-link">Français</a>
-        <a href="#" onclick="setLangMega('de')" class="mega-lang mega-link">Deutsch</a>
-        <a href="#" onclick="setLangMega('nl')" class="mega-lang mega-link">Nederlands</a>
-        <a href="#" onclick="setLangMega('sv')" class="mega-lang mega-link">Svenska</a>
-        <a href="#" onclick="setLangMega('fa')" class="mega-lang mega-link">فارسی</a>
-        <a href="#" onclick="setLangMega('ar')" class="mega-lang mega-link">العربية</a>
+        <a href="#" onclick="setLangMega('en', event)" class="mega-lang mega-link">English</a>
+        <a href="#" onclick="setLangMega('tr', event)" class="mega-lang mega-link active">Türkçe</a>
       </div>
     </div>
     
@@ -459,18 +408,15 @@
     <div style="border-left:1px solid #eee; padding-left:30px;">
       <h4 style="margin:0 0 15px; font-size:13px; color:var(--navy); border-bottom:1px solid #eee; padding-bottom:10px;">CURRENCY</h4>
       <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:10px; font-size:14px;">
-        <a href="#" onclick="setCurrMega('try')" class="mega-curr mega-link">TRY</a>
-        <a href="#" onclick="setCurrMega('usd')" class="mega-curr mega-link">USD</a>
-        <a href="#" onclick="setCurrMega('eur')" class="mega-curr mega-link active">EUR</a>
-        <a href="#" onclick="setCurrMega('sek')" class="mega-curr mega-link">SEK</a>
-        <a href="#" onclick="setCurrMega('rub')" class="mega-curr mega-link">RUB</a>
-        <a href="#" onclick="setCurrMega('nok')" class="mega-curr mega-link">NOK</a>
-        <a href="#" onclick="setCurrMega('chf')" class="mega-curr mega-link">CHF</a>
-        <a href="#" onclick="setCurrMega('gbp')" class="mega-curr mega-link">GBP</a>
-        <a href="#" onclick="setCurrMega('cny')" class="mega-curr mega-link">CNY</a>
-        <a href="#" onclick="setCurrMega('cad')" class="mega-curr mega-link">CAD</a>
-        <a href="#" onclick="setCurrMega('sar')" class="mega-curr mega-link">SAR</a>
-        <a href="#" onclick="setCurrMega('aed')" class="mega-curr mega-link">AED</a>
+        <a href="#" onclick="setCurrMega('try', event)" class="mega-curr mega-link">TRY</a>
+        <a href="#" onclick="setCurrMega('usd', event)" class="mega-curr mega-link">USD</a>
+        <a href="#" onclick="setCurrMega('eur', event)" class="mega-curr mega-link active">EUR</a>
+        <a href="#" onclick="setCurrMega('sek', event)" class="mega-curr mega-link">SEK</a>
+        <a href="#" onclick="setCurrMega('nok', event)" class="mega-curr mega-link">NOK</a>
+        <a href="#" onclick="setCurrMega('chf', event)" class="mega-curr mega-link">CHF</a>
+        <a href="#" onclick="setCurrMega('gbp', event)" class="mega-curr mega-link">GBP</a>
+        <a href="#" onclick="setCurrMega('cny', event)" class="mega-curr mega-link">CNY</a>
+        <a href="#" onclick="setCurrMega('cad', event)" class="mega-curr mega-link">CAD</a>
       </div>
     </div>
     

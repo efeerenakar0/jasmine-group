@@ -1,13 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://www.jasminegroup.com.tr/</loc>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://www.jasminegroup.com.tr/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.jasminegroup.com.tr/en/" />
     <lastmod>2026-07-27</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>https://www.jasminegroup.com.tr/buy.html</loc>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://www.jasminegroup.com.tr/buy.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.jasminegroup.com.tr/en/buy.html" />
     <lastmod>2026-07-27</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
@@ -44,9 +48,59 @@
   </url>
   <url>
     <loc>https://www.jasminegroup.com.tr/contact.html</loc>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://www.jasminegroup.com.tr/contact.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.jasminegroup.com.tr/en/contact.html" />
     <lastmod>2026-07-27</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.jasminegroup.com.tr/en/</loc>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://www.jasminegroup.com.tr/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.jasminegroup.com.tr/en/" />
+    <lastmod>2026-07-27</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.jasminegroup.com.tr/en/buy.html</loc>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://www.jasminegroup.com.tr/buy.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.jasminegroup.com.tr/en/buy.html" />
+    <lastmod>2026-07-27</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.jasminegroup.com.tr/en/contact.html</loc>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://www.jasminegroup.com.tr/contact.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.jasminegroup.com.tr/en/contact.html" />
+    <lastmod>2026-07-27</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.jasminegroup.com.tr/services.html</loc>
+    <lastmod>2026-07-27</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.jasminegroup.com.tr/regions.html</loc>
+    <lastmod>2026-07-27</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.jasminegroup.com.tr/team.html</loc>
+    <lastmod>2026-07-27</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.jasminegroup.com.tr/customer-stories.html</loc>
+    <lastmod>2026-07-27</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
   </url>
   <url>
     <loc>https://www.jasminegroup.com.tr/privacy.html</loc>
