@@ -4,7 +4,8 @@ const path = require('path');
 const root = path.resolve(__dirname, '..');
 const output = path.join(root, 'en');
 const baseUrl = 'https://jasmine-group.vercel.app';
-const assetVersion = '2026072805';
+const assetVersion = '2026072806';
+const regionContent = JSON.parse(fs.readFileSync(path.join(root, 'regions-content.json'), 'utf8'));
 
 function header(active, turkishPath) {
   const links = [
@@ -98,15 +99,11 @@ const pages = [
     turkishPath: 'regions.html',
     active: 'regions',
     title: 'Alanya Area Guide | Jasmine Group',
-    description: 'Compare Oba, Mahmutlar, Kargicak, Avsallar and central Alanya by lifestyle, access and property profile.',
-    content: `<section class="editorial-hero region-hero"><div class="container editorial-hero-grid"><div><p class="section-kicker">DISCOVER ALANYA BY LIFESTYLE</p><h1>The right home starts with the right area.</h1><p>Compare city access, coastal living, privacy and housing character around your real daily routine.</p></div><div class="editorial-hero-note"><span>05</span><strong>Key lifestyle areas</strong><p>Start with the areas where our current portfolio is concentrated and compare their practical differences.</p></div></div></section>
-    <section class="container region-guide-grid">
-      <article><div class="region-number">01</div><div><p class="section-kicker">EAST ALANYA</p><h2>Oba</h2><p>A strong option for buyers who want access to city services alongside an organised, modern residential environment.</p><div class="region-tags"><span>Daily life</span><span>Modern homes</span><span>City access</span></div><a href="buy.html?loc=Oba">Properties in Oba <i class="fa-solid fa-arrow-right"></i></a></div></article>
-      <article><div class="region-number">02</div><div><p class="section-kicker">COASTAL LIVING</p><h2>Mahmutlar</h2><p>A lively coastal district with extensive everyday services and a broad apartment market across different budgets.</p><div class="region-tags"><span>Coast</span><span>Social life</span><span>Broad choice</span></div><a href="buy.html?loc=Mahmutlar">Properties in Mahmutlar <i class="fa-solid fa-arrow-right"></i></a></div></article>
-      <article><div class="region-number">03</div><div><p class="section-kicker">CALM AND SELECTIVE</p><h2>Kargicak</h2><p>Lower density, hillside views and privacy make this an area often considered for villas and quality residences.</p><div class="region-tags"><span>Views</span><span>Villas</span><span>Privacy</span></div><a href="buy.html?loc=Karg%C4%B1cak">Properties in Kargicak <i class="fa-solid fa-arrow-right"></i></a></div></article>
-      <article><div class="region-number">04</div><div><p class="section-kicker">WEST ALANYA</p><h2>Avsallar</h2><p>Beach access, holiday-oriented living and new residential projects create a distinctive western Alanya option.</p><div class="region-tags"><span>Beaches</span><span>Holiday use</span><span>New projects</span></div><a href="buy.html?loc=Avsallar">Properties in Avsallar <i class="fa-solid fa-arrow-right"></i></a></div></article>
-      <article><div class="region-number">05</div><div><p class="section-kicker">CITY CENTRE</p><h2>Central Alanya</h2><p>Walkable city life, social amenities and coastal access for buyers who want to stay close to the city's rhythm.</p><div class="region-tags"><span>Walkability</span><span>Social life</span><span>Central access</span></div><a href="buy.html?loc=Alanya%20Merkez">Central properties <i class="fa-solid fa-arrow-right"></i></a></div></article>
-    </section><section class="container content-cta"><div><p class="section-kicker">AREA COMPARISON</p><h2>Clarify which part of Alanya fits your daily life.</h2></div><a href="contact.html">Ask an area advisor</a></section>`,
+    description: 'Compare Mahmutlar, Avsallar, Kargicak, Kestel, Cikcilli, Kizlar Pinari, Guller Pinari and Konakli with current property counts.',
+    content: `<section class="editorial-hero region-hero"><div class="container editorial-hero-grid"><div><p class="section-kicker">DISCOVER ALANYA BY LIFESTYLE</p><h1>The right home starts with the right area.</h1><p>Compare city access, coastal living, privacy and housing character around your real daily routine.</p></div><div class="editorial-hero-note"><span>${String(regionContent.length).padStart(2, '0')}</span><strong>Current portfolio areas</strong><p>This guide follows the districts represented in the current Jasmine collection, without listing empty locations as active inventory.</p></div></div></section>
+    <section class="container region-hub-grid">${regionContent.map((region, index) => `<article class="region-hub-card"><a class="region-hub-media" href="regions/${region.slug}.html"><img src="../${region.image}" alt="${region.enName} area guide" loading="lazy"><span>${String(index + 1).padStart(2, '0')}</span></a><div><p class="section-kicker">${region.kickerEn}</p><h2><a href="regions/${region.slug}.html">${region.enName}</a></h2><p>${region.summaryEn}</p><div class="region-tags">${region.tagsEn.map(tag => `<span>${tag}</span>`).join('')}</div><div class="region-hub-footer"><strong><span data-region-count="${region.location}">—</span> current properties</strong><a href="regions/${region.slug}.html">Explore area <i class="fa-solid fa-arrow-right"></i></a></div></div></article>`).join('')}</section>
+    <section class="container proof-standard"><div><p class="section-kicker">HOW TO USE THE GUIDE</p><h2>Compare the micro-location, not only the district name.</h2></div><p>Street, gradient, orientation, building management and actual walking routes can change the experience within the same area. Property counts update from the live collection; price and availability remain subject to advisor confirmation.</p></section>
+    <section class="container content-cta"><div><p class="section-kicker">AREA COMPARISON</p><h2>Clarify which part of Alanya fits your daily life.</h2></div><a href="contact.html">Ask an area advisor</a></section>`,
   },
   {
     file: 'team.html',

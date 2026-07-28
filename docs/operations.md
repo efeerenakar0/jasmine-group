@@ -150,5 +150,12 @@ Her yayin oncesinde asagidakileri manuel olarak da dogrulayin:
 
 Odul, satis adedi, pazar liderligi, musteri yorumu veya ekip uyesi gibi
 kanit gerektiren hicbir ifade belge ve acik yayin izni olmadan eklenmemelidir.
+
+Bolge rehberlerinin Turkce ve Ingilizce icerik kaynagi
+`regions-content.json` dosyasidir. `npm run build` her bolge icin iki dilde
+statik SEO sayfasi, FAQ/Breadcrumb semasi ve sitemap kaydi uretir. Merkez ve
+detay sayfalarindaki `data-region-count` alanlari yayindaki ilan verisinden
+guncellenir. Aktif ilani bulunmayan bir bolge, aktif portfoy baglantisi olarak
+sunulmamalidir.
 Bu bilgiler hazir oldugunda marka diline uygun sekilde admin/editorial
 surecinden gecirilerek yayinlanmalidir.

@@ -838,6 +838,20 @@ async function fetchProperties() {
   return normalized;
 }
 
+async function hydrateRegionCounts() {
+  const counters = [...document.querySelectorAll('[data-region-count]')];
+  if (!counters.length) return;
+  const properties = await fetchProperties();
+  counters.forEach(counter => {
+    const location = String(counter.dataset.regionCount || '').toLocaleLowerCase('tr-TR');
+    const count = properties.filter(property => (
+      (!property.status || property.status === 'published')
+      && String(property.location || '').toLocaleLowerCase('tr-TR').includes(location)
+    )).length;
+    counter.textContent = String(count);
+  });
+}
+
 function isTrustedPropertyImage(url) {
   const value = String(url || '').trim();
   if (!value) return false;
@@ -1545,6 +1559,7 @@ document.addEventListener('DOMContentLoaded', () => {
     link.addEventListener('click', () => trackEvent('contact_whatsapp', { page: window.location.pathname }));
   });
   renderPropertyDetail();
+  hydrateRegionCounts();
 });
 
 // --- Advanced Filter Logic ---

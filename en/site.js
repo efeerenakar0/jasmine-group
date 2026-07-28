@@ -176,6 +176,24 @@
     }
   }
 
+  async function loadRegionCounts() {
+    const counters = [...document.querySelectorAll('[data-region-count]')];
+    if (!counters.length) return;
+    try {
+      const data = await fetchPropertyData();
+      counters.forEach(counter => {
+        const location = String(counter.dataset.regionCount || '').toLocaleLowerCase('tr-TR');
+        const count = (data.properties || []).filter(property => (
+          (!property.status || property.status === 'published')
+          && String(property.location || '').toLocaleLowerCase('tr-TR').includes(location)
+        )).length;
+        counter.textContent = String(count);
+      });
+    } catch {
+      // Build-time counts remain visible if the live data service is unavailable.
+    }
+  }
+
   function renderProperties() {
     const query = document.getElementById('en-search').value.toLowerCase();
     const location = document.getElementById('en-location').value.toLowerCase();
@@ -346,6 +364,7 @@
     loadAnalyticsConfiguration();
     loadProperties();
     loadPropertyDetail();
+    loadRegionCounts();
     renderEnglishBlogs();
   });
 })();
