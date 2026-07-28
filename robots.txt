@@ -3,4 +3,4 @@ Allow: /
 Disallow: /admin.html
 Disallow: /admin-login.html
 Disallow: /api/admin/
-Sitemap: https://www.jasminegroup.com.tr/sitemap.xml
+Sitemap: https://jasmine-group.vercel.app/sitemap.xml

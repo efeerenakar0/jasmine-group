@@ -42,8 +42,8 @@ const blogOutput = path.join(output, 'blog');
 fs.mkdirSync(blogOutput, { recursive: true });
 
 for (const blog of blogs) {
-  const canonical = `https://www.jasminegroup.com.tr/blog/${encodeURIComponent(blog.id)}.html`;
-  const absoluteImage = `https://www.jasminegroup.com.tr/${blog.image}`;
+  const canonical = `https://jasmine-group.vercel.app/blog/${encodeURIComponent(blog.id)}.html`;
+  const absoluteImage = `https://jasmine-group.vercel.app/${blog.image}`;
   const article = `
   <article class="blog-static-article">
     <a href="blog.html" class="blog-back-link"><i class="fa-solid fa-arrow-left"></i> Tüm rehberler</a>
@@ -73,7 +73,7 @@ for (const blog of blogs) {
     publisher: {
       '@type': 'Organization',
       name: 'Jasmine Group',
-      logo: { '@type': 'ImageObject', url: 'https://www.jasminegroup.com.tr/images/logo.jpg' },
+      logo: { '@type': 'ImageObject', url: 'https://jasmine-group.vercel.app/images/logo.jpg' },
     },
     mainEntityOfPage: canonical,
   };
@@ -103,7 +103,7 @@ for (const blog of blogs) {
 
 const sitemapPath = path.join(output, 'sitemap.xml');
 const blogSitemapEntries = blogs.map(blog => `  <url>
-    <loc>https://www.jasminegroup.com.tr/blog/${encodeURIComponent(blog.id)}.html</loc>
+    <loc>https://jasmine-group.vercel.app/blog/${encodeURIComponent(blog.id)}.html</loc>
     <lastmod>${isoDate(blog.date)}</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>

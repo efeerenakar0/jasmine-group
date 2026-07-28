@@ -1044,7 +1044,7 @@ function updatePropertySEO(property, mainImage) {
   const propertyTitle = formatPropertyTitle(property.title);
   const title = `${propertyTitle} | Jasmine Group`;
   const description = `${property.location} bölgesindeki ${property.rooms} ${property.type === 'rent' ? 'kiralık' : 'satılık'} gayrimenkulü inceleyin. Fiyat ve müsaitlik bilgisi danışman teyidine tabidir.`.slice(0, 160);
-  const canonicalUrl = `https://www.jasminegroup.com.tr/property-detail.html?id=${encodeURIComponent(property.id)}`;
+  const canonicalUrl = `https://jasmine-group.vercel.app/property-detail.html?id=${encodeURIComponent(property.id)}`;
   const canonical = document.querySelector('link[rel="canonical"]');
 
   document.title = title;
@@ -1297,11 +1297,11 @@ function initGlobalStructuredData() {
     '@graph': [
       {
         '@type': 'RealEstateAgent',
-        '@id': 'https://www.jasminegroup.com.tr/#organization',
+        '@id': 'https://jasmine-group.vercel.app/#organization',
         name: 'Jasmine Group',
-        url: 'https://www.jasminegroup.com.tr/',
-        logo: 'https://www.jasminegroup.com.tr/images/logo.jpg',
-        image: 'https://www.jasminegroup.com.tr/images/jasmine_office.jpg',
+        url: 'https://jasmine-group.vercel.app/',
+        logo: 'https://jasmine-group.vercel.app/images/logo.jpg',
+        image: 'https://jasmine-group.vercel.app/images/jasmine_office.jpg',
         telephone: '+90 533 085 0769',
         email: 'jasminegroupemlak@gmail.com',
         address: {
@@ -1316,13 +1316,13 @@ function initGlobalStructuredData() {
       },
       {
         '@type': 'WebSite',
-        '@id': 'https://www.jasminegroup.com.tr/#website',
-        url: 'https://www.jasminegroup.com.tr/',
+        '@id': 'https://jasmine-group.vercel.app/#website',
+        url: 'https://jasmine-group.vercel.app/',
         name: 'Jasmine Group',
-        publisher: { '@id': 'https://www.jasminegroup.com.tr/#organization' },
+        publisher: { '@id': 'https://jasmine-group.vercel.app/#organization' },
         potentialAction: {
           '@type': 'SearchAction',
-          target: 'https://www.jasminegroup.com.tr/buy.html?q={search_term_string}',
+          target: 'https://jasmine-group.vercel.app/buy.html?q={search_term_string}',
           'query-input': 'required name=search_term_string'
         }
       }

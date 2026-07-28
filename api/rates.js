@@ -13,7 +13,7 @@ module.exports = async function handler(request, response) {
     let upstream;
     try {
       upstream = await fetch(ECB_DAILY_RATES, {
-        headers: { 'User-Agent': 'JasmineGroup/1.0 (+https://www.jasminegroup.com.tr)' },
+        headers: { 'User-Agent': 'JasmineGroup/1.0 (+https://jasmine-group.vercel.app)' },
         signal: controller.signal,
       });
     } finally {
