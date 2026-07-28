@@ -155,6 +155,98 @@ for (const blog of englishBlogs) {
 
 const regions = JSON.parse(fs.readFileSync(path.join(root, 'regions-content.json'), 'utf8'));
 const fallbackProperties = JSON.parse(fs.readFileSync(path.join(root, 'admin', 'data.json'), 'utf8')).properties || [];
+
+function propertyCategory(property) {
+  if (['apartment', 'villa', 'land', 'commercial'].includes(property.category)) return property.category;
+  const title = normalizedTurkish(property.title);
+  if (title.includes('villa')) return 'villa';
+  if (title.includes('arsa')) return 'land';
+  if (title.includes('ticari') || title.includes('dükkan') || title.includes('ofis')) return 'commercial';
+  return 'apartment';
+}
+
+function propertyStaticImage(property) {
+  const image = Array.isArray(property.images) ? property.images.find(item => /^images\/[a-z0-9._/-]+$/i.test(String(item || ''))) : '';
+  return image || 'images/property-placeholder.svg';
+}
+
+function propertyStaticDescription(property, locale) {
+  const district = String(property.location || '').split('/').slice(-1)[0].trim() || 'Alanya';
+  const type = property.type === 'rent' ? (locale === 'en' ? 'for rent' : 'kiralık') : (locale === 'en' ? 'for sale' : 'satılık');
+  if (locale === 'en') return `${property.rooms || 'Residential'} ${propertyCategory(property)} ${type} in ${district}. Confirm current price, availability, media and property-specific documentation with a Jasmine advisor.`;
+  return `${property.location || 'Alanya'} konumunda ${property.rooms || ''} ${type} ${propertyCategory(property)} ilanı. Güncel fiyat, müsaitlik ve ilana özel belgeleri Jasmine danışmanıyla teyit edin.`;
+}
+
+function englishPropertyStaticTitle(property) {
+  const district = String(property.location || '').split('/').slice(-1)[0].trim() || 'Alanya';
+  const type = property.type === 'rent' ? 'for Rent' : 'for Sale';
+  const labels = { apartment: 'Apartment', villa: 'Villa', land: 'Land', commercial: 'Commercial Property' };
+  return `${property.rooms || ''} ${labels[propertyCategory(property)]} ${type} in ${district}`.trim();
+}
+
+const publishedPropertyIds = new Set();
+const publishedProperties = fallbackProperties.filter(property => {
+  const id = String(property.id || '');
+  if (property.status && property.status !== 'published') return false;
+  if (!/^[A-Za-z0-9._-]+$/.test(id) || publishedPropertyIds.has(id)) return false;
+  publishedPropertyIds.add(id);
+  return true;
+});
+const turkishPropertyOutput = path.join(output, 'properties');
+const englishPropertyOutput = path.join(output, 'en', 'properties');
+const propertyTemplate = fs.readFileSync(path.join(root, 'property-detail.html'), 'utf8');
+const englishPropertyTemplate = fs.readFileSync(path.join(root, 'en', 'property-detail.html'), 'utf8');
+fs.mkdirSync(turkishPropertyOutput, { recursive: true });
+fs.mkdirSync(englishPropertyOutput, { recursive: true });
+
+for (const property of publishedProperties) {
+  const propertyId = encodeURIComponent(property.id);
+  const trUrl = `https://jasmine-group.vercel.app/properties/${propertyId}.html`;
+  const enUrl = `https://jasmine-group.vercel.app/en/properties/${propertyId}.html`;
+  const title = String(property.title || `${property.rooms || ''} ${propertyCategory(property)}`).trim();
+  const enTitle = englishPropertyStaticTitle(property);
+  const image = propertyStaticImage(property);
+  const absoluteImage = `https://jasmine-group.vercel.app/${image}`;
+  const lastModified = String(property.updated_at || property.created_at || '2026-07-28').slice(0, 10);
+  const schema = {
+    '@context': 'https://schema.org',
+    '@type': 'RealEstateListing',
+    name: title,
+    description: propertyStaticDescription(property, 'tr'),
+    url: trUrl,
+    image: absoluteImage,
+    datePosted: property.created_at || undefined,
+    offers: { '@type': 'Offer', price: Number(property.price_eur || 0), priceCurrency: 'EUR' },
+    address: { '@type': 'PostalAddress', addressLocality: property.location || 'Alanya', addressRegion: 'Antalya', addressCountry: 'TR' },
+    numberOfRooms: property.rooms || undefined,
+  };
+  const staticSummary = `<article class="listing-empty-state property-static-summary"><h1>${escapeHtml(title)}</h1><p>${escapeHtml(propertyStaticDescription(property, 'tr'))}</p><p><strong>€ ${Number(property.price_eur || 0).toLocaleString('tr-TR')}</strong> · ${escapeHtml(property.location || 'Alanya')}</p></article>`;
+  const trPage = propertyTemplate
+    .replace('<head>', '<head>\n  <base href="../" />')
+    .replace('<body>', `<body data-property-id="${escapeHtml(property.id)}">`)
+    .replace(/<title>[^<]*<\/title>/, `<title>${escapeHtml(title)} | Jasmine Group</title>`)
+    .replace(/<meta name="description" content="[^"]*" \/>/, `<meta name="description" content="${escapeHtml(propertyStaticDescription(property, 'tr'))}" />`)
+    .replace('<div style="text-align:center; padding:50px;"><i class="fa-solid fa-spinner fa-spin fa-3x"></i><p style="margin-top:20px;">İlan Yükleniyor...</p></div>', staticSummary)
+    .replace('</head>', `  <link rel="canonical" href="${trUrl}" />\n  <link rel="alternate" hreflang="tr" href="${trUrl}" />\n  <link rel="alternate" hreflang="en" href="${enUrl}" />\n  <link rel="alternate" hreflang="x-default" href="${trUrl}" />\n  <meta property="og:title" content="${escapeHtml(title)} | Jasmine Group" />\n  <meta property="og:description" content="${escapeHtml(propertyStaticDescription(property, 'tr'))}" />\n  <meta property="og:image" content="${absoluteImage}" />\n  <meta property="og:url" content="${trUrl}" />\n  <script id="property-schema" type="application/ld+json">${JSON.stringify(schema)}</script>\n</head>`);
+  fs.writeFileSync(path.join(turkishPropertyOutput, `${property.id}.html`), trPage);
+
+  const enSchema = { ...schema, name: enTitle, description: propertyStaticDescription(property, 'en'), url: enUrl, inLanguage: 'en' };
+  const enSummary = `<article class="listing-empty-state property-static-summary"><h1>${escapeHtml(enTitle)}</h1><p>${escapeHtml(propertyStaticDescription(property, 'en'))}</p><p><strong>€ ${Number(property.price_eur || 0).toLocaleString('en-GB')}</strong> · ${escapeHtml(property.location || 'Alanya')}</p></article>`;
+  const enPage = englishPropertyTemplate
+    .replace('<head>', '<head>\n  <base href="../../" />')
+    .replace('<body class="english-site" data-en-property-detail>', `<body class="english-site" data-en-property-detail data-property-id="${escapeHtml(property.id)}">`)
+    .replace(/<title>[^<]*<\/title>/, `<title>${escapeHtml(enTitle)} | Jasmine Group</title>`)
+    .replace(/<meta name="description" content="[^"]*" \/>/, `<meta name="description" content="${escapeHtml(propertyStaticDescription(property, 'en'))}" />`)
+    .replace(/<link rel="canonical" href="[^"]*" \/>/, `<link rel="canonical" href="${enUrl}" />`)
+    .replace(/<link rel="alternate" hreflang="tr" href="[^"]*" \/>/, `<link rel="alternate" hreflang="tr" href="${trUrl}" />`)
+    .replace(/<link rel="alternate" hreflang="en" href="[^"]*" \/>/, `<link rel="alternate" hreflang="en" href="${enUrl}" />`)
+    .replace(/<link rel="alternate" hreflang="x-default" href="[^"]*" \/>/, `<link rel="alternate" hreflang="x-default" href="${trUrl}" />`)
+    .replace('<div class="collection-loading"><i class="fa-solid fa-spinner fa-spin"></i> Loading property information...</div>', enSummary)
+    .replace('site.js?v=', 'en/site.js?v=')
+    .replace('</head>', `  <meta property="og:title" content="${escapeHtml(enTitle)} | Jasmine Group" />\n  <meta property="og:description" content="${escapeHtml(propertyStaticDescription(property, 'en'))}" />\n  <meta property="og:image" content="${absoluteImage}" />\n  <meta property="og:url" content="${enUrl}" />\n  <script id="en-property-schema" type="application/ld+json">${JSON.stringify(enSchema)}</script>\n</head>`);
+  fs.writeFileSync(path.join(englishPropertyOutput, `${property.id}.html`), enPage);
+  property._staticLastModified = lastModified;
+}
 const turkishRegionOutput = path.join(output, 'regions');
 const englishRegionOutput = path.join(output, 'en', 'regions');
 fs.mkdirSync(turkishRegionOutput, { recursive: true });
@@ -535,9 +627,19 @@ const guideSitemapEntries = guides.flatMap(guide => [
     <priority>0.8</priority>
   </url>`,
 ]).join('\n');
+const propertySitemapEntries = publishedProperties.flatMap(property => {
+  const id = encodeURIComponent(property.id);
+  const trUrl = `https://jasmine-group.vercel.app/properties/${id}.html`;
+  const enUrl = `https://jasmine-group.vercel.app/en/properties/${id}.html`;
+  const lastModified = property._staticLastModified || '2026-07-28';
+  return [
+    `  <url>\n    <loc>${trUrl}</loc>\n    <xhtml:link rel="alternate" hreflang="tr" href="${trUrl}" />\n    <xhtml:link rel="alternate" hreflang="en" href="${enUrl}" />\n    <xhtml:link rel="alternate" hreflang="x-default" href="${trUrl}" />\n    <lastmod>${lastModified}</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.7</priority>\n  </url>`,
+    `  <url>\n    <loc>${enUrl}</loc>\n    <xhtml:link rel="alternate" hreflang="tr" href="${trUrl}" />\n    <xhtml:link rel="alternate" hreflang="en" href="${enUrl}" />\n    <xhtml:link rel="alternate" hreflang="x-default" href="${trUrl}" />\n    <lastmod>${lastModified}</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.7</priority>\n  </url>`,
+  ];
+}).join('\n');
 fs.writeFileSync(
   sitemapPath,
-  fs.readFileSync(sitemapPath, 'utf8').replace('</urlset>', `${blogSitemapEntries}\n${englishStaticSitemapEntries}\n${englishBlogSitemapEntries}\n${regionSitemapEntries}\n${guideSitemapEntries}\n</urlset>`),
+  fs.readFileSync(sitemapPath, 'utf8').replace('</urlset>', `${blogSitemapEntries}\n${englishStaticSitemapEntries}\n${englishBlogSitemapEntries}\n${regionSitemapEntries}\n${guideSitemapEntries}\n${propertySitemapEntries}\n</urlset>`),
 );
 
 const analyticsConfig = {

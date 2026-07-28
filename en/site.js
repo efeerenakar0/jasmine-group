@@ -122,7 +122,7 @@
     const cards = selected.map(property => {
       const title = englishPropertyTitle(property);
       const image = displayImage((property.images || []).find(trustedImage));
-      return `<article class="collection-item en-compare-card"><button type="button" data-remove="${escapeHTML(property.id)}" aria-label="Remove ${escapeHTML(property.id)}"><i class="fa-solid fa-xmark"></i></button><img src="${escapeHTML(image)}" alt="${escapeHTML(title)}"><div><small>${escapeHTML(englishLocation(property.location))}</small><h3>${escapeHTML(title)}</h3><strong>€ ${Number(property.price_eur || 0).toLocaleString('en-GB')}${property.type === 'rent' ? ' / month' : ''}</strong><dl><div><dt>Rooms</dt><dd>${escapeHTML(property.rooms || '-')}</dd></div><div><dt>Net area</dt><dd>${escapeHTML(property.area_net || '-')}</dd></div><div><dt>Type</dt><dd>${escapeHTML(propertyKind(property))}</dd></div>${property.floor ? `<div><dt>Floor</dt><dd>${escapeHTML(property.floor)}</dd></div>` : ''}${property.year_built ? `<div><dt>Year built</dt><dd>${escapeHTML(property.year_built)}</dd></div>` : ''}</dl><a href="property-detail.html?id=${encodeURIComponent(property.id)}">View property</a></div></article>`;
+      return `<article class="collection-item en-compare-card"><button type="button" data-remove="${escapeHTML(property.id)}" aria-label="Remove ${escapeHTML(property.id)}"><i class="fa-solid fa-xmark"></i></button><img src="${escapeHTML(image)}" alt="${escapeHTML(title)}"><div><small>${escapeHTML(englishLocation(property.location))}</small><h3>${escapeHTML(title)}</h3><strong>€ ${Number(property.price_eur || 0).toLocaleString('en-GB')}${property.type === 'rent' ? ' / month' : ''}</strong><dl><div><dt>Rooms</dt><dd>${escapeHTML(property.rooms || '-')}</dd></div><div><dt>Net area</dt><dd>${escapeHTML(property.area_net || '-')}</dd></div><div><dt>Type</dt><dd>${escapeHTML(propertyKind(property))}</dd></div>${property.floor ? `<div><dt>Floor</dt><dd>${escapeHTML(property.floor)}</dd></div>` : ''}${property.year_built ? `<div><dt>Year built</dt><dd>${escapeHTML(property.year_built)}</dd></div>` : ''}</dl><a href="properties/${encodeURIComponent(property.id)}.html">View property</a></div></article>`;
     }).join('') || '<div class="collection-empty"><h3>Your comparison list is empty.</h3><a href="buy.html">Browse properties</a></div>';
     modal.innerHTML = `<button class="collection-modal-backdrop" type="button" aria-label="Close comparison"></button><div class="collection-modal-panel"><header><div><p class="section-kicker">DECISION SUPPORT</p><h2>Compare properties</h2></div><button type="button" data-close aria-label="Close comparison"><i class="fa-solid fa-xmark"></i></button></header><div class="compare-content">${cards}</div></div>`;
     modal.querySelector('[data-close]').addEventListener('click', closeCompare);
@@ -375,7 +375,13 @@
       const propertyType = document.body.dataset.enPropertyType || 'sale';
       const data = await fetchPropertyData(`&type=${encodeURIComponent(propertyType)}`);
       window.enPropertyType = propertyType;
-      window.enProperties = (data.properties || []).filter(item => !item.type || item.type === propertyType);
+      const seenIds = new Set();
+      window.enProperties = (data.properties || []).filter(item => {
+        if (item.type && item.type !== propertyType) return false;
+        if (!item.id || seenIds.has(item.id)) return false;
+        seenIds.add(item.id);
+        return true;
+      });
       const locations = [...new Set(window.enProperties.map(item => String(item.location || '').split('/').slice(-1)[0].trim()).filter(Boolean))].sort();
       const select = document.getElementById('en-location');
       locations.forEach(location => select?.insertAdjacentHTML('beforeend', `<option value="${escapeHTML(location)}">${escapeHTML(location)}</option>`));
@@ -440,7 +446,7 @@
       const title = englishPropertyTitle(property);
       return `<article class="property-item property-card-v2">
         <div class="property-card-media"><img src="${escapeHTML(image)}" alt="${escapeHTML(title)}" loading="lazy">${approvedImage ? '' : '<span class="media-pending-badge"><i class="fa-solid fa-camera"></i> Verified photos on request</span>'}</div>
-        <div class="property-card-content"><div class="property-card-eyebrow">${isRental ? 'FOR RENT' : 'FOR SALE'} · ${escapeHTML(propertyKind(property).toUpperCase())} · ${escapeHTML(locationName)}</div><h2 class="prop-title">${escapeHTML(title)}</h2><div class="prop-location">${escapeHTML(englishLocation(property.location))}</div><div class="prop-rooms"><span>${escapeHTML(property.rooms || '-')} rooms</span><span>${escapeHTML(property.area_net || '-')}</span>${property.market_status ? `<span>${escapeHTML({ new: 'New build', resale: 'Resale', under_construction: 'Under construction' }[property.market_status] || property.market_status)}</span>` : ''}</div><div class="prop-footer"><div><small>${isRental ? 'Monthly price' : 'Price'}</small><div class="prop-price">€ ${Number(property.price_eur || 0).toLocaleString('en-GB')}${isRental ? ' / month' : ''}</div></div><div class="en-card-actions"><button class="compare-btn" type="button" data-en-compare-id="${escapeHTML(property.id)}" aria-label="Add to comparison" aria-pressed="false"><i class="fa-solid fa-code-compare"></i></button><a class="prop-btn" href="property-detail.html?id=${encodeURIComponent(property.id)}">VIEW</a><a class="prop-btn primary" href="https://wa.me/905330850769?text=${message}">ENQUIRE</a></div></div><p class="property-card-verification"><i class="fa-solid fa-circle-check"></i> Price and availability are subject to advisor confirmation.</p></div>
+        <div class="property-card-content"><div class="property-card-eyebrow">${isRental ? 'FOR RENT' : 'FOR SALE'} · ${escapeHTML(propertyKind(property).toUpperCase())} · ${escapeHTML(locationName)}</div><h2 class="prop-title">${escapeHTML(title)}</h2><div class="prop-location">${escapeHTML(englishLocation(property.location))}</div><div class="prop-rooms"><span>${escapeHTML(property.rooms || '-')} rooms</span><span>${escapeHTML(property.area_net || '-')}</span>${property.market_status ? `<span>${escapeHTML({ new: 'New build', resale: 'Resale', under_construction: 'Under construction' }[property.market_status] || property.market_status)}</span>` : ''}</div><div class="prop-footer"><div><small>${isRental ? 'Monthly price' : 'Price'}</small><div class="prop-price">€ ${Number(property.price_eur || 0).toLocaleString('en-GB')}${isRental ? ' / month' : ''}</div></div><div class="en-card-actions"><button class="compare-btn" type="button" data-en-compare-id="${escapeHTML(property.id)}" aria-label="Add to comparison" aria-pressed="false"><i class="fa-solid fa-code-compare"></i></button><a class="prop-btn" href="properties/${encodeURIComponent(property.id)}.html">VIEW</a><a class="prop-btn primary" href="https://wa.me/905330850769?text=${message}">ENQUIRE</a></div></div><p class="property-card-verification"><i class="fa-solid fa-circle-check"></i> Price and availability are subject to advisor confirmation.</p></div>
       </article>`;
     }).join('') || '<article class="listing-empty-state"><h3>No matching property found.</h3><a href="contact.html">Request a personal shortlist</a></article>';
     document.querySelectorAll('[data-en-compare-id]').forEach(button => button.addEventListener('click', () => toggleCompare(button.dataset.enCompareId)));
@@ -461,7 +467,7 @@
     const container = document.getElementById('en-property-detail');
     if (!container) return;
     try {
-      const id = new URLSearchParams(window.location.search).get('id');
+      const id = new URLSearchParams(window.location.search).get('id') || document.body.dataset.propertyId;
       const data = await fetchPropertyData();
       const property = (data.properties || []).find(item => String(item.id) === String(id));
       if (!property) throw new Error('not-found');
@@ -471,7 +477,9 @@
       const isRental = property.type === 'rent';
       const title = englishPropertyTitle(property);
       const description = englishPropertyDescription(property);
-      const canonical = `${location.origin}/en/property-detail.html?id=${encodeURIComponent(property.id)}`;
+      const canonical = document.body.dataset.propertyId
+        ? `${location.origin}/en/properties/${encodeURIComponent(property.id)}.html`
+        : `${location.origin}/en/property-detail.html?id=${encodeURIComponent(property.id)}`;
       document.title = `${title} | Jasmine Group`;
       document.getElementById('en-detail-heading').textContent = title;
       document.querySelector('link[rel="canonical"]')?.setAttribute('href', canonical);
@@ -480,7 +488,9 @@
       setMeta('meta[property="og:url"]', canonical);
       setMeta('meta[property="og:image"]', new URL(image, location.href).href);
 
+      document.getElementById('en-property-schema')?.remove();
       const schema = document.createElement('script');
+      schema.id = 'en-property-schema';
       schema.type = 'application/ld+json';
       const schemaProperties = [
         ['Property type', propertyKind(property)],

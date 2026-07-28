@@ -25,6 +25,16 @@ function metricNumber(value) {
   return match ? Number(match[0]) : 0;
 }
 
+function uniqueProperties(properties) {
+  const ids = new Set();
+  return properties.filter(property => {
+    const id = String(property.id || '');
+    if (!id || ids.has(id)) return false;
+    ids.add(id);
+    return true;
+  });
+}
+
 function filterProperties(properties, query) {
   const type = normalize(query.type);
   const category = normalize(query.category);
@@ -70,7 +80,7 @@ module.exports = async function handler(request, response) {
     const properties = configuration()
       ? await supabaseRequest('/rest/v1/properties?select=*&order=created_at.desc')
       : readFallbackProperties();
-    const filtered = filterProperties(properties, request.query || {});
+    const filtered = filterProperties(uniqueProperties(properties), request.query || {});
     const page = Math.max(1, Number(request.query?.page || 1));
     const limit = Math.min(500, Math.max(1, Number(request.query?.limit || 24)));
     const start = (page - 1) * limit;

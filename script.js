@@ -823,7 +823,12 @@ async function fetchProperties() {
     }
   }
 
-  const normalized = props.map(normalizeProperty);
+  const seenIds = new Set();
+  const normalized = props.map(normalizeProperty).filter(property => {
+    if (!property.id || seenIds.has(property.id)) return false;
+    seenIds.add(property.id);
+    return true;
+  });
   if (typeof populateLocations === 'function') populateLocations(normalized);
   return normalized;
 }
@@ -1015,7 +1020,7 @@ function renderProperties(props) {
         </div>
         <div class="prop-info-side property-card-content">
           <div class="property-card-eyebrow">${p.type === 'rent' ? 'KİRALIK' : 'SATILIK'} · ${escapeHTML(propertyCategoryLabels[p.category] || 'Gayrimenkul')} · ${escapeHTML(p.location.split('/').slice(-1)[0].trim())}</div>
-          <a href="property-detail.html?id=${encodeURIComponent(p.id)}" class="prop-title">${escapeHTML(displayTitle)}</a>
+          <a href="properties/${encodeURIComponent(p.id)}.html" class="prop-title">${escapeHTML(displayTitle)}</a>
           <div class="prop-location"><i class="fa-solid fa-location-dot"></i> ${escapeHTML(p.location)}</div>
           <div class="prop-rooms">
             <span><i class="fa-solid fa-bed"></i> ${escapeHTML(p.rooms || '-')}</span>
@@ -1028,7 +1033,7 @@ function renderProperties(props) {
               ${compareButton}
               <button class="wishlist-btn" data-wishlist-id="${escapeHTML(p.id)}" onclick="toggleWishlist('${escapeHTML(p.id)}', this)" title="Favorilere ekle" aria-label="Favorilere ekle" aria-pressed="false"><i class="fa-regular fa-heart"></i></button>
               <a href="https://wa.me/905330850769?text=${quickMessage}" target="_blank" class="property-quick-contact" aria-label="${escapeHTML(p.id)} için WhatsApp ile bilgi alın"><i class="fa-brands fa-whatsapp"></i></a>
-              <a href="property-detail.html?id=${encodeURIComponent(p.id)}" class="prop-btn primary">İNCELE <i class="fa-solid fa-arrow-right"></i></a>
+              <a href="properties/${encodeURIComponent(p.id)}.html" class="prop-btn primary">İNCELE <i class="fa-solid fa-arrow-right"></i></a>
             </div>
           </div>
           <p class="property-card-verification"><i class="fa-solid fa-circle-check"></i> Fiyat ve müsaitlik danışman teyidine tabidir.</p>
@@ -1096,7 +1101,9 @@ function updatePropertySEO(property, mainImage) {
   const propertyTitle = formatPropertyTitle(property.title);
   const title = `${propertyTitle} | Jasmine Group`;
   const description = `${property.location} bölgesindeki ${property.rooms} ${property.type === 'rent' ? 'kiralık' : 'satılık'} gayrimenkulü inceleyin. Fiyat ve müsaitlik bilgisi danışman teyidine tabidir.`.slice(0, 160);
-  const canonicalUrl = `https://jasmine-group.vercel.app/property-detail.html?id=${encodeURIComponent(property.id)}`;
+  const canonicalUrl = document.body.dataset.propertyId
+    ? `https://jasmine-group.vercel.app/properties/${encodeURIComponent(property.id)}.html`
+    : `https://jasmine-group.vercel.app/property-detail.html?id=${encodeURIComponent(property.id)}`;
   const canonical = document.querySelector('link[rel="canonical"]');
 
   document.title = title;
@@ -1476,7 +1483,7 @@ async function renderPropertyDetail() {
   if (!container) return;
   
   const urlParams = new URLSearchParams(window.location.search);
-  const id = urlParams.get('id');
+  const id = urlParams.get('id') || document.body.dataset.propertyId;
   if (!id) {
     container.innerHTML = '<h2 style="text-align:center;">İlan Bulunamadı.</h2>';
     return;
@@ -1554,7 +1561,7 @@ async function renderPropertyDetail() {
       const spImg = sp.images && sp.images.length > 0 ? sp.images[0] : '';
       const spSuffix = sp.type === 'rent' ? ' / ay' : '';
       simHTML += `
-        <a href="property-detail.html?id=${encodeURIComponent(sp.id)}" class="similar-property-card">
+        <a href="properties/${encodeURIComponent(sp.id)}.html" class="similar-property-card">
           <img src="${escapeHTML(spImg)}" alt="${escapeHTML(formatPropertyTitle(sp.title))}" loading="lazy" />
           <div style="padding:15px;">
             <h4>${escapeHTML(formatPropertyTitle(sp.title))}</h4>
@@ -2155,7 +2162,7 @@ async function openWishlist() {
     <article class="collection-item">
       <img src="${escapeHTML(property.images[0] || 'images/property-placeholder.svg')}" alt="${escapeHTML(formatPropertyTitle(property.title))}">
       <div><small>${escapeHTML(property.location)}</small><h3>${escapeHTML(formatPropertyTitle(property.title))}</h3><strong>€ ${property.price_eur.toLocaleString('de-DE')}</strong></div>
-      <div><a href="property-detail.html?id=${encodeURIComponent(property.id)}">İncele</a><button type="button" data-remove-wishlist="${escapeHTML(property.id)}">Kaldır</button></div>
+      <div><a href="properties/${encodeURIComponent(property.id)}.html">İncele</a><button type="button" data-remove-wishlist="${escapeHTML(property.id)}">Kaldır</button></div>
     </article>`).join('') || '<div class="collection-empty"><h3>Favori ilanlar artık yayında değil.</h3><a href="buy.html">Güncel portföyler</a></div>';
   content.querySelectorAll('[data-remove-wishlist]').forEach(button => button.addEventListener('click', () => {
     toggleWishlist(button.dataset.removeWishlist);
@@ -2294,7 +2301,7 @@ async function openCompareModal() {
           ${p.year_built ? `<li style="padding:8px 0; border-bottom:1px solid var(--border);"><strong>Yapım yılı:</strong> ${escapeHTML(p.year_built)}</li>` : ''}
           <li style="padding:8px 0;"><strong>Durum:</strong> ${p.type === 'sale' ? 'Satılık' : 'Kiralık'}</li>
         </ul>
-        <a href="property-detail.html?id=${encodeURIComponent(id)}" style="display:block; text-align:center; background:var(--navy); color:#fff; padding:8px; border-radius:6px; text-decoration:none; margin-top:15px; font-weight:bold; font-size:12px;">İlana Git</a>
+        <a href="properties/${encodeURIComponent(id)}.html" style="display:block; text-align:center; background:var(--navy); color:#fff; padding:8px; border-radius:6px; text-decoration:none; margin-top:15px; font-weight:bold; font-size:12px;">İlana Git</a>
       </div>
     `;
   });
