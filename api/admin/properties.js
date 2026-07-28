@@ -5,6 +5,12 @@ function clean(value, max = 500) {
   return String(value || '').trim().slice(0, max);
 }
 
+function optionalNumber(value, minimum, maximum) {
+  if (value === '' || value === null || value === undefined) return null;
+  const number = Number(value);
+  return Number.isFinite(number) && number >= minimum && number <= maximum ? number : null;
+}
+
 function approvedImageUrl(value) {
   const image = clean(value, 1000);
   if (/^\/?images\/[a-z0-9._/-]+$/i.test(image)) {
@@ -39,12 +45,20 @@ function propertyPayload(body) {
     id: /^[A-Za-z0-9._-]+$/.test(id) ? id : '',
     type: body.type === 'rent' ? 'rent' : 'sale',
     status: ['published', 'draft', 'sold', 'rented'].includes(body.status) ? body.status : 'draft',
+    category: ['apartment', 'villa', 'land', 'commercial'].includes(body.category) ? body.category : null,
+    market_status: ['new', 'resale', 'under_construction'].includes(body.market_status) ? body.market_status : null,
     title: clean(body.title, 180),
     location: clean(body.location, 180),
     rooms: clean(body.rooms, 30),
     bathrooms: clean(body.bathrooms, 30),
     area_net: clean(body.area_net, 30),
     area_gross: clean(body.area_gross, 30),
+    floor: clean(body.floor, 30) || null,
+    year_built: optionalNumber(body.year_built, 1800, 2100),
+    furnished_status: ['furnished', 'unfurnished', 'optional'].includes(body.furnished_status) ? body.furnished_status : null,
+    heating: clean(body.heating, 80) || null,
+    distance_sea_m: optionalNumber(body.distance_sea_m, 0, 100000),
+    distance_airport_km: optionalNumber(body.distance_airport_km, 0, 10000),
     price_eur: Number(body.price_eur || 0),
     description: clean(body.description || body.desc, 12000),
     badge: clean(body.badge, 50) || null,

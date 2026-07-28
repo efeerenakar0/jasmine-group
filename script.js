@@ -722,8 +722,14 @@ async function initLiveCurrencyRates() {
 function changeLang(lang) {
   if (lang === 'en') {
     const page = window.location.pathname.split('/').pop();
-    const target = page === 'buy.html' || page === 'contact.html' ? page : '';
-    window.location.href = `/en/${target}`;
+    const translatedPages = new Set([
+      'buy.html', 'rent.html', 'property-detail.html', 'contact.html', 'services.html', 'regions.html',
+      'buying-guide.html', 'corporate.html', 'team.html', 'customer-stories.html', 'blog.html',
+      'privacy.html', 'kvkk.html', 'terms.html', 'cookie-policy.html',
+    ]);
+    const target = translatedPages.has(page) ? page : '';
+    const preserveQuery = ['buy.html', 'rent.html', 'property-detail.html', 'contact.html'].includes(target);
+    window.location.href = `/en/${target}${preserveQuery ? window.location.search : ''}`;
     return;
   }
   localStorage.setItem('jg_lang', lang);
@@ -758,60 +764,44 @@ document.addEventListener('DOMContentLoaded', async () => {
   const hasPropertyList = document.getElementById('prop-list') || document.getElementById('sale-prop-list') || document.getElementById('rent-prop-list');
   if(hasPropertyList) {
     const props = await fetchProperties();
-    
-    const urlParams = new URLSearchParams(window.location.search);
-    if (Array.from(urlParams.keys()).length > 0) {
-        setTimeout(() => {
-            if(document.getElementById('sidebar-loc') && urlParams.get('loc')) {
-                document.getElementById('sidebar-loc').value = urlParams.get('loc');
-            }
-            if(document.getElementById('sidebar-type') && urlParams.get('type')) {
-                const t = urlParams.get('type');
-                if(t.includes('Daire') || t.includes('Apartman')) document.getElementById('sidebar-type').value = 'Daire';
-                else if(t.includes('Villa')) document.getElementById('sidebar-type').value = 'Villa';
-            }
-            if(document.getElementById('sidebar-pmin') && urlParams.get('min')) {
-                document.getElementById('sidebar-pmin').value = urlParams.get('min');
-            }
-            if(document.getElementById('sidebar-pmax') && urlParams.get('max')) {
-                document.getElementById('sidebar-pmax').value = urlParams.get('max');
-            }
-        }, 100);
-    }
-    
+    window.currentAllListingProperties = props;
+    hydrateListingControls();
+
     const btnApply = document.getElementById('btn-sidebar-apply');
-    if (btnApply) {
-        btnApply.addEventListener('click', () => applySidebarFilters(props));
-    }
+    if (btnApply) btnApply.addEventListener('click', () => applySidebarFilters(props));
     const btnReset = document.getElementById('btn-sidebar-reset');
     if (btnReset) {
-        btnReset.addEventListener('click', () => {
-            if(document.getElementById('sidebar-loc')) document.getElementById('sidebar-loc').value = 'Tümü';
-            if(document.getElementById('sidebar-type')) document.getElementById('sidebar-type').value = 'Tümü';
-            if(document.getElementById('sidebar-pmin')) document.getElementById('sidebar-pmin').value = '';
-            if(document.getElementById('sidebar-pmax')) document.getElementById('sidebar-pmax').value = '';
-            if(document.getElementById('sidebar-keyword')) document.getElementById('sidebar-keyword').value = '';
-            if(document.getElementById('sidebar-room')) document.getElementById('sidebar-room').value = '';
-            window.history.pushState({}, document.title, window.location.pathname);
-            renderProperties(props);
-        });
+      btnReset.addEventListener('click', () => clearListingFilter('all'));
     }
-    
+
+    document.getElementById('sidebar-keyword')?.addEventListener('keydown', event => {
+      if (event.key === 'Enter') applySidebarFilters(props);
+    });
     const sortSelect = document.querySelector('.sort-bar select');
-    if (sortSelect) {
-        sortSelect.addEventListener('change', () => {
-            if(document.getElementById('sidebar-loc')) applySidebarFilters(props);
-            else renderProperties(props);
-        });
-    }
-    
-    setTimeout(() => {
-        if(document.getElementById('sidebar-loc')) {
-            applySidebarFilters(props);
-        } else {
-            renderProperties(props);
-        }
-    }, 150);
+    if (sortSelect) sortSelect.addEventListener('change', () => (
+      document.getElementById('sidebar-loc') ? applySidebarFilters(props) : renderProperties(props)
+    ));
+    document.getElementById('active-filter-chips')?.addEventListener('click', event => {
+      const button = event.target.closest('[data-clear-filter]');
+      if (button) clearListingFilter(button.dataset.clearFilter);
+    });
+    document.getElementById('save-search-button')?.addEventListener('click', event => {
+      localStorage.setItem('jg_saved_search', JSON.stringify({ path: window.location.pathname, query: listingQuery(readListingFilters()).toString(), savedAt: new Date().toISOString() }));
+      event.currentTarget.innerHTML = '<i class="fa-solid fa-bookmark"></i> Arama kaydedildi';
+    });
+    document.getElementById('share-search-button')?.addEventListener('click', async event => {
+      const url = window.location.href;
+      try {
+        if (navigator.share) await navigator.share({ title: document.title, url });
+        else await navigator.clipboard.writeText(url);
+        event.currentTarget.innerHTML = '<i class="fa-solid fa-check"></i> Bağlantı hazır';
+      } catch {
+        event.currentTarget.innerHTML = '<i class="fa-solid fa-link"></i> Adres çubuğundan kopyalayın';
+      }
+    });
+
+    if(document.getElementById('sidebar-loc')) applySidebarFilters(props, { skipHistory: true });
+    else renderProperties(props);
   }
 });
 
@@ -876,17 +866,54 @@ function isTrustedPropertyImage(url) {
   }
 }
 
+const propertyCategoryLabels = {
+  apartment: 'Daire',
+  villa: 'Villa',
+  land: 'Arsa',
+  commercial: 'Ticari',
+};
+
+const marketStatusLabels = {
+  new: 'Yeni yapı',
+  resale: 'İkinci el',
+  under_construction: 'İnşaat halinde',
+};
+
+function inferPropertyCategory(property) {
+  if (propertyCategoryLabels[property.category]) return property.category;
+  const source = String(property.title || '').toLocaleLowerCase('tr-TR');
+  if (source.includes('villa')) return 'villa';
+  if (source.includes('arsa')) return 'land';
+  if (source.includes('ticari') || source.includes('dükkan') || source.includes('ofis')) return 'commercial';
+  return 'apartment';
+}
+
+function metricNumber(value) {
+  const match = String(value || '').replace(',', '.').match(/\d+(?:\.\d+)?/);
+  return match ? Number(match[0]) : 0;
+}
+
 function normalizeProperty(property) {
   const trustedImages = Array.isArray(property.images) ? property.images.filter(isTrustedPropertyImage) : [];
   const id = String(property.id || '').replace(/[^\p{L}\p{N}._-]/gu, '').slice(0, 80);
   const price = Number(property.price_eur);
+  const optionalNumber = value => {
+    const number = Number(value);
+    return value !== null && value !== '' && Number.isFinite(number) && number >= 0 ? number : null;
+  };
   return {
     ...property,
     id,
     type: property.type === 'rent' ? 'rent' : 'sale',
+    category: inferPropertyCategory(property),
+    market_status: marketStatusLabels[property.market_status] ? property.market_status : '',
     price_eur: Number.isFinite(price) && price >= 0 ? price : 0,
     badge_color: ['red', 'blue', 'green'].includes(property.badge_color) ? property.badge_color : '',
     desc: property.description || property.desc || '',
+    features: Array.isArray(property.features) ? property.features.map(item => String(item || '').trim()).filter(Boolean).slice(0, 80) : [],
+    year_built: optionalNumber(property.year_built),
+    distance_sea_m: optionalNumber(property.distance_sea_m),
+    distance_airport_km: optionalNumber(property.distance_airport_km),
     status: property.status || 'published',
     media_pending: trustedImages.length === 0,
     verified_image_count: trustedImages.length,
@@ -967,6 +994,7 @@ function renderProperties(props) {
     let bClass = p.badge_color ? `prop-badge ${p.badge_color}` : `prop-badge`;
     let badgeHTML = p.badge ? `<span class="${bClass}">${escapeHTML(p.badge)}</span>` : '';
     let suffix = p.type === 'rent' ? ' <em>/ ay</em>' : '';
+    const quickMessage = encodeURIComponent(`Merhaba, ${p.id} kodlu portföy hakkında güncel bilgi almak istiyorum.`);
     const compareButton = document.getElementById('compare-floating')
       ? `<button class="compare-btn" data-compare-id="${escapeHTML(p.id)}" onclick="toggleCompare('${escapeHTML(p.id)}', this)" title="Karşılaştırmaya ekle" aria-label="Karşılaştırmaya ekle" aria-pressed="false"><i class="fa-solid fa-code-compare"></i></button>`
       : '';
@@ -988,7 +1016,7 @@ function renderProperties(props) {
           <div class="prop-code-strip"><span>${escapeHTML(p.id)}</span><span><i class="fa-solid fa-camera"></i> ${p.verified_image_count ?? p.images.length}</span></div>
         </div>
         <div class="prop-info-side property-card-content">
-          <div class="property-card-eyebrow">${p.type === 'rent' ? 'KİRALIK' : 'SATILIK'} · ${escapeHTML(p.location.split('/').slice(-1)[0].trim())}</div>
+          <div class="property-card-eyebrow">${p.type === 'rent' ? 'KİRALIK' : 'SATILIK'} · ${escapeHTML(propertyCategoryLabels[p.category] || 'Gayrimenkul')} · ${escapeHTML(p.location.split('/').slice(-1)[0].trim())}</div>
           <a href="property-detail.html?id=${encodeURIComponent(p.id)}" class="prop-title">${escapeHTML(displayTitle)}</a>
           <div class="prop-location"><i class="fa-solid fa-location-dot"></i> ${escapeHTML(p.location)}</div>
           <div class="prop-rooms">
@@ -1001,6 +1029,7 @@ function renderProperties(props) {
             <div class="prop-actions">
               ${compareButton}
               <button class="wishlist-btn" data-wishlist-id="${escapeHTML(p.id)}" onclick="toggleWishlist('${escapeHTML(p.id)}', this)" title="Favorilere ekle" aria-label="Favorilere ekle" aria-pressed="false"><i class="fa-regular fa-heart"></i></button>
+              <a href="https://wa.me/905330850769?text=${quickMessage}" target="_blank" class="property-quick-contact" aria-label="${escapeHTML(p.id)} için WhatsApp ile bilgi alın"><i class="fa-brands fa-whatsapp"></i></a>
               <a href="property-detail.html?id=${encodeURIComponent(p.id)}" class="prop-btn primary">İNCELE <i class="fa-solid fa-arrow-right"></i></a>
             </div>
           </div>
@@ -1083,6 +1112,16 @@ function updatePropertySEO(property, mainImage) {
 
   const previousSchema = document.getElementById('property-schema');
   if (previousSchema) previousSchema.remove();
+  const additionalProperties = [
+    ['Gayrimenkul tipi', propertyCategoryLabels[property.category]],
+    ['Portföy durumu', marketStatusLabels[property.market_status]],
+    ['Bulunduğu kat', property.floor],
+    ['Yapım yılı', property.year_built],
+    ['Isıtma', property.heating],
+    ['Denize mesafe', property.distance_sea_m !== null ? `${property.distance_sea_m} m` : null],
+    ['Havalimanına mesafe', property.distance_airport_km !== null ? `${property.distance_airport_km} km` : null],
+  ].filter(([, value]) => value !== null && value !== undefined && value !== '')
+    .map(([name, value]) => ({ '@type': 'PropertyValue', name, value }));
   const schema = document.createElement('script');
   schema.id = 'property-schema';
   schema.type = 'application/ld+json';
@@ -1110,7 +1149,8 @@ function updatePropertySEO(property, mainImage) {
       value: Number.parseFloat(String(property.area_net).replace(',', '.')),
       unitCode: 'MTK'
     } : undefined,
-    numberOfRooms: property.rooms || undefined
+    numberOfRooms: property.rooms || undefined,
+    additionalProperty: additionalProperties.length ? additionalProperties : undefined
   });
   document.head.appendChild(schema);
 }
@@ -1467,9 +1507,48 @@ async function renderPropertyDetail() {
   let bClass = p.badge_color ? `prop-badge ${p.badge_color}` : `prop-badge`;
   let typeLabel = p.type === 'rent' ? 'Kiralık' : 'Satılık';
   let suffix = p.type === 'rent' ? ' <em>/ ay</em>' : '';
+  const furnishedLabels = { furnished: 'Eşyalı', unfurnished: 'Eşyasız', optional: 'Opsiyonel' };
+  const specificationRows = [
+    ['İlan No', safeId],
+    ['Durumu', typeLabel],
+    ['Gayrimenkul tipi', propertyCategoryLabels[p.category] || 'Gayrimenkul'],
+    ['Portföy durumu', marketStatusLabels[p.market_status] || null],
+    ['Oda Sayısı', safeRooms || '-'],
+    ['Banyo', p.bathrooms || '-'],
+    ['Brüt / Arsa Alanı', formatArea(p.area_gross)],
+    ['Net Alan', formatArea(p.area_net)],
+    ['Bulunduğu kat', p.floor],
+    ['Yapım yılı', p.year_built],
+    ['Eşya durumu', furnishedLabels[p.furnished_status]],
+    ['Isıtma', p.heating],
+  ].filter(([, value]) => value !== null && value !== undefined && value !== '');
+  const specificationsHTML = specificationRows.map(([label, value]) => `<div class="spec-item"><span class="spec-label">${escapeHTML(label)}</span><span class="spec-value">${escapeHTML(value)}</span></div>`).join('');
+  const distanceFacts = [
+    p.distance_sea_m !== null ? ['fa-water', 'Denize mesafe', `${Number(p.distance_sea_m).toLocaleString('tr-TR')} m`] : null,
+    p.distance_airport_km !== null ? ['fa-plane-departure', 'Havalimanına mesafe', `${Number(p.distance_airport_km).toLocaleString('tr-TR')} km`] : null,
+  ].filter(Boolean);
+  const featuresHTML = p.features.length
+    ? `<div class="detail-feature-box"><div class="detail-specs-title"><i class="fa-solid fa-star"></i> Portföy Özellikleri</div><div class="detail-feature-grid">${p.features.map(feature => `<span><i class="fa-solid fa-check"></i>${escapeHTML(feature)}</span>`).join('')}</div></div>`
+    : '';
+  const distancesHTML = distanceFacts.length
+    ? `<div class="detail-distance-box"><div class="detail-specs-title"><i class="fa-solid fa-location-crosshairs"></i> Konum Mesafeleri</div><div class="detail-distance-grid">${distanceFacts.map(([icon, label, value]) => `<div><i class="fa-solid ${icon}"></i><span>${escapeHTML(label)}</span><strong>${escapeHTML(value)}</strong></div>`).join('')}</div><p>Mesafeler portföy kaydından alınır ve rota/gösterim öncesinde danışman tarafından teyit edilir.</p></div>`
+    : '';
   
-  // RENDER SIMILAR PROPERTIES HTML FIRST
-  const similar = props.filter(sp => sp.id !== p.id && sp.type === p.type).slice(0, 4);
+  const currentDistrict = String(p.location || '').split('/').slice(-1)[0].trim().toLocaleLowerCase('tr-TR');
+  const similar = props
+    .filter(property => property.id !== p.id && property.type === p.type)
+    .map(property => {
+      const district = String(property.location || '').split('/').slice(-1)[0].trim().toLocaleLowerCase('tr-TR');
+      const priceDifference = Math.abs(property.price_eur - p.price_eur) / Math.max(p.price_eur, 1);
+      const score = (district === currentDistrict ? 8 : 0)
+        + (property.category === p.category ? 5 : 0)
+        + (property.rooms === p.rooms ? 3 : 0)
+        + Math.max(0, 3 - (priceDifference * 3));
+      return { property, score };
+    })
+    .sort((left, right) => right.score - left.score)
+    .slice(0, 4)
+    .map(item => item.property);
   let simHTML = '';
   if (similar.length > 0) {
     simHTML = `<div style="margin-top:50px;"><h2 class="detail-similar-title">Benzer İlanlar</h2><div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(260px, 1fr)); gap:20px;">`;
@@ -1529,12 +1608,7 @@ async function renderPropertyDetail() {
         <div class="detail-specs-box">
           <div class="detail-specs-title"><i class="fa-solid fa-list" style="color:var(--red); margin-right:8px;"></i> İlan Özellikleri</div>
           <div class="detail-specs-grid">
-            <div class="spec-item"><span class="spec-label">İlan No</span><span class="spec-value">${safeId}</span></div>
-            <div class="spec-item"><span class="spec-label">Durumu</span><span class="spec-value">${typeLabel}</span></div>
-            <div class="spec-item"><span class="spec-label">Oda Sayısı</span><span class="spec-value">${safeRooms || '-'}</span></div>
-            <div class="spec-item"><span class="spec-label">Banyo</span><span class="spec-value">${escapeHTML(p.bathrooms || '-')}</span></div>
-            <div class="spec-item"><span class="spec-label">Brüt / Arsa Alanı</span><span class="spec-value">${escapeHTML(formatArea(p.area_gross))}</span></div>
-            <div class="spec-item"><span class="spec-label">Net Alan</span><span class="spec-value">${escapeHTML(formatArea(p.area_net))}</span></div>
+            ${specificationsHTML}
           </div>
         </div>
 
@@ -1543,6 +1617,8 @@ async function renderPropertyDetail() {
           <div class="detail-specs-title"><i class="fa-solid fa-align-left" style="color:var(--red); margin-right:8px;"></i> İlan Açıklaması</div>
           <div class="detail-desc-text">${safeDescription}</div>
         </div>
+        ${featuresHTML}
+        ${distancesHTML}
 
         <!-- SIMILAR PROPERTIES -->
         ${simHTML}
@@ -1679,59 +1755,121 @@ function applyFilters() {
     window.location.href = target + '?' + params.toString();
 }
 
-function applySidebarFilters(props) {
-    const loc = document.getElementById('sidebar-loc') ? document.getElementById('sidebar-loc').value : '';
-    const type = document.getElementById('sidebar-type') ? document.getElementById('sidebar-type').value : '';
-    const keyword = document.getElementById('sidebar-keyword') ? document.getElementById('sidebar-keyword').value.trim() : '';
-    const selectedRoom = document.getElementById('sidebar-room') ? document.getElementById('sidebar-room').value : '';
-    const pminStr = document.getElementById('sidebar-pmin') ? document.getElementById('sidebar-pmin').value : '';
-    const pmaxStr = document.getElementById('sidebar-pmax') ? document.getElementById('sidebar-pmax').value : '';
-    
-    const pmin = pminStr ? parseInt(pminStr) : 0;
-    const pmax = pmaxStr ? parseInt(pmaxStr) : 999999999;
-    
-    const urlParams = new URLSearchParams(window.location.search);
-    const q = keyword || urlParams.get('q') || '';
-    const room = selectedRoom || urlParams.get('room') || '';
-    
-    const filtered = props.filter(p => {
-        const locLower = p.location.toLowerCase();
-        const titleLower = p.title.toLowerCase();
-        
-        if (loc && loc !== 'Tümü' && !locLower.includes(loc.toLowerCase())) return false;
-        
-        if (type && type !== 'Tümü') {
-            if (type === 'Daire' && !titleLower.includes('daire')) return false;
-            if (type === 'Villa' && !titleLower.includes('villa')) return false;
-        }
-        
-        if (p.price_eur < pmin || p.price_eur > pmax) return false;
-        
-        if (q && !titleLower.includes(q.toLowerCase()) && !locLower.includes(q.toLowerCase())) return false;
-        
-        if (room) {
-            let rNum = room.charAt(0);
-            if (p.rooms && !p.rooms.startsWith(rNum)) return false;
-        }
-        
-        return true;
+function listingControlValue(id) {
+  return document.getElementById(id)?.value?.trim() || '';
+}
+
+function readListingFilters() {
+  return {
+    q: listingControlValue('sidebar-keyword'),
+    loc: listingControlValue('sidebar-loc') === 'Tümü' ? '' : listingControlValue('sidebar-loc'),
+    category: listingControlValue('sidebar-type'),
+    market: listingControlValue('sidebar-market'),
+    room: listingControlValue('sidebar-room'),
+    min: listingControlValue('sidebar-pmin'),
+    max: listingControlValue('sidebar-pmax'),
+    areaMin: listingControlValue('sidebar-area-min'),
+    sort: listingControlValue('listing-sort'),
+  };
+}
+
+function listingQuery(filters) {
+  const params = new URLSearchParams();
+  ['q', 'loc', 'category', 'market', 'room', 'min', 'max', 'areaMin'].forEach(key => {
+    if (filters[key]) params.set(key, filters[key]);
+  });
+  if (filters.sort && !/önerilen|en yeniler/i.test(filters.sort)) params.set('sort', filters.sort);
+  return params;
+}
+
+function hydrateListingControls() {
+  const params = new URLSearchParams(window.location.search);
+  const legacyCategory = params.get('type') || '';
+  const values = {
+    'sidebar-keyword': params.get('q') || '',
+    'sidebar-loc': params.get('loc') || '',
+    'sidebar-type': params.get('category') || (/villa/i.test(legacyCategory) ? 'villa' : /daire|apartman/i.test(legacyCategory) ? 'apartment' : ''),
+    'sidebar-market': params.get('market') || '',
+    'sidebar-room': params.get('room') || '',
+    'sidebar-pmin': params.get('min') || '',
+    'sidebar-pmax': params.get('max') || '',
+    'sidebar-area-min': params.get('areaMin') || '',
+    'listing-sort': params.get('sort') || '',
+  };
+  Object.entries(values).forEach(([id, value]) => {
+    const control = document.getElementById(id);
+    if (!control || !value) return;
+    const option = control.tagName === 'SELECT'
+      ? [...control.options].find(item => item.value === value || item.textContent === value || item.value.toLocaleLowerCase('tr-TR').includes(value.toLocaleLowerCase('tr-TR')))
+      : null;
+    if (control.tagName !== 'SELECT') control.value = value;
+    else if (option) control.value = option.value;
+  });
+}
+
+function renderActiveListingFilters(filters, resultCount) {
+  const container = document.getElementById('active-filter-chips');
+  if (!container) return;
+  const labels = {
+    q: value => `“${value}”`,
+    loc: value => value,
+    category: value => propertyCategoryLabels[value] || value,
+    market: value => marketStatusLabels[value] || value,
+    room: value => value === '4' ? '4+ oda' : `${value}+1`,
+    min: value => `Min €${Number(value).toLocaleString('tr-TR')}`,
+    max: value => `Maks €${Number(value).toLocaleString('tr-TR')}`,
+    areaMin: value => `Min ${value} m²`,
+  };
+  const active = Object.entries(labels).filter(([key]) => filters[key]);
+  container.innerHTML = active.length
+    ? `<span class="filter-result-summary">${resultCount} sonuç</span>${active.map(([key, formatter]) => `<button type="button" data-clear-filter="${key}">${escapeHTML(formatter(filters[key]))} <i class="fa-solid fa-xmark"></i></button>`).join('')}<button type="button" class="clear-all-filters" data-clear-filter="all">Tümünü temizle</button>`
+    : `<span class="filter-result-summary">${resultCount} güncel portföy</span><span class="filter-empty-note">Filtre seçerek kısa listenizi daraltın.</span>`;
+}
+
+function clearListingFilter(key) {
+  const controlIds = {
+    q: 'sidebar-keyword', loc: 'sidebar-loc', category: 'sidebar-type', market: 'sidebar-market',
+    room: 'sidebar-room', min: 'sidebar-pmin', max: 'sidebar-pmax', areaMin: 'sidebar-area-min',
+  };
+  if (key === 'all') Object.values(controlIds).forEach(id => {
+    const control = document.getElementById(id);
+    if (control) control.value = id === 'sidebar-loc' ? 'Tümü' : '';
+  });
+  else {
+    const control = document.getElementById(controlIds[key]);
+    if (control) control.value = key === 'loc' ? 'Tümü' : '';
+  }
+  applySidebarFilters(window.currentAllListingProperties || []);
+}
+
+function applySidebarFilters(props, options = {}) {
+    const filters = readListingFilters();
+    const q = filters.q.toLocaleLowerCase('tr-TR');
+    const minimumPrice = Number(filters.min || 0);
+    const maximumPrice = Number(filters.max || Number.MAX_SAFE_INTEGER);
+    const minimumArea = Number(filters.areaMin || 0);
+
+    const filtered = props.filter(property => {
+      const haystack = `${property.id} ${property.title} ${property.location} ${property.desc} ${(property.features || []).join(' ')}`.toLocaleLowerCase('tr-TR');
+      const roomCount = Number.parseInt(String(property.rooms || ''), 10);
+      return (!filters.loc || String(property.location).toLocaleLowerCase('tr-TR').includes(filters.loc.toLocaleLowerCase('tr-TR')))
+        && (!filters.category || property.category === filters.category)
+        && (!filters.market || property.market_status === filters.market)
+        && (!q || haystack.includes(q))
+        && (!filters.room || (filters.room === '4' ? roomCount >= 4 : roomCount === Number(filters.room)))
+        && property.price_eur >= minimumPrice
+        && property.price_eur <= maximumPrice
+        && metricNumber(property.area_net) >= minimumArea;
     });
-    
-    const sortSelect = document.querySelector('.sort-bar select');
-    if (sortSelect) {
-        const sortVal = sortSelect.value.toLowerCase();
-        if (sortVal.includes('düşük') || sortVal.includes('artan') || sortVal.includes('lowest') || sortVal.includes('croissant') || sortVal.includes('laagste') || sortVal.includes('lägst') || sortVal.includes('дешевые')) {
-            filtered.sort((a, b) => a.price_eur - b.price_eur);
-        } else if (sortVal.includes('yüksek') || sortVal.includes('azalan') || sortVal.includes('highest') || sortVal.includes('décroissant') || sortVal.includes('hoogste') || sortVal.includes('högst') || sortVal.includes('дорогие')) {
-            filtered.sort((a, b) => b.price_eur - a.price_eur);
-        } else {
-            // Newest first or Recommended
-            filtered.sort((a, b) => parseInt(b.id.replace(/\D/g, '') || 0) - parseInt(a.id.replace(/\D/g, '') || 0));
-        }
+
+    if (!options.skipHistory) {
+      const query = listingQuery(filters).toString();
+      window.history.replaceState({}, document.title, `${window.location.pathname}${query ? `?${query}` : ''}`);
     }
-    
     window.listingVisibleCount = 24;
+    window.currentFilteredListingProperties = filtered;
     renderProperties(filtered);
+    renderActiveListingFilters(filters, filtered.length);
 }
 
 // --- Mega Menu Logic ---

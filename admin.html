@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-  <link rel="stylesheet" href="admin.css?v=2026072808" />
+  <link rel="stylesheet" href="admin.css?v=2026072809" />
 </head>
 <body class="admin-page">
   <aside class="admin-sidebar">
@@ -192,6 +192,8 @@
         <label>İlan kodu<input name="id" required maxlength="80" placeholder="JG-S201" /></label>
         <label>Durum<select name="status"><option value="draft">Taslak</option><option value="published">Yayında</option><option value="sold">Satıldı</option><option value="rented">Kiralandı</option></select></label>
         <label>İşlem tipi<select name="type"><option value="sale">Satılık</option><option value="rent">Kiralık</option></select></label>
+        <label>Gayrimenkul kategorisi<select name="category"><option value="">Belirtilmedi</option><option value="apartment">Daire</option><option value="villa">Villa</option><option value="land">Arsa</option><option value="commercial">Ticari</option></select></label>
+        <label>Piyasa durumu<select name="market_status"><option value="">Belirtilmedi</option><option value="new">Yeni yapı</option><option value="resale">İkinci el</option><option value="under_construction">İnşaat halinde</option></select></label>
         <label>Fiyat (€)<input name="price_eur" type="number" min="1" step="1" required /></label>
         <label class="form-span-2">Başlık<input name="title" required maxlength="180" /></label>
         <label class="form-span-2">Konum<input name="location" required maxlength="180" placeholder="Antalya / Alanya / Oba" /></label>
@@ -199,6 +201,12 @@
         <label>Banyo<input name="bathrooms" maxlength="30" placeholder="2" /></label>
         <label>Net alan<input name="area_net" maxlength="30" placeholder="110 m²" /></label>
         <label>Brüt alan<input name="area_gross" maxlength="30" placeholder="125 m²" /></label>
+        <label>Bulunduğu kat<input name="floor" maxlength="30" placeholder="5. kat" /></label>
+        <label>Yapım yılı<input name="year_built" type="number" min="1800" max="2100" step="1" /></label>
+        <label>Eşya durumu<select name="furnished_status"><option value="">Belirtilmedi</option><option value="furnished">Eşyalı</option><option value="unfurnished">Eşyasız</option><option value="optional">Opsiyonel</option></select></label>
+        <label>Isıtma<input name="heating" maxlength="80" placeholder="Klima / yerden ısıtma" /></label>
+        <label>Denize mesafe (m)<input name="distance_sea_m" type="number" min="0" max="100000" step="1" /></label>
+        <label>Havalimanına mesafe (km)<input name="distance_airport_km" type="number" min="0" max="10000" step="0.1" /></label>
         <label class="form-span-2">Açıklama<textarea name="description" rows="7" maxlength="12000"></textarea></label>
         <label class="form-span-2">Özellikler<textarea name="features" rows="3" placeholder="Her satıra bir özellik"></textarea></label>
         <label class="form-span-2">Görsel bağlantıları<textarea name="images" rows="4" placeholder="Her satıra bir Supabase Storage bağlantısı"></textarea></label>
@@ -209,6 +217,6 @@
     </form>
   </dialog>
 
-  <script src="admin.js?v=2026072808" defer></script>
+  <script src="admin.js?v=2026072809" defer></script>
 </body>
 </html>

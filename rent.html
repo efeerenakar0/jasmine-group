@@ -14,7 +14,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css?v=2026072808" />
+  <link rel="stylesheet" href="style.css?v=2026072809" />
   <link rel="icon" type="image/jpeg" href="images/favicon.jpg">
 
   <meta property="og:title" content="Jasmine Group - Alanya Emlak Proje Pazarlama" />
@@ -109,8 +109,24 @@
             <select id="sidebar-loc" class="filter-loc-select"><option>Tümü</option></select>
           </div>
           <div class="filter-group">
+            <label for="sidebar-type">EMLAK TİPİ</label>
+            <select id="sidebar-type"><option value="">Tümü</option><option value="apartment">Daire</option><option value="villa">Villa</option><option value="land">Arsa</option><option value="commercial">Ticari</option></select>
+          </div>
+          <div class="filter-group">
+            <label for="sidebar-market">PORTFÖY DURUMU</label>
+            <select id="sidebar-market"><option value="">Tümü</option><option value="new">Yeni yapı</option><option value="resale">İkinci el</option><option value="under_construction">İnşaat halinde</option></select>
+          </div>
+          <div class="filter-group">
             <label for="sidebar-room">ODA SAYISI</label>
             <select id="sidebar-room"><option value="">Tümü</option><option value="1">1+1</option><option value="2">2+1</option><option value="3">3+1</option><option value="4">4+ oda</option></select>
+          </div>
+          <div class="filter-group">
+            <label>FİYAT ARALIĞI (€)</label>
+            <div style="display:flex;gap:10px"><input type="number" id="sidebar-pmin" placeholder="Min" /><input type="number" id="sidebar-pmax" placeholder="Max" /></div>
+          </div>
+          <div class="filter-group">
+            <label for="sidebar-area-min">MİNİMUM NET ALAN (m²)</label>
+            <input type="number" id="sidebar-area-min" min="0" max="100000" step="1" placeholder="Örn. 90" />
           </div>
           <button id="btn-sidebar-apply" class="btn-filter-search">UYGULA</button>
           <button id="btn-sidebar-reset" class="btn-filter-reset">TEMİZLE</button>
@@ -121,6 +137,10 @@
           <div class="sort-bar">
             <div><p class="section-kicker">GÜNCEL PORTFÖY</p><strong id="listing-count">0 portföy</strong></div>
             <select id="listing-sort" aria-label="İlan sıralaması"><option>En Yeniler</option><option>Fiyat Artan</option><option>Fiyat Azalan</option></select>
+          </div>
+          <div class="listing-discovery-tools">
+            <div id="active-filter-chips" class="active-filter-chips" aria-live="polite"></div>
+            <div class="listing-discovery-actions"><button id="save-search-button" type="button"><i class="fa-regular fa-bookmark"></i> Aramayı kaydet</button><button id="share-search-button" type="button"><i class="fa-solid fa-share-nodes"></i> Aramayı paylaş</button></div>
           </div>
           <div class="property-list listing-grid" id="prop-list"></div>
           <button id="load-more-properties" class="load-more-properties" type="button" onclick="showMoreProperties()" hidden>DAHA FAZLA PORTFÖY GÖSTER</button>
@@ -207,7 +227,7 @@
 
   <!-- Swiper JS -->
   <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
-  <script src="script.js?v=2026072808"></script>
+  <script src="script.js?v=2026072809"></script>
 
 <!-- MEGA MENU MODAL -->
 <div id="megaMenuOverlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:9998;" onclick="closeMegaMenu()"></div>

@@ -11,16 +11,33 @@ if (!url || !key) {
 }
 
 const source = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'admin', 'data.json'), 'utf8'));
+function categoryFor(property) {
+  if (['apartment', 'villa', 'land', 'commercial'].includes(property.category)) return property.category;
+  const title = String(property.title || '').toLocaleLowerCase('tr-TR');
+  if (title.includes('villa')) return 'villa';
+  if (title.includes('arsa')) return 'land';
+  if (title.includes('ticari') || title.includes('dükkan') || title.includes('ofis')) return 'commercial';
+  return 'apartment';
+}
+
 const properties = (source.properties || []).map(property => ({
   id: property.id,
   type: property.type === 'rent' ? 'rent' : 'sale',
   status: 'published',
+  category: categoryFor(property),
+  market_status: ['new', 'resale', 'under_construction'].includes(property.market_status) ? property.market_status : null,
   title: property.title,
   location: property.location,
   rooms: property.rooms || null,
   bathrooms: property.bathrooms || null,
   area_net: property.area_net || null,
   area_gross: property.area_gross || null,
+  floor: property.floor || null,
+  year_built: property.year_built || null,
+  furnished_status: ['furnished', 'unfurnished', 'optional'].includes(property.furnished_status) ? property.furnished_status : null,
+  heating: property.heating || null,
+  distance_sea_m: property.distance_sea_m ?? null,
+  distance_airport_km: property.distance_airport_km ?? null,
   price_eur: Number(property.price_eur || 0),
   description: String(property.desc || '').trim(),
   badge: property.badge || null,

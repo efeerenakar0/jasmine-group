@@ -86,11 +86,22 @@ karsi korumali uretilir.
    birakmayin.
 5. Gercek ekip bilgileri ve izinli musteri yorumlari hazir olana kadar
    rol-temelli ekip yapisi ile yorum dogrulama politikasi kullanilir.
+6. Kategori, yeni/ikinci el durumu, kat, yapim yili, esya, isitma ve mesafe
+   alanlarini yalnizca portfoy sahibi veya dogrulanabilir portfoy belgesine
+   dayanarak doldurun. Bilinmeyen alanlari tahmin etmeyin; bos birakilan
+   alanlar ilan detayinda gosterilmez.
 
 Harici ilan sitelerinden fotograflar veya metinler kopyalanmamalidir. Medya
 dosyalari Supabase Storage'daki `property-media` bucket'ina yuklenir.
 Admin panelindeki Medya Kalitesi ekrani hem harici baglantilari hem de
 gorselsiz ilanlari tek kuyrukta gosterir.
+
+Listeleme filtreleri Turkce ve Ingilizce sayfalarda ayni URL parametrelerini
+(`q`, `loc`, `category`, `market`, `room`, `min`, `max`, `areaMin`) kullanir.
+Bu adresler kisa liste paylasimi icindir; canonical adresler filtre
+kopyalarini ayri SEO sayfalari gibi indeksletmez. Admin formuna yeni portfoy
+alanlari eklenmeden once guncel `supabase/schema.sql` mutlaka
+calistirilmalidir.
 
 ## 5. Analitik ve reklam
 

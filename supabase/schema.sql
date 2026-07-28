@@ -29,12 +29,20 @@ create table if not exists public.properties (
   updated_at timestamptz not null default now(),
   type text not null default 'sale',
   status text not null default 'draft',
+  category text,
+  market_status text,
   title text not null,
   location text not null,
   rooms text,
   bathrooms text,
   area_net text,
   area_gross text,
+  floor text,
+  year_built integer,
+  furnished_status text,
+  heating text,
+  distance_sea_m integer,
+  distance_airport_km numeric,
   price_eur numeric not null,
   description text,
   badge text,
@@ -42,11 +50,38 @@ create table if not exists public.properties (
   images jsonb not null default '[]'::jsonb,
   features jsonb not null default '[]'::jsonb,
   constraint properties_type_check check (type in ('sale', 'rent')),
-  constraint properties_status_check check (status in ('published', 'draft', 'sold', 'rented'))
+  constraint properties_status_check check (status in ('published', 'draft', 'sold', 'rented')),
+  constraint properties_category_check check (category is null or category in ('apartment', 'villa', 'land', 'commercial')),
+  constraint properties_market_status_check check (market_status is null or market_status in ('new', 'resale', 'under_construction')),
+  constraint properties_furnished_check check (furnished_status is null or furnished_status in ('furnished', 'unfurnished', 'optional'))
 );
+
+alter table public.properties add column if not exists category text;
+alter table public.properties add column if not exists market_status text;
+alter table public.properties add column if not exists floor text;
+alter table public.properties add column if not exists year_built integer;
+alter table public.properties add column if not exists furnished_status text;
+alter table public.properties add column if not exists heating text;
+alter table public.properties add column if not exists distance_sea_m integer;
+alter table public.properties add column if not exists distance_airport_km numeric;
+
+do $$
+begin
+  if not exists (select 1 from pg_constraint where conname = 'properties_category_check') then
+    alter table public.properties add constraint properties_category_check check (category is null or category in ('apartment', 'villa', 'land', 'commercial'));
+  end if;
+  if not exists (select 1 from pg_constraint where conname = 'properties_market_status_check') then
+    alter table public.properties add constraint properties_market_status_check check (market_status is null or market_status in ('new', 'resale', 'under_construction'));
+  end if;
+  if not exists (select 1 from pg_constraint where conname = 'properties_furnished_check') then
+    alter table public.properties add constraint properties_furnished_check check (furnished_status is null or furnished_status in ('furnished', 'unfurnished', 'optional'));
+  end if;
+end
+$$;
 
 create index if not exists properties_status_type_idx on public.properties (status, type);
 create index if not exists properties_location_idx on public.properties (location);
+create index if not exists properties_category_idx on public.properties (category);
 create index if not exists leads_status_created_idx on public.leads (status, created_at desc);
 
 alter table public.properties enable row level security;

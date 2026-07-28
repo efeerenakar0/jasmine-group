@@ -5,6 +5,7 @@
     new: 'Yeni', contacted: 'İletişim kuruldu', qualified: 'Nitelikli',
     viewing: 'Gösterim', won: 'Kazanıldı', lost: 'Kaybedildi',
   };
+  const categoryLabels = { apartment: 'Daire', villa: 'Villa', land: 'Arsa', commercial: 'Ticari' };
 
   const escapeHTML = value => String(value ?? '').replace(/[&<>"']/g, character => ({
     '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;',
@@ -94,7 +95,7 @@
       return `<tr>
         <td><strong>${escapeHTML(property.title)}</strong><small>${escapeHTML(property.id)}</small></td>
         <td>${escapeHTML(property.location)}</td>
-        <td>${property.type === 'rent' ? 'Kiralık' : 'Satılık'}</td>
+        <td><strong>${escapeHTML(categoryLabels[property.category] || 'Belirtilmedi')}</strong><small>${property.type === 'rent' ? 'Kiralık' : 'Satılık'}</small></td>
         <td><span class="status-pill ${escapeHTML(property.status || 'published')}">${escapeHTML(statusLabels[property.status] || 'Yayında')}</span></td>
         <td>€ ${Number(property.price_eur || 0).toLocaleString('tr-TR')}</td>
         <td>${(property.images || []).length} görsel${external ? ` · <strong>${external} harici</strong>` : ''}</td>

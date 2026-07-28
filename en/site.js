@@ -41,12 +41,27 @@
   }
 
   function propertyKind(property) {
+    const categories = { apartment: 'Apartment', villa: 'Villa', land: 'Land', commercial: 'Commercial Property' };
+    if (categories[property.category]) return categories[property.category];
     const source = String(property.title || '').toLocaleLowerCase('tr-TR');
     if (source.includes('villa')) return 'Villa';
     if (source.includes('penthouse')) return 'Penthouse';
     if (source.includes('arsa')) return 'Land';
     if (source.includes('ticari') || source.includes('dükkan') || source.includes('ofis')) return 'Commercial Property';
     return 'Apartment';
+  }
+
+  function propertyCategory(property) {
+    const kind = propertyKind(property);
+    if (kind === 'Villa') return 'villa';
+    if (kind === 'Land') return 'land';
+    if (kind === 'Commercial Property') return 'commercial';
+    return 'apartment';
+  }
+
+  function metricNumber(value) {
+    const match = String(value || '').replace(',', '.').match(/\d+(?:\.\d+)?/);
+    return match ? Number(match[0]) : 0;
   }
 
   function englishPropertyTitle(property) {
@@ -222,6 +237,69 @@
     }
   }
 
+  function englishFilterValues() {
+    const value = id => document.getElementById(id)?.value?.trim() || '';
+    return {
+      q: value('en-search'),
+      loc: value('en-location'),
+      category: value('en-category'),
+      market: value('en-market'),
+      room: value('en-rooms'),
+      min: value('en-price-min'),
+      max: value('en-price-max'),
+      areaMin: value('en-area-min'),
+      sort: value('en-sort'),
+    };
+  }
+
+  function englishFilterQuery(filters) {
+    const params = new URLSearchParams();
+    ['q', 'loc', 'category', 'market', 'room', 'min', 'max', 'areaMin'].forEach(key => {
+      if (filters[key]) params.set(key, filters[key]);
+    });
+    if (filters.sort && filters.sort !== 'newest') params.set('sort', filters.sort);
+    return params;
+  }
+
+  function renderEnglishFilterChips(filters, resultCount) {
+    const container = document.getElementById('en-active-filter-chips');
+    if (!container) return;
+    const categoryLabels = { apartment: 'Apartment', villa: 'Villa', land: 'Land', commercial: 'Commercial' };
+    const marketLabels = { new: 'New build', resale: 'Resale', under_construction: 'Under construction' };
+    const labels = {
+      q: value => `“${value}”`,
+      loc: value => value,
+      category: value => categoryLabels[value] || value,
+      market: value => marketLabels[value] || value,
+      room: value => value === '4' ? '4+ rooms' : `${value}+ rooms`,
+      min: value => `Min €${Number(value).toLocaleString('en-GB')}`,
+      max: value => `Max €${Number(value).toLocaleString('en-GB')}`,
+      areaMin: value => `Min ${value} m²`,
+    };
+    const active = Object.entries(labels).filter(([key]) => filters[key]);
+    container.innerHTML = active.length
+      ? `<span class="filter-result-summary">${resultCount} results</span>${active.map(([key, formatter]) => `<button type="button" data-en-clear-filter="${key}">${escapeHTML(formatter(filters[key]))} <i class="fa-solid fa-xmark"></i></button>`).join('')}`
+      : `<span class="filter-result-summary">${resultCount} current properties</span><span class="filter-empty-note">Add filters to focus your shortlist.</span>`;
+  }
+
+  function hydrateEnglishFilters() {
+    const params = new URLSearchParams(window.location.search);
+    const ids = {
+      q: 'en-search', category: 'en-category', market: 'en-market', room: 'en-rooms',
+      min: 'en-price-min', max: 'en-price-max', areaMin: 'en-area-min', sort: 'en-sort',
+    };
+    Object.entries(ids).forEach(([key, id]) => {
+      const control = document.getElementById(id);
+      if (control && params.get(key)) control.value = params.get(key);
+    });
+    const requestedLocation = params.get('loc');
+    const locationControl = document.getElementById('en-location');
+    if (requestedLocation && locationControl) {
+      const match = [...locationControl.options].find(option => option.value.toLowerCase().includes(requestedLocation.toLowerCase()));
+      if (match) locationControl.value = match.value;
+    }
+  }
+
   async function loadProperties() {
     const grid = document.getElementById('en-property-grid');
     if (!grid) return;
@@ -233,11 +311,7 @@
       const locations = [...new Set(window.enProperties.map(item => String(item.location || '').split('/').slice(-1)[0].trim()).filter(Boolean))].sort();
       const select = document.getElementById('en-location');
       locations.forEach(location => select?.insertAdjacentHTML('beforeend', `<option value="${escapeHTML(location)}">${escapeHTML(location)}</option>`));
-      const requestedLocation = new URLSearchParams(window.location.search).get('loc');
-      if (requestedLocation && select) {
-        const match = [...select.options].find(option => option.value.toLowerCase().includes(requestedLocation.toLowerCase()));
-        if (match) select.value = match.value;
-      }
+      hydrateEnglishFilters();
       renderProperties();
     } catch {
       grid.innerHTML = '<article class="listing-empty-state"><h3>Property data is temporarily unavailable.</h3><p>Please contact our team for a personal shortlist.</p><a href="contact.html">Contact an advisor</a></article>';
@@ -264,20 +338,31 @@
   }
 
   function renderProperties() {
-    const query = document.getElementById('en-search').value.toLowerCase();
-    const location = document.getElementById('en-location').value.toLowerCase();
-    const rooms = document.getElementById('en-rooms').value;
-    const sort = document.getElementById('en-sort').value;
+    const filters = englishFilterValues();
+    const query = filters.q.toLowerCase();
+    const location = filters.loc.toLowerCase();
+    const minimumPrice = Number(filters.min || 0);
+    const maximumPrice = Number(filters.max || Number.MAX_SAFE_INTEGER);
+    const minimumArea = Number(filters.areaMin || 0);
     const properties = (window.enProperties || []).filter(item => {
-      const haystack = `${item.title} ${item.location} ${item.description || item.desc || ''}`.toLowerCase();
+      const haystack = `${item.id} ${item.title} ${item.location} ${item.description || item.desc || ''} ${(item.features || []).join(' ')}`.toLowerCase();
+      const roomCount = Number.parseInt(String(item.rooms || ''), 10);
       return (!query || haystack.includes(query))
         && (!location || String(item.location).toLowerCase().includes(location))
-        && (!rooms || String(item.rooms || '').startsWith(rooms));
+        && (!filters.category || propertyCategory(item) === filters.category)
+        && (!filters.market || item.market_status === filters.market)
+        && (!filters.room || (filters.room === '4' ? roomCount >= 4 : roomCount === Number(filters.room)))
+        && Number(item.price_eur || 0) >= minimumPrice
+        && Number(item.price_eur || 0) <= maximumPrice
+        && metricNumber(item.area_net) >= minimumArea;
     });
-    if (sort === 'price-asc') properties.sort((a, b) => Number(a.price_eur) - Number(b.price_eur));
-    if (sort === 'price-desc') properties.sort((a, b) => Number(b.price_eur) - Number(a.price_eur));
+    if (filters.sort === 'price-asc') properties.sort((a, b) => Number(a.price_eur) - Number(b.price_eur));
+    if (filters.sort === 'price-desc') properties.sort((a, b) => Number(b.price_eur) - Number(a.price_eur));
 
     document.getElementById('en-count').textContent = `${properties.length} properties`;
+    const filterQuery = englishFilterQuery(filters).toString();
+    window.history.replaceState({}, document.title, `${window.location.pathname}${filterQuery ? `?${filterQuery}` : ''}`);
+    renderEnglishFilterChips(filters, properties.length);
     document.getElementById('en-property-grid').innerHTML = properties.slice(0, 60).map(property => {
       const approvedImage = (property.images || []).find(trustedImage);
       const image = displayImage(approvedImage);
@@ -287,7 +372,7 @@
       const title = englishPropertyTitle(property);
       return `<article class="property-item property-card-v2">
         <div class="property-card-media"><img src="${escapeHTML(image)}" alt="${escapeHTML(title)}" loading="lazy">${approvedImage ? '' : '<span class="media-pending-badge"><i class="fa-solid fa-camera"></i> Verified photos on request</span>'}</div>
-        <div class="property-card-content"><div class="property-card-eyebrow">${isRental ? 'FOR RENT' : 'FOR SALE'} · ${escapeHTML(locationName)}</div><h2 class="prop-title">${escapeHTML(title)}</h2><div class="prop-location">${escapeHTML(englishLocation(property.location))}</div><div class="prop-rooms"><span>${escapeHTML(property.rooms || '-')} rooms</span><span>${escapeHTML(property.area_net || '-')}</span></div><div class="prop-footer"><div><small>${isRental ? 'Monthly price' : 'Price'}</small><div class="prop-price">€ ${Number(property.price_eur || 0).toLocaleString('en-GB')}${isRental ? ' / month' : ''}</div></div><div class="en-card-actions"><a class="prop-btn" href="property-detail.html?id=${encodeURIComponent(property.id)}">VIEW</a><a class="prop-btn primary" href="https://wa.me/905330850769?text=${message}">ENQUIRE</a></div></div><p class="property-card-verification"><i class="fa-solid fa-circle-check"></i> Price and availability are subject to advisor confirmation.</p></div>
+        <div class="property-card-content"><div class="property-card-eyebrow">${isRental ? 'FOR RENT' : 'FOR SALE'} · ${escapeHTML(propertyKind(property).toUpperCase())} · ${escapeHTML(locationName)}</div><h2 class="prop-title">${escapeHTML(title)}</h2><div class="prop-location">${escapeHTML(englishLocation(property.location))}</div><div class="prop-rooms"><span>${escapeHTML(property.rooms || '-')} rooms</span><span>${escapeHTML(property.area_net || '-')}</span>${property.market_status ? `<span>${escapeHTML({ new: 'New build', resale: 'Resale', under_construction: 'Under construction' }[property.market_status] || property.market_status)}</span>` : ''}</div><div class="prop-footer"><div><small>${isRental ? 'Monthly price' : 'Price'}</small><div class="prop-price">€ ${Number(property.price_eur || 0).toLocaleString('en-GB')}${isRental ? ' / month' : ''}</div></div><div class="en-card-actions"><a class="prop-btn" href="property-detail.html?id=${encodeURIComponent(property.id)}">VIEW</a><a class="prop-btn primary" href="https://wa.me/905330850769?text=${message}">ENQUIRE</a></div></div><p class="property-card-verification"><i class="fa-solid fa-circle-check"></i> Price and availability are subject to advisor confirmation.</p></div>
       </article>`;
     }).join('') || '<article class="listing-empty-state"><h3>No matching property found.</h3><a href="contact.html">Request a personal shortlist</a></article>';
   }
@@ -327,6 +412,16 @@
 
       const schema = document.createElement('script');
       schema.type = 'application/ld+json';
+      const schemaProperties = [
+        ['Property type', propertyKind(property)],
+        ['Portfolio status', { new: 'New build', resale: 'Resale', under_construction: 'Under construction' }[property.market_status]],
+        ['Floor', property.floor],
+        ['Year built', property.year_built],
+        ['Heating', property.heating],
+        ['Distance to sea', property.distance_sea_m !== null && property.distance_sea_m !== undefined ? `${property.distance_sea_m} m` : null],
+        ['Distance to airport', property.distance_airport_km !== null && property.distance_airport_km !== undefined ? `${property.distance_airport_km} km` : null],
+      ].filter(([, value]) => value !== null && value !== undefined && value !== '')
+        .map(([name, value]) => ({ '@type': 'PropertyValue', name, value }));
       schema.textContent = JSON.stringify({
         '@context': 'https://schema.org',
         '@type': 'RealEstateListing',
@@ -336,11 +431,39 @@
         image: approvedImages.map(item => new URL(item, location.href).href),
         offers: { '@type': 'Offer', price: Number(property.price_eur || 0), priceCurrency: 'EUR', availability: 'https://schema.org/InStock' },
         address: { '@type': 'PostalAddress', addressLocality: englishLocation(property.location), addressRegion: 'Antalya', addressCountry: 'TR' },
+        floorSize: property.area_net ? { '@type': 'QuantitativeValue', value: metricNumber(property.area_net), unitCode: 'MTK' } : undefined,
+        additionalProperty: schemaProperties.length ? schemaProperties : undefined,
       });
       document.head.appendChild(schema);
 
       const message = encodeURIComponent(`Hello, I would like verified information about property ${property.id}.`);
+      const marketLabels = { new: 'New build', resale: 'Resale', under_construction: 'Under construction' };
+      const furnishedLabels = { furnished: 'Furnished', unfurnished: 'Unfurnished', optional: 'Optional' };
+      const facts = [
+        ['Property type', propertyKind(property)],
+        ['Rooms', property.rooms || '-'],
+        ['Bathrooms', englishBathrooms(property.bathrooms)],
+        ['Net area', property.area_net || '-'],
+        ['Gross area', property.area_gross || '-'],
+        ['Portfolio status', marketLabels[property.market_status]],
+        ['Floor', property.floor],
+        ['Year built', property.year_built],
+        ['Furnishing', furnishedLabels[property.furnished_status]],
+        ['Heating', property.heating],
+        ['Reference', property.id],
+      ].filter(([, value]) => value !== null && value !== undefined && value !== '');
+      const featureSection = Array.isArray(property.features) && property.features.length
+        ? `<section class="detail-feature-box"><div class="detail-specs-title"><i class="fa-solid fa-star"></i> Property features</div><div class="detail-feature-grid">${property.features.map(feature => `<span><i class="fa-solid fa-check"></i>${escapeHTML(feature)}</span>`).join('')}</div></section>`
+        : '';
+      const distanceFacts = [
+        property.distance_sea_m !== null && property.distance_sea_m !== undefined && property.distance_sea_m !== '' ? ['Sea', `${Number(property.distance_sea_m).toLocaleString('en-GB')} m`] : null,
+        property.distance_airport_km !== null && property.distance_airport_km !== undefined && property.distance_airport_km !== '' ? ['Airport', `${Number(property.distance_airport_km).toLocaleString('en-GB')} km`] : null,
+      ].filter(Boolean);
+      const distanceSection = distanceFacts.length
+        ? `<section class="detail-distance-box"><div class="detail-specs-title"><i class="fa-solid fa-location-crosshairs"></i> Location distances</div><div class="detail-distance-grid">${distanceFacts.map(([label, value]) => `<div><span>${escapeHTML(label)}</span><strong>${escapeHTML(value)}</strong></div>`).join('')}</div><p>Distances come from the property record and remain subject to route and advisor confirmation.</p></section>`
+        : '';
       window.__jasminePropertyContext = {
+        property_id: property.id,
         item_id: property.id,
         item_name: title,
         item_category: property.type,
@@ -352,11 +475,11 @@
       container.innerHTML = `<div class="en-detail-layout">
         <div class="en-detail-media"><img src="${escapeHTML(image)}" alt="${escapeHTML(title)}">${approvedImages.length ? '' : '<span class="media-pending-badge"><i class="fa-solid fa-camera"></i> Verified property photos on request</span>'}</div>
         <article class="en-detail-summary"><p class="section-kicker">${isRental ? 'FOR RENT' : 'FOR SALE'} · ${escapeHTML(property.id)}</p><h2>${escapeHTML(title)}</h2><p class="prop-location"><i class="fa-solid fa-location-dot"></i> ${escapeHTML(englishLocation(property.location))}</p><strong class="en-detail-price">€ ${Number(property.price_eur || 0).toLocaleString('en-GB')}${isRental ? ' / month' : ''}</strong>
-          <div class="en-detail-facts"><span><small>Rooms</small>${escapeHTML(property.rooms || '-')}</span><span><small>Bathrooms</small>${escapeHTML(englishBathrooms(property.bathrooms))}</span><span><small>Net area</small>${escapeHTML(property.area_net || '-')}</span><span><small>Reference</small>${escapeHTML(property.id)}</span></div>
+          <div class="en-detail-facts">${facts.map(([label, value]) => `<span><small>${escapeHTML(label)}</small>${escapeHTML(value)}</span>`).join('')}</div>
           <p>${escapeHTML(description)}</p><div class="property-card-verification"><i class="fa-solid fa-circle-check"></i> Price, availability, media and property-specific documents are subject to advisor confirmation.</div>
           <div class="en-hero-actions"><a href="https://wa.me/905330850769?text=${message}">Ask on WhatsApp</a><a href="contact.html?property=${encodeURIComponent(property.id)}">Request a consultation</a></div>
         </article>
-      </div><section class="proof-standard"><div><p class="section-kicker">BEFORE YOU DECIDE</p><h2>Request the current property file.</h2></div><p>Ask for confirmed availability, approved media and the property-specific information required by your independent legal and technical professionals.</p></section>`;
+      </div>${featureSection}${distanceSection}<section class="proof-standard"><div><p class="section-kicker">BEFORE YOU DECIDE</p><h2>Request the current property file.</h2></div><p>Ask for confirmed availability, approved media and the property-specific information required by your independent legal and technical professionals.</p></section>`;
     } catch {
       document.getElementById('en-detail-heading').textContent = 'Property not found';
       container.innerHTML = '<article class="listing-empty-state"><h2>This property is no longer available in the public collection.</h2><p>Request a current shortlist with similar options.</p><a href="buy.html">Browse current properties</a></article>';
@@ -393,6 +516,14 @@
     overlay.addEventListener('click', () => setOpen(false));
   }
 
+  function preserveLanguageQuery() {
+    const page = window.location.pathname.split('/').pop();
+    if (!['buy.html', 'rent.html', 'property-detail.html', 'contact.html'].includes(page)) return;
+    document.querySelectorAll(`a[href="../${page}"]`).forEach(link => {
+      link.href = `../${page}${window.location.search}`;
+    });
+  }
+
   async function submitLead(event) {
     event.preventDefault();
     const form = event.currentTarget;
@@ -427,8 +558,41 @@
 
   document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('[data-en-lead]').forEach(form => form.addEventListener('submit', submitLead));
-    ['en-search', 'en-location', 'en-rooms', 'en-sort'].forEach(id => document.getElementById(id)?.addEventListener('input', renderProperties));
+    ['en-search', 'en-location', 'en-category', 'en-market', 'en-rooms', 'en-price-min', 'en-price-max', 'en-area-min', 'en-sort']
+      .forEach(id => document.getElementById(id)?.addEventListener('input', renderProperties));
+    document.getElementById('en-active-filter-chips')?.addEventListener('click', event => {
+      const button = event.target.closest('[data-en-clear-filter]');
+      if (!button) return;
+      const ids = {
+        q: 'en-search', loc: 'en-location', category: 'en-category', market: 'en-market',
+        room: 'en-rooms', min: 'en-price-min', max: 'en-price-max', areaMin: 'en-area-min',
+      };
+      const control = document.getElementById(ids[button.dataset.enClearFilter]);
+      if (control) control.value = '';
+      renderProperties();
+    });
+    document.getElementById('en-filter-reset')?.addEventListener('click', () => {
+      ['en-search', 'en-location', 'en-category', 'en-market', 'en-rooms', 'en-price-min', 'en-price-max', 'en-area-min']
+        .forEach(id => { const control = document.getElementById(id); if (control) control.value = ''; });
+      const sort = document.getElementById('en-sort');
+      if (sort) sort.value = 'newest';
+      renderProperties();
+    });
+    document.getElementById('en-save-search')?.addEventListener('click', event => {
+      localStorage.setItem('jg_saved_search', JSON.stringify({ path: window.location.pathname, query: englishFilterQuery(englishFilterValues()).toString(), savedAt: new Date().toISOString() }));
+      event.currentTarget.innerHTML = '<i class="fa-solid fa-bookmark"></i> Search saved';
+    });
+    document.getElementById('en-share-search')?.addEventListener('click', async event => {
+      try {
+        if (navigator.share) await navigator.share({ title: document.title, url: window.location.href });
+        else await navigator.clipboard.writeText(window.location.href);
+        event.currentTarget.innerHTML = '<i class="fa-solid fa-check"></i> Link ready';
+      } catch {
+        event.currentTarget.innerHTML = '<i class="fa-solid fa-link"></i> Copy from address bar';
+      }
+    });
     initMobileNavigation();
+    preserveLanguageQuery();
     document.addEventListener('click', event => {
       const link = event.target.closest('a[href*="wa.me"]');
       if (link) trackEvent('contact_whatsapp', {

@@ -11,22 +11,43 @@ function normalize(value) {
   return String(value || '').toLocaleLowerCase('tr-TR');
 }
 
+function propertyCategory(property) {
+  if (['apartment', 'villa', 'land', 'commercial'].includes(property.category)) return property.category;
+  const title = normalize(property.title);
+  if (title.includes('villa')) return 'villa';
+  if (title.includes('arsa')) return 'land';
+  if (title.includes('ticari') || title.includes('dükkan') || title.includes('ofis')) return 'commercial';
+  return 'apartment';
+}
+
+function metricNumber(value) {
+  const match = String(value || '').replace(',', '.').match(/\d+(?:\.\d+)?/);
+  return match ? Number(match[0]) : 0;
+}
+
 function filterProperties(properties, query) {
   const type = normalize(query.type);
-  const location = normalize(query.location);
+  const category = normalize(query.category);
+  const market = normalize(query.market);
+  const location = normalize(query.location || query.loc);
   const rooms = normalize(query.rooms);
   const keyword = normalize(query.q);
   const min = Number(query.min || 0);
   const max = Number(query.max || Number.MAX_SAFE_INTEGER);
+  const areaMin = Number(query.areaMin || 0);
 
   const filtered = properties.filter(property => {
-    const haystack = normalize(`${property.title} ${property.location} ${property.description || property.desc || ''} ${(property.features || []).join(' ')}`);
+    const haystack = normalize(`${property.id} ${property.title} ${property.location} ${property.description || property.desc || ''} ${(property.features || []).join(' ')}`);
+    const roomCount = Number.parseInt(String(property.rooms || ''), 10);
     return (!type || type === normalize(property.type))
+      && (!category || category === propertyCategory(property))
+      && (!market || market === normalize(property.market_status))
       && (!location || normalize(property.location).includes(location))
-      && (!rooms || normalize(property.rooms) === rooms)
+      && (!rooms || (rooms === '4' ? roomCount >= 4 : roomCount === Number(rooms)))
       && (!keyword || haystack.includes(keyword))
       && Number(property.price_eur || 0) >= min
       && Number(property.price_eur || 0) <= max
+      && metricNumber(property.area_net) >= areaMin
       && (!property.status || property.status === 'published');
   });
 
