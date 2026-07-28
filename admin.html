@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-  <link rel="stylesheet" href="admin.css?v=2026072807" />
+  <link rel="stylesheet" href="admin.css?v=2026072808" />
 </head>
 <body class="admin-page">
   <aside class="admin-sidebar">
@@ -19,6 +19,7 @@
       <button class="admin-nav" data-view="properties"><i class="fa-solid fa-building"></i> Portföy</button>
       <button class="admin-nav" data-view="leads"><i class="fa-solid fa-user-group"></i> CRM Talepleri</button>
       <button class="admin-nav" data-view="media"><i class="fa-solid fa-photo-film"></i> Medya Kalitesi</button>
+      <button class="admin-nav" data-view="analytics"><i class="fa-solid fa-chart-column"></i> Dönüşüm Analitiği</button>
       <button class="admin-nav" data-view="readiness"><i class="fa-solid fa-shield-halved"></i> Sistem Durumu</button>
     </nav>
     <div class="admin-sidebar-footer">
@@ -106,6 +107,58 @@
       <div id="media-property-list" class="media-property-list"></div>
     </section>
 
+    <section class="admin-view" data-panel="analytics">
+      <article class="admin-card analytics-hero">
+        <div>
+          <p class="admin-kicker">BİRİNCİ TARAF ÖLÇÜM</p>
+          <h2>Dönüşüm hunisi ve kanal performansı</h2>
+          <p>Yalnızca ziyaretçi onayından sonra toplanan anonim ilan görüntüleme, WhatsApp ve başarılı form olayları gösterilir. Ham oturum kimlikleri veya müşteri bilgileri bu ekrana aktarılmaz.</p>
+        </div>
+        <label class="analytics-window">Dönem
+          <select id="analytics-window">
+            <option value="7">Son 7 gün</option>
+            <option value="30" selected>Son 30 gün</option>
+            <option value="90">Son 90 gün</option>
+          </select>
+        </label>
+      </article>
+
+      <article id="analytics-setup" class="admin-card analytics-setup" hidden>
+        <i class="fa-solid fa-chart-simple"></i>
+        <div><h2>Ölçüm altyapısı aktivasyon bekliyor</h2><p>Supabase bağlantısını kurup güncel <code>supabase/schema.sql</code> dosyasını çalıştırdığınızda gerçek olaylar burada görünmeye başlayacak. Örnek veya tahmini veri gösterilmez.</p></div>
+      </article>
+
+      <div id="analytics-content">
+        <div class="analytics-summary">
+          <article><span>İlan görüntüleme</span><strong id="analytics-views">0</strong><small>Huni başlangıcı</small></article>
+          <article><span>WhatsApp teması</span><strong id="analytics-whatsapp">0</strong><small id="analytics-contact-rate">%0 dönüşüm</small></article>
+          <article><span>Başarılı form</span><strong id="analytics-leads">0</strong><small id="analytics-lead-rate">%0 dönüşüm</small></article>
+          <article><span>Anonim oturum</span><strong id="analytics-sessions">0</strong><small>Kişisel veri içermez</small></article>
+        </div>
+
+        <article class="admin-card analytics-funnel-card">
+          <div class="card-heading"><div><p class="admin-kicker">DÖNÜŞÜM HUNİSİ</p><h2>İlgiden talebe</h2></div><span id="analytics-updated"></span></div>
+          <div id="analytics-funnel" class="analytics-funnel"></div>
+        </article>
+
+        <div class="analytics-grid">
+          <article class="admin-card">
+            <div class="card-heading"><div><p class="admin-kicker">GÜNLÜK EĞİLİM</p><h2>Son temaslar</h2></div></div>
+            <div id="analytics-daily" class="analytics-daily"></div>
+          </article>
+          <article class="admin-card">
+            <div class="card-heading"><div><p class="admin-kicker">KANALLAR</p><h2>Kaynak performansı</h2></div></div>
+            <div id="analytics-sources" class="analytics-ranking"></div>
+          </article>
+        </div>
+
+        <article class="admin-card analytics-property-card">
+          <div class="card-heading"><div><p class="admin-kicker">PORTFÖY İLGİSİ</p><h2>En çok etkileşim alan ilanlar</h2></div></div>
+          <div id="analytics-properties" class="analytics-property-list"></div>
+        </article>
+      </div>
+    </section>
+
     <section class="admin-view" data-panel="readiness">
       <article class="admin-card readiness-hero">
         <div>
@@ -156,6 +209,6 @@
     </form>
   </dialog>
 
-  <script src="admin.js?v=2026072807" defer></script>
+  <script src="admin.js?v=2026072808" defer></script>
 </body>
 </html>

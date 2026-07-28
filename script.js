@@ -1239,12 +1239,87 @@ function initGlobalNavigation() {
   });
 }
 
+function analyticsSessionId() {
+  let sessionId = sessionStorage.getItem('jg_analytics_session');
+  if (sessionId) return sessionId;
+  if (window.crypto?.randomUUID) sessionId = window.crypto.randomUUID();
+  else {
+    const bytes = new Uint8Array(16);
+    window.crypto.getRandomValues(bytes);
+    sessionId = Array.from(bytes, value => value.toString(16).padStart(2, '0')).join('');
+  }
+  sessionStorage.setItem('jg_analytics_session', sessionId);
+  return sessionId;
+}
+
+function analyticsAttribution() {
+  const params = new URLSearchParams(window.location.search);
+  const current = {
+    utmSource: params.get('utm_source') || '',
+    utmMedium: params.get('utm_medium') || '',
+    utmCampaign: params.get('utm_campaign') || '',
+    referrerHost: '',
+  };
+  if (current.utmSource || current.utmMedium || current.utmCampaign) {
+    sessionStorage.setItem('jg_analytics_attribution', JSON.stringify(current));
+    return current;
+  }
+  try {
+    const storedAttribution = sessionStorage.getItem('jg_analytics_attribution');
+    if (storedAttribution) return JSON.parse(storedAttribution);
+  } catch {
+    // Invalid session data is replaced with a fresh attribution record.
+  }
+  try {
+    const referrer = document.referrer ? new URL(document.referrer) : null;
+    current.referrerHost = referrer && referrer.hostname !== window.location.hostname ? referrer.hostname : '';
+  } catch {
+    current.referrerHost = '';
+  }
+  sessionStorage.setItem('jg_analytics_attribution', JSON.stringify(current));
+  return current;
+}
+
+function recordFirstPartyEvent(name, parameters = {}) {
+  const attribution = analyticsAttribution();
+  const width = window.innerWidth;
+  const device = width < 768 ? 'mobile' : (width < 1100 ? 'tablet' : 'desktop');
+  fetch('/api/events', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    keepalive: true,
+    body: JSON.stringify({
+      consent: true,
+      eventName: name,
+      sessionId: analyticsSessionId(),
+      propertyId: parameters.property_id || '',
+      pathname: window.location.pathname,
+      locale: document.documentElement.lang === 'en' ? 'en' : 'tr',
+      eventSource: parameters.source || '',
+      utmSource: attribution.utmSource || '',
+      utmMedium: attribution.utmMedium || '',
+      utmCampaign: attribution.utmCampaign || '',
+      referrerHost: attribution.referrerHost || '',
+      device,
+    }),
+  }).catch(() => {});
+}
+
 function trackEvent(name, parameters = {}) {
-  if (localStorage.getItem('jg_cookie_consent') !== 'accepted') return;
+  if (localStorage.getItem('jg_cookie_consent') !== 'accepted') return false;
+  recordFirstPartyEvent(name, parameters);
   if (typeof window.gtag === 'function') window.gtag('event', name, parameters);
   if (typeof window.fbq === 'function') window.fbq('trackCustom', name, parameters);
   window.dataLayer = window.dataLayer || [];
   window.dataLayer.push({ event: name, ...parameters });
+  return true;
+}
+
+function trackCurrentPropertyView() {
+  if (!window.__jasminePropertyContext || window.__jasminePropertyViewTracked) return;
+  if (trackEvent('view_property', window.__jasminePropertyContext)) {
+    window.__jasminePropertyViewTracked = true;
+  }
 }
 
 function loadApprovedAnalytics() {
@@ -1279,6 +1354,7 @@ function loadApprovedAnalytics() {
     window.fbq('init', config.metaPixelId);
     window.fbq('track', 'PageView');
   }
+  trackCurrentPropertyView();
 }
 
 function initCookieConsent() {
@@ -1533,7 +1609,8 @@ async function renderPropertyDetail() {
   // Para birimi vs uygula
   changeCurrency(localStorage.getItem('jg_currency') || 'eur');
   initLeadForms(container);
-  trackEvent('view_property', { property_id: p.id, value: p.price_eur, currency: 'EUR' });
+  window.__jasminePropertyContext = { property_id: p.id, value: p.price_eur, currency: 'EUR' };
+  trackCurrentPropertyView();
   
   // Re-run language translation for dynamic content if any
   const lang = localStorage.getItem('jg_lang') || 'tr';
@@ -1555,8 +1632,13 @@ document.addEventListener('DOMContentLoaded', () => {
   initGlobalStructuredData();
   loadAnalyticsConfiguration();
   initLiveCurrencyRates();
-  document.querySelectorAll('a[href*="wa.me"]').forEach(link => {
-    link.addEventListener('click', () => trackEvent('contact_whatsapp', { page: window.location.pathname }));
+  document.addEventListener('click', event => {
+    const link = event.target.closest('a[href*="wa.me"]');
+    if (link) trackEvent('contact_whatsapp', {
+      page: window.location.pathname,
+      property_id: window.__jasminePropertyContext?.property_id || '',
+      source: 'whatsapp',
+    });
   });
   renderPropertyDetail();
   hydrateRegionCounts();

@@ -94,7 +94,22 @@ gorselsiz ilanlari tek kuyrukta gosterir.
 
 ## 5. Analitik ve reklam
 
-Asagidaki degiskenlerden ihtiyac duyulanlari Vercel'e ekleyin:
+Birinci taraf donusum olcumunun calismasi icin guncel
+`supabase/schema.sql` dosyasini calistirin. Bu sema `analytics_events`
+tablosunu, gerekli indeksleri ve RLS korumasini kurar. Anonim oturum
+kimlikleri tarayicidan geldigi haliyle saklanmaz; sunucuda tek yonlu HMAC
+hash'e donusturulur. Ayrı bir anahtar kullanmak isterseniz Vercel'e su
+degiskeni ekleyin:
+
+```text
+ANALYTICS_PRIVACY_SALT
+```
+
+Bu degisken tanimli degilse `LEAD_PRIVACY_SALT` kullanilir. Ikisinden biri
+olmadan olay sayilari kaydedilir ancak anonim oturum sayisi hesaplanmaz.
+
+Harici platformlar icin asagidaki degiskenlerden ihtiyac duyulanlari
+Vercel'e ekleyin:
 
 ```text
 PUBLIC_GA4_ID
@@ -103,9 +118,16 @@ PUBLIC_META_PIXEL_ID
 ```
 
 Analitik ve reklam betikleri ziyaretci cerez tercihini kabul etmeden
-yuklenmez. Form gonderimi, ilan goruntuleme ve WhatsApp tiklamalari donusum
-olayi olarak Turkce ve Ingilizce rotalarda kaydedilir. GA4/GTM ile birlikte
-Meta Pixel de ayni onay kuralina tabidir.
+yuklenmez; birinci taraf `/api/events` kaydi da ayni onay kuralina tabidir.
+Form gonderimi, ilan goruntuleme ve WhatsApp tiklamalari donusum olayi
+olarak Turkce ve Ingilizce rotalarda kaydedilir. Olay API'si izinli olay
+listesi, alan uzunlugu dogrulamasi ve istek siniri uygular; ad, telefon,
+e-posta, mesaj, tam IP veya URL sorgusu toplamaz.
+
+Admin panelindeki `Donusum Analitigi` ekrani 7, 30 ve 90 gunluk huni,
+anonim oturum, kampanya/kaynak ve ilan performansini yalnizca
+toplulastirilmis olarak gosterir. Supabase veya tablo hazir degilse ornek
+veri uretmek yerine aktivasyon durumunu gosterir.
 
 ## 6. Sistem durumu ekrani
 
@@ -113,11 +135,12 @@ Admin panelindeki `Sistem Durumu` ekrani su kontrolleri gizli degerleri
 istemciye gondermeden yapar:
 
 - Admin oturum degiskenleri
-- Supabase ilan ve CRM tablolarina gercek okuma erisimi
+- Supabase ilan, CRM ve analitik tablolarina gercek okuma erisimi
 - Medya bucket yapilandirmasi
 - Resend bildirim yapilandirmasi
 - Talep gizlilik tuzu
-- GA4, GTM veya Meta Pixel aktivasyonu
+- Birinci taraf donusum olay deposu
+- Istege bagli GA4, GTM veya Meta Pixel aktivasyonu
 
 Kontroller `/api/admin/readiness` uzerinden yalnizca gecerli admin oturumuna
 sunulur. Ekrandaki `Yeniden kontrol et` dugmesi Vercel degiskenleri
@@ -144,6 +167,8 @@ Her yayin oncesinde asagidakileri manuel olarak da dogrulayin:
 - Ilan arama, filtre, siralama ve detay baglantilari
 - Canonical, hreflang, sitemap ve robots kurallari
 - Cerez reddinde analitik betiklerinin yuklenmemesi
+- Cerez reddinde `/api/events` istegi gonderilmemesi
+- Admin donusum hunisinin gercek form, WhatsApp ve ilan olaylariyla guncellenmesi
 - Telefon, WhatsApp, adres ve yasal metinlerin guncelligi
 
 ## 8. Icerik yayin politikasi

@@ -1,5 +1,5 @@
 (() => {
-  const state = { properties: [], leads: [], readiness: null, editingId: null };
+  const state = { properties: [], leads: [], readiness: null, analytics: null, editingId: null };
   const statusLabels = {
     published: 'Yayında', draft: 'Taslak', sold: 'Satıldı', rented: 'Kiralandı',
     new: 'Yeni', contacted: 'İletişim kuruldu', qualified: 'Nitelikli',
@@ -163,19 +163,83 @@
       </article>`).join('');
   }
 
+  function renderAnalytics() {
+    const analytics = state.analytics;
+    const configured = analytics?.configured === true;
+    document.getElementById('analytics-setup').hidden = configured;
+    document.getElementById('analytics-content').hidden = !configured;
+    if (!configured) return;
+
+    const summary = analytics.summary || {};
+    document.getElementById('analytics-views').textContent = Number(summary.views || 0).toLocaleString('tr-TR');
+    document.getElementById('analytics-whatsapp').textContent = Number(summary.whatsapp || 0).toLocaleString('tr-TR');
+    document.getElementById('analytics-leads').textContent = Number(summary.leads || 0).toLocaleString('tr-TR');
+    document.getElementById('analytics-sessions').textContent = Number(summary.sessions || 0).toLocaleString('tr-TR');
+    document.getElementById('analytics-contact-rate').textContent = `%${Number(summary.contactRate || 0).toLocaleString('tr-TR')} dönüşüm`;
+    document.getElementById('analytics-lead-rate').textContent = `%${Number(summary.leadRate || 0).toLocaleString('tr-TR')} dönüşüm`;
+    document.getElementById('analytics-updated').textContent = `Güncellendi: ${formatDate(analytics.generatedAt)}`;
+
+    const funnel = [
+      ['İlan görüntüleme', Number(summary.views || 0), 'views'],
+      ['WhatsApp teması', Number(summary.whatsapp || 0), 'whatsapp'],
+      ['Başarılı form', Number(summary.leads || 0), 'leads'],
+    ];
+    const funnelMaximum = Math.max(...funnel.map(item => item[1]), 1);
+    document.getElementById('analytics-funnel').innerHTML = funnel.map(([label, value, type]) => `
+      <div class="funnel-step ${type}">
+        <div><span>${escapeHTML(label)}</span><strong>${value.toLocaleString('tr-TR')}</strong></div>
+        <div class="funnel-track"><span style="width:${Math.max(value ? 6 : 0, (value / funnelMaximum) * 100)}%"></span></div>
+      </div>`).join('');
+
+    const daily = analytics.daily || [];
+    const dailyMaximum = Math.max(...daily.map(item => Number(item.views || 0) + Number(item.whatsapp || 0) + Number(item.leads || 0)), 1);
+    document.getElementById('analytics-daily').innerHTML = daily.slice(-14).map(item => {
+      const total = Number(item.views || 0) + Number(item.whatsapp || 0) + Number(item.leads || 0);
+      return `<div class="daily-row">
+        <time>${escapeHTML(new Intl.DateTimeFormat('tr-TR', { day: '2-digit', month: 'short' }).format(new Date(`${item.date}T12:00:00`)))}</time>
+        <div class="daily-track"><span style="width:${Math.max(total ? 5 : 0, (total / dailyMaximum) * 100)}%"></span></div>
+        <strong>${total}</strong>
+      </div>`;
+    }).join('') || '<p class="analytics-empty">Seçilen dönemde henüz onaylı olay bulunmuyor.</p>';
+
+    document.getElementById('analytics-sources').innerHTML = (analytics.sources || []).map(source => `
+      <div class="ranking-row">
+        <strong>${escapeHTML(source.source)}</strong>
+        <span>${Number(source.views || 0)} görüntüleme · ${Number(source.whatsapp || 0)} WhatsApp · ${Number(source.leads || 0)} form</span>
+      </div>`).join('') || '<p class="analytics-empty">Kanal verisi henüz oluşmadı.</p>';
+
+    document.getElementById('analytics-properties').innerHTML = (analytics.topProperties || []).map(item => {
+      const property = state.properties.find(candidate => candidate.id === item.propertyId);
+      return `<a href="property-detail.html?id=${encodeURIComponent(item.propertyId)}" target="_blank">
+        <div><strong>${escapeHTML(property?.title || item.propertyId)}</strong><span>${escapeHTML(item.propertyId)}</span></div>
+        <div><b>${Number(item.views || 0)}</b><span>görüntüleme</span></div>
+        <div><b>${Number(item.whatsapp || 0)}</b><span>WhatsApp</span></div>
+        <div><b>${Number(item.leads || 0)}</b><span>form</span></div>
+      </a>`;
+    }).join('') || '<p class="analytics-empty">İlan bazlı etkileşim henüz oluşmadı.</p>';
+  }
+
   function renderAll() {
     renderOverview();
     renderProperties();
     renderLeads();
     renderMedia();
+    renderAnalytics();
     renderReadiness();
   }
 
   async function loadData() {
-    const results = await Promise.allSettled([api('/api/admin/properties'), api('/api/admin/leads'), api('/api/admin/readiness')]);
+    const days = document.getElementById('analytics-window').value;
+    const results = await Promise.allSettled([
+      api('/api/admin/properties'),
+      api('/api/admin/leads'),
+      api('/api/admin/readiness'),
+      api(`/api/admin/analytics?days=${encodeURIComponent(days)}`),
+    ]);
     if (results[0].status === 'fulfilled') state.properties = results[0].value.properties || [];
     if (results[1].status === 'fulfilled') state.leads = results[1].value.leads || [];
     if (results[2].status === 'fulfilled') state.readiness = results[2].value;
+    if (results[3].status === 'fulfilled') state.analytics = results[3].value;
     const errors = results.filter(result => result.status === 'rejected').map(result => result.reason.message);
     showAlert(errors.length ? `Kurulum gerekli: ${[...new Set(errors)].join(' ')}` : '');
     renderAll();
@@ -309,6 +373,20 @@
     }
   }
 
+  async function refreshAnalytics() {
+    const select = document.getElementById('analytics-window');
+    select.disabled = true;
+    try {
+      state.analytics = await api(`/api/admin/analytics?days=${encodeURIComponent(select.value)}`);
+      renderAnalytics();
+      showAlert('');
+    } catch (error) {
+      showAlert(error.message);
+    } finally {
+      select.disabled = false;
+    }
+  }
+
   document.addEventListener('DOMContentLoaded', async () => {
     try {
       const session = await api('/api/admin/session');
@@ -328,6 +406,7 @@
     document.getElementById('lead-filter').addEventListener('change', renderLeads);
     document.getElementById('export-leads-button').addEventListener('click', exportLeadsCsv);
     document.getElementById('refresh-readiness-button').addEventListener('click', refreshReadiness);
+    document.getElementById('analytics-window').addEventListener('change', refreshAnalytics);
     document.getElementById('add-property-button').addEventListener('click', () => openPropertyDialog());
     document.getElementById('property-form').addEventListener('submit', saveProperty);
     document.getElementById('logout-button').addEventListener('click', async () => {

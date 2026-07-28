@@ -15,14 +15,17 @@ module.exports = async function handler(request, response) {
 
   const supabaseConfigured = Boolean(configuration());
   let databaseReachable = false;
+  let analyticsReachable = false;
   let databaseMessage = supabaseConfigured ? 'Bağlantı kontrol ediliyor.' : 'Supabase değişkenleri eksik.';
 
   if (supabaseConfigured) {
     const checks = await Promise.allSettled([
       supabaseRequest('/rest/v1/properties?select=id&limit=1'),
       supabaseRequest('/rest/v1/leads?select=id&limit=1'),
+      supabaseRequest('/rest/v1/analytics_events?select=id&limit=1'),
     ]);
-    databaseReachable = checks.every(check => check.status === 'fulfilled');
+    databaseReachable = checks.slice(0, 2).every(check => check.status === 'fulfilled');
+    analyticsReachable = checks[2].status === 'fulfilled';
     databaseMessage = databaseReachable
       ? 'İlan ve CRM tablolarına erişim doğrulandı.'
       : 'Supabase erişimi veya tablo kurulumu doğrulanamadı.';
@@ -60,8 +63,14 @@ module.exports = async function handler(request, response) {
       detail: 'IP değerleri yalnızca tek yönlü hash olarak tutulur.',
     },
     {
-      id: 'analytics',
-      label: 'Analitik ve reklam',
+      id: 'first-party-analytics',
+      label: 'Birinci taraf dönüşüm ölçümü',
+      status: analyticsReachable ? 'ready' : (supabaseConfigured ? 'error' : 'missing'),
+      detail: analyticsReachable ? 'Onaylı olay deposuna erişim doğrulandı.' : 'analytics_events tablosu veya Supabase bağlantısı bekliyor.',
+    },
+    {
+      id: 'external-analytics',
+      label: 'Harici analitik ve reklam',
       status: configured('PUBLIC_GA4_ID') || configured('PUBLIC_GTM_ID') || configured('PUBLIC_META_PIXEL_ID') ? 'ready' : 'optional',
       detail: 'GA4, GTM veya Meta Pixel kimliklerinden en az biri',
     },

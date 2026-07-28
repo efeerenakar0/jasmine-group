@@ -69,19 +69,88 @@
     return `${count} ${Number(count) === 1 ? 'bathroom' : 'bathrooms'}`;
   }
 
+  function analyticsSessionId() {
+    let sessionId = sessionStorage.getItem('jg_analytics_session');
+    if (sessionId) return sessionId;
+    if (window.crypto?.randomUUID) sessionId = window.crypto.randomUUID();
+    else {
+      const bytes = new Uint8Array(16);
+      window.crypto.getRandomValues(bytes);
+      sessionId = Array.from(bytes, value => value.toString(16).padStart(2, '0')).join('');
+    }
+    sessionStorage.setItem('jg_analytics_session', sessionId);
+    return sessionId;
+  }
+
+  function analyticsAttribution() {
+    const params = new URLSearchParams(window.location.search);
+    const current = {
+      utmSource: params.get('utm_source') || '',
+      utmMedium: params.get('utm_medium') || '',
+      utmCampaign: params.get('utm_campaign') || '',
+      referrerHost: '',
+    };
+    if (current.utmSource || current.utmMedium || current.utmCampaign) {
+      sessionStorage.setItem('jg_analytics_attribution', JSON.stringify(current));
+      return current;
+    }
+    try {
+      const storedAttribution = sessionStorage.getItem('jg_analytics_attribution');
+      if (storedAttribution) return JSON.parse(storedAttribution);
+    } catch {
+      // Invalid session data is replaced with a fresh attribution record.
+    }
+    try {
+      const referrer = document.referrer ? new URL(document.referrer) : null;
+      current.referrerHost = referrer && referrer.hostname !== window.location.hostname ? referrer.hostname : '';
+    } catch {
+      current.referrerHost = '';
+    }
+    sessionStorage.setItem('jg_analytics_attribution', JSON.stringify(current));
+    return current;
+  }
+
+  function recordFirstPartyEvent(name, parameters = {}) {
+    const attribution = analyticsAttribution();
+    const width = window.innerWidth;
+    const device = width < 768 ? 'mobile' : (width < 1100 ? 'tablet' : 'desktop');
+    fetch('/api/events', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      keepalive: true,
+      body: JSON.stringify({
+        consent: true,
+        eventName: name,
+        sessionId: analyticsSessionId(),
+        propertyId: parameters.property_id || '',
+        pathname: window.location.pathname,
+        locale: 'en',
+        eventSource: parameters.source || '',
+        utmSource: attribution.utmSource || '',
+        utmMedium: attribution.utmMedium || '',
+        utmCampaign: attribution.utmCampaign || '',
+        referrerHost: attribution.referrerHost || '',
+        device,
+      }),
+    }).catch(() => {});
+  }
+
   function trackEvent(name, parameters = {}) {
-    if (localStorage.getItem('jg_cookie_consent') !== 'accepted') return;
+    if (localStorage.getItem('jg_cookie_consent') !== 'accepted') return false;
+    recordFirstPartyEvent(name, parameters);
     if (typeof window.gtag === 'function') window.gtag('event', name, parameters);
     if (typeof window.fbq === 'function') window.fbq('trackCustom', name, parameters);
     window.dataLayer = window.dataLayer || [];
     window.dataLayer.push({ event: name, ...parameters });
+    return true;
   }
 
   function trackPropertyView() {
     if (!window.__jasminePropertyContext || window.__jasminePropertyViewTracked) return;
     if (localStorage.getItem('jg_cookie_consent') !== 'accepted') return;
-    trackEvent('view_item', window.__jasminePropertyContext);
-    window.__jasminePropertyViewTracked = true;
+    if (trackEvent('view_item', window.__jasminePropertyContext)) {
+      window.__jasminePropertyViewTracked = true;
+    }
   }
 
   function loadAnalytics() {
@@ -360,7 +429,15 @@
     document.querySelectorAll('[data-en-lead]').forEach(form => form.addEventListener('submit', submitLead));
     ['en-search', 'en-location', 'en-rooms', 'en-sort'].forEach(id => document.getElementById(id)?.addEventListener('input', renderProperties));
     initMobileNavigation();
-    document.querySelectorAll('a[href*="wa.me"]').forEach(link => link.addEventListener('click', () => trackEvent('contact_whatsapp', { page: window.location.pathname, locale: 'en' })));
+    document.addEventListener('click', event => {
+      const link = event.target.closest('a[href*="wa.me"]');
+      if (link) trackEvent('contact_whatsapp', {
+        page: window.location.pathname,
+        locale: 'en',
+        property_id: window.__jasminePropertyContext?.property_id || '',
+        source: 'whatsapp',
+      });
+    });
     loadAnalyticsConfiguration();
     loadProperties();
     loadPropertyDetail();
