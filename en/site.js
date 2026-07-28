@@ -64,6 +64,74 @@
     return match ? Number(match[0]) : 0;
   }
 
+  let compareIds = (() => {
+    try {
+      const stored = JSON.parse(localStorage.getItem('jg_property_compare') || '[]');
+      return Array.isArray(stored) ? [...new Set(stored.filter(id => /^[A-Za-z0-9._-]+$/.test(id)))].slice(0, 3) : [];
+    } catch {
+      return [];
+    }
+  })();
+
+  function ensureCompareUI() {
+    let button = document.getElementById('en-compare-floating');
+    if (button) return button;
+    button = document.createElement('button');
+    button.id = 'en-compare-floating';
+    button.className = 'compare-floating-action';
+    button.type = 'button';
+    button.innerHTML = '<i class="fa-solid fa-code-compare"></i> Compare <span>0</span>';
+    button.addEventListener('click', openCompare);
+    document.body.appendChild(button);
+    return button;
+  }
+
+  function updateCompareUI() {
+    const floating = ensureCompareUI();
+    floating.style.display = compareIds.length ? 'inline-flex' : 'none';
+    floating.querySelector('span').textContent = String(compareIds.length);
+    document.querySelectorAll('[data-en-compare-id]').forEach(button => {
+      const active = compareIds.includes(button.dataset.enCompareId);
+      button.classList.toggle('active', active);
+      button.setAttribute('aria-pressed', String(active));
+    });
+    localStorage.setItem('jg_property_compare', JSON.stringify(compareIds));
+  }
+
+  function toggleCompare(id) {
+    if (compareIds.includes(id)) compareIds = compareIds.filter(item => item !== id);
+    else if (compareIds.length < 3) compareIds.push(id);
+    else return;
+    updateCompareUI();
+  }
+
+  function closeCompare() {
+    document.getElementById('en-compare-modal')?.remove();
+    document.body.style.overflow = '';
+  }
+
+  function openCompare() {
+    closeCompare();
+    const selected = compareIds.map(id => (window.enProperties || []).find(property => property.id === id)).filter(Boolean);
+    const modal = document.createElement('section');
+    modal.id = 'en-compare-modal';
+    modal.className = 'collection-modal active compare-modal';
+    modal.setAttribute('role', 'dialog');
+    modal.setAttribute('aria-modal', 'true');
+    modal.setAttribute('aria-label', 'Property comparison');
+    const cards = selected.map(property => {
+      const title = englishPropertyTitle(property);
+      const image = displayImage((property.images || []).find(trustedImage));
+      return `<article class="collection-item en-compare-card"><button type="button" data-remove="${escapeHTML(property.id)}" aria-label="Remove ${escapeHTML(property.id)}"><i class="fa-solid fa-xmark"></i></button><img src="${escapeHTML(image)}" alt="${escapeHTML(title)}"><div><small>${escapeHTML(englishLocation(property.location))}</small><h3>${escapeHTML(title)}</h3><strong>€ ${Number(property.price_eur || 0).toLocaleString('en-GB')}${property.type === 'rent' ? ' / month' : ''}</strong><dl><div><dt>Rooms</dt><dd>${escapeHTML(property.rooms || '-')}</dd></div><div><dt>Net area</dt><dd>${escapeHTML(property.area_net || '-')}</dd></div><div><dt>Type</dt><dd>${escapeHTML(propertyKind(property))}</dd></div>${property.floor ? `<div><dt>Floor</dt><dd>${escapeHTML(property.floor)}</dd></div>` : ''}${property.year_built ? `<div><dt>Year built</dt><dd>${escapeHTML(property.year_built)}</dd></div>` : ''}</dl><a href="property-detail.html?id=${encodeURIComponent(property.id)}">View property</a></div></article>`;
+    }).join('') || '<div class="collection-empty"><h3>Your comparison list is empty.</h3><a href="buy.html">Browse properties</a></div>';
+    modal.innerHTML = `<button class="collection-modal-backdrop" type="button" aria-label="Close comparison"></button><div class="collection-modal-panel"><header><div><p class="section-kicker">DECISION SUPPORT</p><h2>Compare properties</h2></div><button type="button" data-close aria-label="Close comparison"><i class="fa-solid fa-xmark"></i></button></header><div class="compare-content">${cards}</div></div>`;
+    modal.querySelector('[data-close]').addEventListener('click', closeCompare);
+    modal.querySelector('.collection-modal-backdrop').addEventListener('click', closeCompare);
+    modal.querySelectorAll('[data-remove]').forEach(button => button.addEventListener('click', () => { toggleCompare(button.dataset.remove); openCompare(); }));
+    document.body.appendChild(modal);
+    document.body.style.overflow = 'hidden';
+  }
+
   function englishPropertyTitle(property) {
     const district = englishLocation(String(property.location || '').split('/').slice(-1)[0].trim()).replace(/\s+District$/i, '');
     const status = property.type === 'rent' ? 'for Rent' : 'for Sale';
@@ -372,9 +440,11 @@
       const title = englishPropertyTitle(property);
       return `<article class="property-item property-card-v2">
         <div class="property-card-media"><img src="${escapeHTML(image)}" alt="${escapeHTML(title)}" loading="lazy">${approvedImage ? '' : '<span class="media-pending-badge"><i class="fa-solid fa-camera"></i> Verified photos on request</span>'}</div>
-        <div class="property-card-content"><div class="property-card-eyebrow">${isRental ? 'FOR RENT' : 'FOR SALE'} · ${escapeHTML(propertyKind(property).toUpperCase())} · ${escapeHTML(locationName)}</div><h2 class="prop-title">${escapeHTML(title)}</h2><div class="prop-location">${escapeHTML(englishLocation(property.location))}</div><div class="prop-rooms"><span>${escapeHTML(property.rooms || '-')} rooms</span><span>${escapeHTML(property.area_net || '-')}</span>${property.market_status ? `<span>${escapeHTML({ new: 'New build', resale: 'Resale', under_construction: 'Under construction' }[property.market_status] || property.market_status)}</span>` : ''}</div><div class="prop-footer"><div><small>${isRental ? 'Monthly price' : 'Price'}</small><div class="prop-price">€ ${Number(property.price_eur || 0).toLocaleString('en-GB')}${isRental ? ' / month' : ''}</div></div><div class="en-card-actions"><a class="prop-btn" href="property-detail.html?id=${encodeURIComponent(property.id)}">VIEW</a><a class="prop-btn primary" href="https://wa.me/905330850769?text=${message}">ENQUIRE</a></div></div><p class="property-card-verification"><i class="fa-solid fa-circle-check"></i> Price and availability are subject to advisor confirmation.</p></div>
+        <div class="property-card-content"><div class="property-card-eyebrow">${isRental ? 'FOR RENT' : 'FOR SALE'} · ${escapeHTML(propertyKind(property).toUpperCase())} · ${escapeHTML(locationName)}</div><h2 class="prop-title">${escapeHTML(title)}</h2><div class="prop-location">${escapeHTML(englishLocation(property.location))}</div><div class="prop-rooms"><span>${escapeHTML(property.rooms || '-')} rooms</span><span>${escapeHTML(property.area_net || '-')}</span>${property.market_status ? `<span>${escapeHTML({ new: 'New build', resale: 'Resale', under_construction: 'Under construction' }[property.market_status] || property.market_status)}</span>` : ''}</div><div class="prop-footer"><div><small>${isRental ? 'Monthly price' : 'Price'}</small><div class="prop-price">€ ${Number(property.price_eur || 0).toLocaleString('en-GB')}${isRental ? ' / month' : ''}</div></div><div class="en-card-actions"><button class="compare-btn" type="button" data-en-compare-id="${escapeHTML(property.id)}" aria-label="Add to comparison" aria-pressed="false"><i class="fa-solid fa-code-compare"></i></button><a class="prop-btn" href="property-detail.html?id=${encodeURIComponent(property.id)}">VIEW</a><a class="prop-btn primary" href="https://wa.me/905330850769?text=${message}">ENQUIRE</a></div></div><p class="property-card-verification"><i class="fa-solid fa-circle-check"></i> Price and availability are subject to advisor confirmation.</p></div>
       </article>`;
     }).join('') || '<article class="listing-empty-state"><h3>No matching property found.</h3><a href="contact.html">Request a personal shortlist</a></article>';
+    document.querySelectorAll('[data-en-compare-id]').forEach(button => button.addEventListener('click', () => toggleCompare(button.dataset.enCompareId)));
+    updateCompareUI();
   }
 
   function setMeta(selector, value) {
@@ -477,9 +547,11 @@
         <article class="en-detail-summary"><p class="section-kicker">${isRental ? 'FOR RENT' : 'FOR SALE'} · ${escapeHTML(property.id)}</p><h2>${escapeHTML(title)}</h2><p class="prop-location"><i class="fa-solid fa-location-dot"></i> ${escapeHTML(englishLocation(property.location))}</p><strong class="en-detail-price">€ ${Number(property.price_eur || 0).toLocaleString('en-GB')}${isRental ? ' / month' : ''}</strong>
           <div class="en-detail-facts">${facts.map(([label, value]) => `<span><small>${escapeHTML(label)}</small>${escapeHTML(value)}</span>`).join('')}</div>
           <p>${escapeHTML(description)}</p><div class="property-card-verification"><i class="fa-solid fa-circle-check"></i> Price, availability, media and property-specific documents are subject to advisor confirmation.</div>
-          <div class="en-hero-actions"><a href="https://wa.me/905330850769?text=${message}">Ask on WhatsApp</a><a href="contact.html?property=${encodeURIComponent(property.id)}">Request a consultation</a></div>
+          <div class="en-hero-actions"><button class="compare-btn" type="button" id="en-detail-compare" data-en-compare-id="${escapeHTML(property.id)}" aria-label="Add to comparison" aria-pressed="false"><i class="fa-solid fa-code-compare"></i> Compare</button><a href="https://wa.me/905330850769?text=${message}">Ask on WhatsApp</a><a href="contact.html?property=${encodeURIComponent(property.id)}">Request a consultation</a></div>
         </article>
       </div>${featureSection}${distanceSection}<section class="proof-standard"><div><p class="section-kicker">BEFORE YOU DECIDE</p><h2>Request the current property file.</h2></div><p>Ask for confirmed availability, approved media and the property-specific information required by your independent legal and technical professionals.</p></section>`;
+      document.getElementById('en-detail-compare')?.addEventListener('click', event => toggleCompare(event.currentTarget.dataset.enCompareId));
+      updateCompareUI();
     } catch {
       document.getElementById('en-detail-heading').textContent = 'Property not found';
       container.innerHTML = '<article class="listing-empty-state"><h2>This property is no longer available in the public collection.</h2><p>Request a current shortlist with similar options.</p><a href="buy.html">Browse current properties</a></article>';

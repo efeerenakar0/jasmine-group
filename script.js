@@ -995,9 +995,7 @@ function renderProperties(props) {
     let badgeHTML = p.badge ? `<span class="${bClass}">${escapeHTML(p.badge)}</span>` : '';
     let suffix = p.type === 'rent' ? ' <em>/ ay</em>' : '';
     const quickMessage = encodeURIComponent(`Merhaba, ${p.id} kodlu portföy hakkında güncel bilgi almak istiyorum.`);
-    const compareButton = document.getElementById('compare-floating')
-      ? `<button class="compare-btn" data-compare-id="${escapeHTML(p.id)}" onclick="toggleCompare('${escapeHTML(p.id)}', this)" title="Karşılaştırmaya ekle" aria-label="Karşılaştırmaya ekle" aria-pressed="false"><i class="fa-solid fa-code-compare"></i></button>`
-      : '';
+    const compareButton = `<button class="compare-btn" data-compare-id="${escapeHTML(p.id)}" onclick="toggleCompare('${escapeHTML(p.id)}', this)" title="Karşılaştırmaya ekle" aria-label="Karşılaştırmaya ekle" aria-pressed="false"><i class="fa-solid fa-code-compare"></i></button>`;
     
     // desc truncate
     let desc = formatPropertyDescription(p.desc);
@@ -1633,6 +1631,7 @@ async function renderPropertyDetail() {
           <div class="sidebar-price prop-price" data-eur="${p.price_eur}" data-type="${p.type === 'rent' ? 'rent_month' : 'sale'}">€ ${p.price_eur.toLocaleString('de-DE')}${suffix}</div>
           <div class="sidebar-ref">İlan Kodu: ${safeId}</div>
           <p class="price-verification"><i class="fa-solid fa-circle-check"></i> Fiyat ve müsaitlik danışman tarafından teyit edilir.</p>
+          <button type="button" class="detail-compare-button compare-btn" data-compare-id="${safeId}" onclick="toggleCompare('${safeId}', this)"><i class="fa-solid fa-code-compare"></i> Karşılaştırmaya ekle</button>
         </div>
 
         <!-- AGENT & CONTACT FORM -->
@@ -2190,10 +2189,49 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // --- COMPARE LOGIC ---
-let compareList = [];
+let compareList = (() => {
+  try {
+    const stored = JSON.parse(localStorage.getItem('jg_property_compare') || '[]');
+    return Array.isArray(stored) ? [...new Set(stored.filter(id => /^[A-Za-z0-9._-]+$/.test(id)))].slice(0, 3) : [];
+  } catch {
+    return [];
+  }
+})();
+
+function ensureCompareModal() {
+  let modal = document.getElementById('compareModal');
+  if (modal) return modal;
+  const overlay = document.createElement('div');
+  overlay.id = 'compareModalOverlay';
+  overlay.className = 'collection-modal-backdrop';
+  overlay.addEventListener('click', closeCompareModal);
+  modal = document.createElement('section');
+  modal.id = 'compareModal';
+  modal.className = 'collection-modal compare-modal';
+  modal.setAttribute('role', 'dialog');
+  modal.setAttribute('aria-modal', 'true');
+  modal.setAttribute('aria-label', 'İlan karşılaştırması');
+  modal.innerHTML = `<div class="collection-modal-panel"><header><div><p class="section-kicker">KARAR DESTEĞİ</p><h2>İlan Karşılaştırma</h2></div><button type="button" data-close-compare aria-label="Karşılaştırmayı kapat"><i class="fa-solid fa-xmark"></i></button></header><div id="compare-content" class="compare-content"></div></div>`;
+  modal.querySelector('[data-close-compare]').addEventListener('click', closeCompareModal);
+  document.body.append(overlay, modal);
+  return modal;
+}
+
+function ensureCompareFloating() {
+  let floating = document.getElementById('compare-floating');
+  if (floating) return floating;
+  floating = document.createElement('button');
+  floating.id = 'compare-floating';
+  floating.className = 'compare-floating-action';
+  floating.type = 'button';
+  floating.innerHTML = '<i class="fa-solid fa-code-compare"></i> Karşılaştır <span id="compare-count">0</span>';
+  floating.addEventListener('click', openCompareModal);
+  document.body.appendChild(floating);
+  return floating;
+}
 
 function updateCompareUI() {
-  const floating = document.getElementById('compare-floating');
+  const floating = ensureCompareFloating();
   const countSpan = document.getElementById('compare-count');
   if (countSpan) countSpan.innerText = compareList.length;
   if (floating) floating.style.display = compareList.length ? 'block' : 'none';
@@ -2203,9 +2241,11 @@ function updateCompareUI() {
     button.classList.toggle('active', active);
     button.setAttribute('aria-pressed', String(active));
   });
+  localStorage.setItem('jg_property_compare', JSON.stringify(compareList));
 }
 
 function toggleCompare(id, source) {
+  source?.preventDefault?.();
   const adding = !compareList.includes(id);
   if (adding) {
     if (compareList.length >= 3) {
@@ -2223,18 +2263,20 @@ function toggleCompare(id, source) {
 }
 
 async function openCompareModal() {
-  const modal = document.getElementById('compareModal');
+  const modal = ensureCompareModal();
   const overlay = document.getElementById('compareModalOverlay');
   const content = document.getElementById('compare-content');
   if (!modal || !overlay || !content) return;
   
   const props = await fetchProperties();
-  content.innerHTML = '';
+  content.innerHTML = '<div class="collection-loading"><i class="fa-solid fa-spinner fa-spin"></i> İlanlar karşılaştırma için hazırlanıyor...</div>';
   
-  compareList.forEach(id => {
-    const p = props.find(x => x.id === id);
-    if (!p) return;
-    
+  const selected = compareList.map(id => props.find(property => property.id === id)).filter(Boolean);
+  if (!selected.length) {
+    content.innerHTML = '<div class="collection-empty"><i class="fa-solid fa-code-compare"></i><h3>Karşılaştırma listeniz boş.</h3><p>İlan kartlarındaki karşılaştırma simgesiyle en fazla üç portföy seçebilirsiniz.</p><a href="buy.html">Portföyleri keşfet</a></div>';
+  }
+  selected.forEach(p => {
+    const id = p.id;
     let img = p.images.length > 0 ? p.images[0] : 'images/property-placeholder.svg';
     let suffix = p.type === 'rent' ? ' / ay' : '';
     
@@ -2248,6 +2290,8 @@ async function openCompareModal() {
           <li style="padding:8px 0; border-bottom:1px solid var(--border);"><strong>Bölge:</strong> ${escapeHTML(p.location)}</li>
           <li style="padding:8px 0; border-bottom:1px solid var(--border);"><strong>Oda:</strong> ${escapeHTML(p.rooms)}</li>
           <li style="padding:8px 0; border-bottom:1px solid var(--border);"><strong>Alan:</strong> ${escapeHTML(formatArea(p.area_net))}</li>
+          ${p.floor ? `<li style="padding:8px 0; border-bottom:1px solid var(--border);"><strong>Kat:</strong> ${escapeHTML(p.floor)}</li>` : ''}
+          ${p.year_built ? `<li style="padding:8px 0; border-bottom:1px solid var(--border);"><strong>Yapım yılı:</strong> ${escapeHTML(p.year_built)}</li>` : ''}
           <li style="padding:8px 0;"><strong>Durum:</strong> ${p.type === 'sale' ? 'Satılık' : 'Kiralık'}</li>
         </ul>
         <a href="property-detail.html?id=${encodeURIComponent(id)}" style="display:block; text-align:center; background:var(--navy); color:#fff; padding:8px; border-radius:6px; text-decoration:none; margin-top:15px; font-weight:bold; font-size:12px;">İlana Git</a>
@@ -2255,15 +2299,21 @@ async function openCompareModal() {
     `;
   });
   
-  overlay.style.display = 'block';
-  modal.style.display = 'block';
+  if (overlay.classList.contains('collection-modal-backdrop')) overlay.classList.add('active');
+  else overlay.style.display = 'block';
+  if (modal.classList.contains('collection-modal')) modal.classList.add('active');
+  else modal.style.display = 'block';
+  document.body.style.overflow = 'hidden';
 }
 
 function closeCompareModal() {
   const modal = document.getElementById('compareModal');
   const overlay = document.getElementById('compareModalOverlay');
-  if (modal) modal.style.display = 'none';
-  if (overlay) overlay.style.display = 'none';
+  if (modal?.classList.contains('collection-modal')) modal.classList.remove('active');
+  else if (modal) modal.style.display = 'none';
+  if (overlay?.classList.contains('collection-modal-backdrop')) overlay.classList.remove('active');
+  else if (overlay) overlay.style.display = 'none';
+  document.body.style.overflow = '';
 }
 
 

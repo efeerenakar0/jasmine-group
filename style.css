@@ -2970,6 +2970,7 @@ button[type="submit"]:disabled { cursor: wait; opacity: .65; }
 .english-site .msm-close { border: 0; background: transparent; }
 .en-card-actions { display: flex; align-items: center; gap: 7px; }
 .en-card-actions .prop-btn { padding-inline: 12px; }
+.en-card-actions .compare-btn { flex: 0 0 38px; }
 .compact-listing-hero { min-height: 330px; }
 .en-detail-layout { display: grid; padding: 70px 0; grid-template-columns: minmax(0, 1.2fr) minmax(380px, .8fr); align-items: start; gap: 42px; }
 .en-detail-media { position: relative; min-height: 560px; overflow: hidden; border-radius: 10px; background: #edf0eb; }
@@ -2984,6 +2985,7 @@ button[type="submit"]:disabled { cursor: wait; opacity: .65; }
 .en-detail-summary .en-hero-actions { margin-top: 26px; }
 .en-detail-summary .en-hero-actions a { border-color: var(--sea); color: var(--ink); }
 .en-detail-summary .en-hero-actions a:first-child { color: white; background: var(--sea); }
+.en-detail-summary .en-hero-actions .compare-btn { width: auto; height: auto; padding: 14px 17px; border-radius: 5px; color: var(--sea); font-size: 11px; font-weight: 800; }
 .en-contact-grid { display: grid; grid-template-columns: .8fr 1.2fr; gap: 80px; }
 .en-contact-grid h2 { margin: 0 0 20px; font-family: 'Playfair Display', Georgia, serif; font-size: 45px; }
 .en-contact-grid > div p { color: var(--text-muted); line-height: 1.75; }
@@ -3100,6 +3102,23 @@ button[type="submit"]:disabled { cursor: wait; opacity: .65; }
 .compare-btn.limit-reached {
   animation: compare-shake 300ms ease 2;
 }
+
+.detail-compare-button { width: 100%; height: auto; margin-top: 14px; padding: 12px 14px; border-radius: 6px; color: var(--sea); font-size: 11px; font-weight: 800; }
+.detail-compare-button.active { color: white; }
+.compare-floating-action { position: fixed; z-index: 10040; right: 24px; bottom: 24px; display: none; align-items: center; gap: 9px; padding: 13px 17px; border: 0; border-radius: 999px; color: white; background: var(--ink); box-shadow: 0 14px 30px rgba(8,24,45,.26); font-size: 11px; font-weight: 800; cursor: pointer; }
+.compare-floating-action #compare-count { display: grid; min-width: 20px; min-height: 20px; place-items: center; border-radius: 50%; color: var(--ink); background: var(--gold); }
+.compare-modal .collection-modal-panel { width: min(1060px, 94vw); }
+.compare-content { display: grid; grid-template-columns: repeat(auto-fit, minmax(235px, 1fr)); gap: 16px; }
+.compare-modal .compare-content { padding: 28px 36px 36px; }
+.en-compare-card { position: relative; display: block; padding: 0; overflow: hidden; }
+.en-compare-card > button { position: absolute; z-index: 2; top: 10px; right: 10px; display: grid; width: 32px; height: 32px; place-items: center; border: 0; border-radius: 50%; color: var(--ink); background: white; cursor: pointer; }
+.en-compare-card > img { width: 100%; height: 150px; object-fit: cover; }
+.en-compare-card > div { padding: 18px; }
+.en-compare-card dl { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); margin: 16px 0; gap: 8px; }
+.en-compare-card dl div { padding: 9px; background: #f4f7f5; }
+.en-compare-card dt { color: #708078; font-size: 9px; text-transform: uppercase; }
+.en-compare-card dd { margin: 4px 0 0; color: var(--ink); font-size: 12px; font-weight: 700; }
+.en-compare-card a { display: block; padding: 10px; border-radius: 4px; color: white; background: var(--sea); font-size: 10px; font-weight: 800; text-align: center; }
 
 @keyframes compare-shake {
   50% { transform: translateX(4px); }
