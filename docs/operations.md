@@ -203,3 +203,10 @@ yayinlanmamali; ilgili TKGM, GIB, Goc Idaresi, e-Devlet veya DASK sayfasina
 dogrudan dogrulama baglantisi verilmelidir.
 Bu bilgiler hazir oldugunda marka diline uygun sekilde admin/editorial
 surecinden gecirilerek yayinlanmalidir.
+
+## 9. Portfoy kodu kalitesi
+
+Her ilan kodu tekil olmalidir. Admin genel bakisi yinelenen kodlari gosterir;
+bu kayitlar yayin ve sitemap ekraninda ilk gecerli kayda indirgenir, ancak
+veri kaynagindan silinmez. Kopya kayitlar manuel olarak birlestirildikten
+sonra `npm run db:migrate -- --apply` yalnizca tekil kodlari Supabase'e aktarir.

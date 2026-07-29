@@ -4,7 +4,7 @@ const path = require('path');
 const root = path.resolve(__dirname, '..');
 const output = path.join(root, 'en');
 const baseUrl = 'https://jasmine-group.vercel.app';
-const assetVersion = '2026072813';
+const assetVersion = '2026072814';
 const regionContent = JSON.parse(fs.readFileSync(path.join(root, 'regions-content.json'), 'utf8'));
 const guideContent = JSON.parse(fs.readFileSync(path.join(root, 'guides-content.json'), 'utf8'));
 

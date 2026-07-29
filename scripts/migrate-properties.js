@@ -20,7 +20,13 @@ function categoryFor(property) {
   return 'apartment';
 }
 
-const properties = (source.properties || []).map(property => ({
+const seenIds = new Set();
+const properties = (source.properties || []).filter(property => {
+  const id = String(property.id || '');
+  if (!/^[A-Za-z0-9._-]+$/.test(id) || seenIds.has(id)) return false;
+  seenIds.add(id);
+  return true;
+}).map(property => ({
   id: property.id,
   type: property.type === 'rent' ? 'rent' : 'sale',
   status: 'published',
@@ -47,7 +53,8 @@ const properties = (source.properties || []).map(property => ({
 }));
 
 if (!apply) {
-  console.log(`Dry run: ${properties.length} properties are ready. Re-run with --apply to upload.`);
+  const skipped = (source.properties || []).length - properties.length;
+  console.log(`Dry run: ${properties.length} unique properties are ready${skipped ? `; ${skipped} invalid or duplicate records skipped` : ''}. Re-run with --apply to upload.`);
   process.exit(0);
 }
 

@@ -64,10 +64,17 @@
   }
 
   function renderOverview() {
-    const published = state.properties.filter(item => item.status === 'published' || !item.status).length;
+    const propertyIdCounts = state.properties.reduce((counts, item) => {
+      const id = String(item.id || '').trim();
+      if (id) counts.set(id, (counts.get(id) || 0) + 1);
+      return counts;
+    }, new Map());
+    const duplicateIds = [...propertyIdCounts.entries()].filter(([, count]) => count > 1);
+    const uniqueProperties = state.properties.filter((item, index, all) => all.findIndex(candidate => candidate.id === item.id) === index);
+    const published = uniqueProperties.filter(item => item.status === 'published' || !item.status).length;
     const newLeads = state.leads.filter(item => item.status === 'new').length;
     const external = state.properties.reduce((total, item) => total + (item.images || []).filter(isExternalImage).length, 0);
-    document.getElementById('stat-properties').textContent = state.properties.length;
+    document.getElementById('stat-properties').textContent = uniqueProperties.length;
     document.getElementById('stat-published').textContent = published;
     document.getElementById('stat-leads').textContent = newLeads;
     document.getElementById('stat-external').textContent = external;
@@ -82,6 +89,7 @@
       ['Harici görsel', external, 'Medya yükleme ile değiştirilmeli'],
       ['Taslak ilan', state.properties.filter(item => item.status === 'draft').length, 'Yayın öncesi kontrol bekliyor'],
       ['Görselsiz ilan', state.properties.filter(item => !(item.images || []).length).length, 'Profesyonel fotoğraf gerekli'],
+      ['Yinelenen ilan kodu', duplicateIds.length, duplicateIds.length ? `${duplicateIds.map(([id, count]) => `${id} (${count})`).slice(0, 3).join(', ')}${duplicateIds.length > 3 ? '…' : ''}` : 'Her ilan kodu tekil'],
     ];
     document.getElementById('portfolio-health').innerHTML = issues.map(([label, count, hint]) => `
       <div class="health-row"><div><strong>${label}</strong><span>${hint}</span></div><strong>${count}</strong></div>`).join('');
@@ -89,11 +97,16 @@
 
   function renderProperties() {
     const query = document.getElementById('property-search').value.toLocaleLowerCase('tr-TR');
+    const idCounts = state.properties.reduce((counts, item) => {
+      const id = String(item.id || '');
+      counts.set(id, (counts.get(id) || 0) + 1);
+      return counts;
+    }, new Map());
     const properties = state.properties.filter(item => `${item.id} ${item.title} ${item.location}`.toLocaleLowerCase('tr-TR').includes(query));
     document.getElementById('property-table-body').innerHTML = properties.map(property => {
       const external = (property.images || []).filter(isExternalImage).length;
       return `<tr>
-        <td><strong>${escapeHTML(property.title)}</strong><small>${escapeHTML(property.id)}</small></td>
+        <td><strong>${escapeHTML(property.title)}</strong><small>${escapeHTML(property.id)}${idCounts.get(property.id) > 1 ? ` · <span class="duplicate-code">Yinelenen kod (${idCounts.get(property.id)})</span>` : ''}</small></td>
         <td>${escapeHTML(property.location)}</td>
         <td><strong>${escapeHTML(categoryLabels[property.category] || 'Belirtilmedi')}</strong><small>${property.type === 'rent' ? 'Kiralık' : 'Satılık'}</small></td>
         <td><span class="status-pill ${escapeHTML(property.status || 'published')}">${escapeHTML(statusLabels[property.status] || 'Yayında')}</span></td>
